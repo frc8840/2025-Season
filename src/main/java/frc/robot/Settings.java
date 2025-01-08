@@ -1,4 +1,3 @@
-
 import frc.team_8840_lib.utils.controllers.swerve.structs.PIDStruct;
 
 public class Settings {
