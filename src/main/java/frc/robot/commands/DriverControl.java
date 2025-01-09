@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.Settings;
 import frc.robot.subsystems.NewSwerve;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Arm.ArmPosition;
 
 public class DriverControl extends Command {
@@ -17,19 +16,17 @@ public class DriverControl extends Command {
     private XboxController xboxcontroller;
     private NewSwerve swerve;
     private Arm arm;
-    private Lights lights;
 
     private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(10);
     private SlewRateLimiter rotationLimiter = new SlewRateLimiter(10);
 
     // Make sure the roller imported is the one from subsystems! Not from settings.
-    public DriverControl(NewSwerve swerve, Arm arm, Lights lights) {
+    public DriverControl(NewSwerve swerve, Arm arm) {
         addRequirements(swerve);
 
         this.swerve = swerve;
         this.arm = arm;
-        this.lights = lights;
         xboxcontroller = new XboxController(Settings.DRIVER_CONTROLLER_PORT);
     }
 

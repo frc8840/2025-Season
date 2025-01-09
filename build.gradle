@@ -3,6 +3,12 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2025.1.1"
 }
 
+repositories {
+    mavenCentral()
+    // Add the REV Robotics repository
+    maven { url 'https://www.revrobotics.com/content/sw/max/sdk/maven/' }
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -55,6 +61,9 @@ dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
+
+    implementation 'com.revrobotics.frc:SparkMax-java:1.5.2'
+    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2025.1.1'
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
