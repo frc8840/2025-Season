@@ -2,10 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.SparkMaxPIDController.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,9 +18,9 @@ public class Arm extends SubsystemBase {
     private RelativeEncoder shoulderEncoder;
     // private RelativeEncoder elbowEncoder;
     public RelativeEncoder wristEncoder;
-    private CANPIDController shoulderPID;
+    private SparkPIDController shoulderPID;
     // private SparkPIDController elbowPID;
-    private CANPIDController wristPID;
+    private SparkPIDController wristPID;
     private ArmPosition position = ArmPosition.REST;
 
     public Arm() {

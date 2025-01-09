@@ -8,9 +8,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.PickUpNote;
 import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.ArmShooter;
+import frc.robot.subsystems.Lights;
 
 public class OperatorControl extends Command {
 
@@ -20,6 +22,7 @@ public class OperatorControl extends Command {
     private PickUpNote intake;
     private ArmShooter shooter;
     private Arm arm;
+    private Lights lights;
 
     long shooterStarted = -1;
 
@@ -33,6 +36,7 @@ public class OperatorControl extends Command {
         this.intake = pIntake;
         this.shooter = shooter;
         this.arm = arm;
+        this.lights = lights;
 
         ps4controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
 
