@@ -1,100 +1,95 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Settings;
 
 public class Arm extends SubsystemBase {
-    private CANSparkMax shoulderMotor;
-    // private CANSparkMax elbowMotor;
-    private CANSparkMax wristMotor;
+
+    private SparkMaxConfig shoulderConfig = new SparkMaxConfig();
+    private SparkMaxConfig wristConfig = new SparkMaxConfig();
+
+    private SparkMax shoulderMotor;
+    private SparkMax wristMotor;
+
     private RelativeEncoder shoulderEncoder;
-    // private RelativeEncoder elbowEncoder;
     public RelativeEncoder wristEncoder;
-    private SparkPIDController shoulderPID;
-    // private SparkPIDController elbowPID;
-    private SparkPIDController wristPID;
+
+    SparkClosedLoopController shoulderPID;
+    SparkClosedLoopController wristPID;
+
     private ArmPosition position = ArmPosition.REST;
 
     public Arm() {
-        shoulderMotor = new CANSparkMax(Settings.SHOULDER_MOTOR_ID, MotorType.kBrushless);
-        // elbowMotor = new CANSparkMax(Settings.ELBOW_MOTOR_ID, MotorType.kBrushless);
-        wristMotor = new CANSparkMax(Settings.WRIST_MOTOR_ID, MotorType.kBrushless);
 
+        // set up the motor configs
+        // shoulderConfig.restoreFactoryDefaults();
+        // shoulderConfig.restoreFactoryDefaults();
+
+        shoulderConfig.idleMode(IdleMode.kBrake);
+        wristConfig.idleMode(IdleMode.kBrake);
+
+        shoulderConfig.smartCurrentLimit(80);
+        wristConfig.smartCurrentLimit(80);
+
+        shoulderConfig.secondaryCurrentLimit(85);
+        wristConfig.secondaryCurrentLimit(85);
+
+        shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
+        wristConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
+
+        shoulderConfig.voltageCompensation(12);
+        wristConfig.voltageCompensation(12);
+
+        shoulderConfig.encoder.positionConversionFactor((1 / Settings.SHOULDER_GEAR_RATIO) * 360);
+        wristConfig.encoder.positionConversionFactor((1 / Settings.WRIST_GEAR_RATIO) * 360);
+
+        // PID configurations
+
+        shoulderConfig.closedLoop.p(Settings.SHOULDER_PID.kP);
+        shoulderConfig.closedLoop.i(Settings.SHOULDER_PID.kI);
+        shoulderConfig.closedLoop.d(Settings.SHOULDER_PID.kD);
+        shoulderConfig.closedLoop.iZone(Settings.SHOULDER_PID.kIZone);
+        shoulderConfig.closedLoop.velocityFF(Settings.SHOULDER_PID.kF);
+
+        wristConfig.closedLoop.p(Settings.WRIST_PID.kP);
+        wristConfig.closedLoop.i(Settings.WRIST_PID.kI);
+        wristConfig.closedLoop.d(Settings.WRIST_PID.kD);
+        wristConfig.closedLoop.iZone(Settings.WRIST_PID.kIZone);
+        wristConfig.closedLoop.velocityFF(Settings.WRIST_PID.kF);
+
+        // now set up the motors 
+        shoulderMotor = new SparkMax(Settings.SHOULDER_MOTOR_ID, MotorType.kBrushless);
+        wristMotor = new SparkMax(Settings.WRIST_MOTOR_ID, MotorType.kBrushless);
+
+        shoulderMotor.configure(wristConfig, null, null);
+        wristMotor.configure(wristConfig, null, null);
+        
+        
+        // setup the encoders
         shoulderEncoder = shoulderMotor.getEncoder();
-        // elbowEncoder = elbowMotor.getEncoder();
         wristEncoder = wristMotor.getEncoder();
 
         shoulderEncoder.setPosition(0);
-        // elbowEncoder.setPosition(0);
         wristEncoder.setPosition(0);
 
-        shoulderMotor.restoreFactoryDefaults();
-        // elbowMotor.restoreFactoryDefaults();
-        wristMotor.restoreFactoryDefaults();
+        // the PID controllers
+        shoulderPID = shoulderMotor.getClosedLoopController();
+        wristPID = wristMotor.getClosedLoopController();
 
-        shoulderMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // elbowMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        wristMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
-        shoulderMotor.setSmartCurrentLimit(80);
-        // elbowMotor.setSmartCurrentLimit(80);
-        wristMotor.setSmartCurrentLimit(80);
-
-        shoulderMotor.setSecondaryCurrentLimit(85);
-        // elbowMotor.setSecondaryCurrentLimit(85);
-        wristMotor.setSecondaryCurrentLimit(85);
-
-        shoulderMotor.setClosedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
-        // elbowMotor.setClosedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
-        wristMotor.setClosedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
-
-        shoulderMotor.enableVoltageCompensation(12);
-        // elbowMotor.enableVoltageCompensation(12);
-        wristMotor.enableVoltageCompensation(12);
-
-        shoulderEncoder.setPositionConversionFactor((1 / Settings.SHOULDER_GEAR_RATIO) * 360);
-        // elbowEncoder.setPositionConversionFactor((1 / Settings.ELBOW_GEAR_RATIO) *
-        // 360);
-        wristEncoder.setPositionConversionFactor((1 / Settings.WRIST_GEAR_RATIO) * 360);
-
-        shoulderPID = shoulderMotor.getPIDController();
-        // elbowPID = elbowMotor.getPIDController();
-        wristPID = wristMotor.getPIDController();
-
-        shoulderPID.setP(Settings.SHOULDER_PID.kP);
-        shoulderPID.setI(Settings.SHOULDER_PID.kI);
-        shoulderPID.setD(Settings.SHOULDER_PID.kD);
-        shoulderPID.setIZone(Settings.SHOULDER_PID.kIZone);
-        shoulderPID.setFF(Settings.SHOULDER_PID.kF);
-
-        // elbowPID.setP(Settings.ELBOW_PID.kP);
-        // elbowPID.setI(Settings.ELBOW_PID.kI);
-        // elbowPID.setD(Settings.ELBOW_PID.kD);
-        // elbowPID.setIZone(Settings.ELBOW_PID.kIZone);
-        // elbowPID.setFF(Settings.ELBOW_PID.kF);
-
-        wristPID.setP(Settings.WRIST_PID.kP);
-        wristPID.setI(Settings.WRIST_PID.kI);
-        wristPID.setD(Settings.WRIST_PID.kD);
-        wristPID.setIZone(Settings.WRIST_PID.kIZone);
-        wristPID.setFF(Settings.WRIST_PID.kF);
-
-        // shoulderPID.setOutputRange(-Settings.MAX_SHOULDER_SPEED,
-        // Settings.MAX_SHOULDER_SPEED);
-        // elbowPID.setOutputRange(-Settings.MAX_ELBOW_SPEED, Settings.MAX_ELBOW_SPEED);
+        // shoulderPID.setOutputRange(-Settings.MAX_SHOULDER_SPEED, Settings.MAX_SHOULDER_SPEED);
         // wristPID.setOutputRange(-Settings.MAX_WRIST_SPEED, Settings.MAX_WRIST_SPEED);
 
-        shoulderMotor.burnFlash();
-        // elbowMotor.burnFlash();
-        wristMotor.burnFlash();
+        // shoulderMotor.burnFlash();
+        // wristMotor.burnFlash();
     }
 
     public void setArmPosition(ArmPosition position) {
@@ -103,8 +98,7 @@ public class Arm extends SubsystemBase {
         // Logger.Log("shoulder position before:" + shoulderEncoder.getPosition());
         shoulderPID.setReference(
                 position.shoulderAngle,
-                ControlType.kPosition,
-                0);
+                ControlType.kPosition);
 
         // elbowPID.setReference(
         // position.elbowAngle,
@@ -113,23 +107,26 @@ public class Arm extends SubsystemBase {
 
         wristPID.setReference(
                 position.wristAngle,
-                ControlType.kPosition,
-                0);
+                ControlType.kPosition);
     }
 
     public void relax() {
-        shoulderMotor.setIdleMode(IdleMode.kCoast);
+        shoulderConfig.idleMode(IdleMode.kCoast);
+        shoulderMotor.configure(shoulderConfig, null, null);
         shoulderMotor.set(0);
         // elbowMotor.setIdleMode(IdleMode.kCoast);
         // elbowMotor.set(0);
-        wristMotor.setIdleMode(IdleMode.kCoast);
+        wristConfig.idleMode(IdleMode.kCoast);
+        wristMotor.configure(wristConfig, null, null);
         wristMotor.set(0);
     }
 
     public void gethard() {
-        shoulderMotor.setIdleMode(IdleMode.kBrake);
-        // elbowMotor.setIdleMode(IdleMode.kBrake);
-        wristMotor.setIdleMode(IdleMode.kBrake);
+        shoulderConfig.idleMode(IdleMode.kBrake);
+        shoulderMotor.configure(shoulderConfig, null, null);
+
+        wristConfig.idleMode(IdleMode.kBrake);
+        wristMotor.configure(wristConfig, null, null);
     }
 
     public ArmPosition getArmPosition() {
