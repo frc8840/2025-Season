@@ -23,8 +23,6 @@ public class OperatorControl extends Command {
 
     long shooterStarted = -1;
 
-    private final Arm.ArmPosition[] heightOrder = new ArmPosition[] { ArmPosition.INTAKE, ArmPosition.AMPSHOOTING,
-            ArmPosition.SPEAKERSHOOTING };
 
     // Make sure the roller imported is the one from subsystems! Not from settings.
     public OperatorControl(Arm arm, Climber climber, PickUpNote pIntake, ArmShooter shooter) {

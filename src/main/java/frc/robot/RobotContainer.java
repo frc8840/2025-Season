@@ -36,7 +36,6 @@ public class RobotContainer {
     private NewSwerve swerve;
     public PickUpNote intake;
     public ArmShooter shooter;
-    public Lights lights;
 
     // the old chooser
     private final SendableChooser<String> oldAutoChooser;
@@ -65,7 +64,6 @@ public class RobotContainer {
         climber = new Climber();
         intake = new PickUpNote();
         shooter = new ArmShooter();
-        lights = new Lights();
 
         Logger.Log("finished constructing subsystems, going to sleep");
         try {
@@ -76,7 +74,7 @@ public class RobotContainer {
         Logger.Log("finished sleeping");
 
         // now make the controllers
-        driverControl = new DriverControl(swerve, arm, lights);
+        driverControl = new DriverControl(swerve, arm);
         swerve.setDefaultCommand(driverControl);
 
         operatorControl = new OperatorControl(arm, climber, intake, shooter);
