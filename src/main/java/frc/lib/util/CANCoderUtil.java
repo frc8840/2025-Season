@@ -1,6 +1,5 @@
 package frc.lib.util;
 
-import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 /** Sets status frames for the CTRE CANCoder. */

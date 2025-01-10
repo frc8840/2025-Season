@@ -147,10 +147,14 @@ public class NewSwerve extends SubsystemBase {
         gyro.setYaw(180);
     }
 
+    public double getYawValue() {
+        return gyro.getYaw().getValueAsDouble();
+    }
+
     public Rotation2d getYaw() {
         return (Constants.Swerve.invertGyro)
-                ? Rotation2d.fromDegrees(360 - gyro.getAngle())
-                : Rotation2d.fromDegrees(gyro.getAngle());
+                ? Rotation2d.fromDegrees(360 - getYawValue())
+                : Rotation2d.fromDegrees(getYawValue());
     }
 
     public enum DrivePosition {
@@ -173,7 +177,7 @@ public class NewSwerve extends SubsystemBase {
         // }
         // tell dashboard where the robot thinks it is
         SmartDashboard.putNumber(
-                "Robot heading:", gyro.getAngle());
+                "Robot heading:", getYawValue());
         SmartDashboard.putString(
                 "Robot location:", getPose().getTranslation().toString());
     }
