@@ -1,6 +1,9 @@
 package frc.lib.util;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel;
 
 /** Sets motor usage for a Spark Max motor controller */
@@ -30,8 +33,10 @@ public class CANSparkMaxUtil {
      */
     public static void setCANSparkMaxBusUsage(
             SparkMax motor, Usage usage, boolean enableFollowing) {
+            SparkMaxConfig config = new SparkMaxConfig();
         if (enableFollowing) {
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus0, 10);
+            config.signals.primaryEncoderPositionPeriodMs(10);
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         } else {
             motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus0, 500);
         }
@@ -70,7 +75,7 @@ public class CANSparkMaxUtil {
      *              CANSparkMax is
      *              constructed.
      */
-    public static void setCANSparkMaxBusUsage(CANSparkMax motor, Usage usage) {
+    public static void setCANSparkMaxBusUsage(SparkMax motor, Usage usage) {
         setCANSparkMaxBusUsage(motor, usage, false);
     }
 }
