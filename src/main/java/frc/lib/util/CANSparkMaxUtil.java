@@ -4,7 +4,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel;
 
 /** Sets motor usage for a Spark Max motor controller */
 public class CANSparkMaxUtil {
@@ -35,28 +34,37 @@ public class CANSparkMaxUtil {
             SparkMax motor, Usage usage, boolean enableFollowing) {
             SparkMaxConfig config = new SparkMaxConfig();
         if (enableFollowing) {
-            config.signals.primaryEncoderPositionPeriodMs(10);
+            config.signals.appliedOutputPeriodMs(20);
             motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         } else {
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus0, 500);
+            config.signals.appliedOutputPeriodMs(500);
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
 
         if (usage == Usage.kAll) {
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus1, 20);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus2, 20);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus3, 50);
+            config.signals
+        .primaryEncoderVelocityPeriodMs(20)  // Previously status 1
+        .primaryEncoderPositionPeriodMs(20)  // Previously status 2
+        .analogVoltagePeriodMs(50);                  // Previously status 3
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         } else if (usage == Usage.kPositionOnly) {
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus1, 500);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus2, 20);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus3, 500);
+            config.signals
+        .primaryEncoderVelocityPeriodMs(500)  // Previously status 1
+        .primaryEncoderPositionPeriodMs(20)  // Previously status 2
+        .analogVoltagePeriodMs(500);                  // Previously status 3
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         } else if (usage == Usage.kVelocityOnly) {
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus1, 20);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus2, 500);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus3, 500);
+            config.signals
+        .primaryEncoderVelocityPeriodMs(20)  // Previously status 1
+        .primaryEncoderPositionPeriodMs(500)  // Previously status 2
+        .analogVoltagePeriodMs(500);                  // Previously status 3
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         } else if (usage == Usage.kMinimal) {
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus1, 500);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus2, 500);
-            motor.setPeriodicFramePeriod(SparkLowLevel.PeriodicFrame.kStatus3, 500);
+            config.signals
+        .primaryEncoderVelocityPeriodMs(500)  // Previously status 1
+        .primaryEncoderPositionPeriodMs(500)  // Previously status 2
+        .analogVoltagePeriodMs(500);                  // Previously status 3
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 
