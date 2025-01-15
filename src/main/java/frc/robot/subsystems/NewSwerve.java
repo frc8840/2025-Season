@@ -49,7 +49,7 @@ public class NewSwerve extends SubsystemBase {
                 new NewSwerveModule(3, Constants.Swerve.BRconstants)
         };
 
-        // field = new Field2d();
+        field = new Field2d();
         // SmartDashboard.putData("Field", field);
         // Logger.Log("mSwerveMods.length=" + mSwerveMods.length);
 
@@ -168,7 +168,7 @@ public class NewSwerve extends SubsystemBase {
     @Override
     public void periodic() {
         odometer.update(getYaw(), getPositions());
-        field.setRobotPose(getPose());
+        field.setRobotPose(getPose()); 
 
         // for (NewSwerveModule mod : mSwerveMods) {
         // SmartDashboard.putNumber(
