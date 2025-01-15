@@ -1,24 +1,29 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Settings;
 
 public class Climber extends SubsystemBase {
 
-    private CANSparkMax lMotor;
-    private CANSparkMax rMotor;
+    private SparkMax lMotor;
+    private SparkMax rMotor;
+
+    private SparkMaxConfig lMotorConfig = new SparkMaxConfig();
+    private SparkMaxConfig rMotorConfig = new SparkMaxConfig();
 
     public RelativeEncoder lEncoder;
     public RelativeEncoder rEncoder;
 
-    private final SparkPIDController lController;
-    private final SparkPIDController rController;
+    private final SparkClosedLoopController lController;
+    private final SparkClosedLoopController rController;
 
     // constants
 
@@ -36,65 +41,66 @@ public class Climber extends SubsystemBase {
     double maxAcc = 1500;
     double allowedErr = 0; // TODO is this correct?
 
-    int smartMotionSlot = 0;
+    ClosedLoopSlot smartMotionSlot = ClosedLoopSlot.kSlot0;
 
     public Climber() {
 
         // Assumption of use of a NEO brushless motor
-        lMotor = new CANSparkMax(Settings.LCLIMBER_MOTOR_ID, MotorType.kBrushless);
+        lMotor = new SparkMax(Settings.LCLIMBER_MOTOR_ID, MotorType.kBrushless);
         lEncoder = lMotor.getEncoder();
-        lController = lMotor.getPIDController();
+        lController = lMotor.getClosedLoopController();
 
-        rMotor = new CANSparkMax(Settings.RCLIMBER_MOTOR_ID, MotorType.kBrushless);
+        rMotor = new SparkMax(Settings.RCLIMBER_MOTOR_ID, MotorType.kBrushless);
         rEncoder = rMotor.getEncoder();
-        rController = rMotor.getPIDController();
+        rController = rMotor.getClosedLoopController();
+
 
         // Restore factory defaults
-        lMotor.restoreFactoryDefaults();
-        rMotor.restoreFactoryDefaults();
+        // lMotor.restoreFactoryDefaults();
+        // rMotor.restoreFactoryDefaults();
 
         // Set the current limits
-        lMotor.setSmartCurrentLimit(80, 80);
-        lMotor.setSecondaryCurrentLimit(85);
-        rMotor.setSmartCurrentLimit(80, 80);
-        rMotor.setSecondaryCurrentLimit(85);
+        lMotorConfig.smartCurrentLimit(80, 80);
+        lMotorConfig.secondaryCurrentLimit(85);
+        rMotorConfig.smartCurrentLimit(80, 80);
+        rMotorConfig.secondaryCurrentLimit(85);
 
         // // Set the ramp rate since it jumps to full speed too quickly - don't want to
         // // break the robot!
-        lMotor.setOpenLoopRampRate(0.2);
-        rMotor.setOpenLoopRampRate(0.2);
+        lMotorConfig.openLoopRampRate(0.2);
+        rMotorConfig.openLoopRampRate(0.2);
 
         // Set the idle mode to brake
-        lMotor.setIdleMode(IdleMode.kBrake);
-        rMotor.setIdleMode(IdleMode.kBrake);
+        lMotorConfig.idleMode(IdleMode.kBrake);
+        rMotorConfig.idleMode(IdleMode.kBrake);
 
         // Set the CAN timeout to 20ms
-        lMotor.setCANTimeout(20);
-        rMotor.setCANTimeout(20);
+        // lMotorConfig.setCANTimeout(20);
+        // rMotorConfig.setCANTimeout(20);
 
-        lMotor.enableVoltageCompensation(12.0);
-        rMotor.enableVoltageCompensation(12.0);
+        lMotorConfig.voltageCompensation(12.0);
+        rMotorConfig.voltageCompensation(12.0);
 
         // left
-        lController.setP(kP);
-        lController.setI(kI);
-        lController.setD(kD);
-        lController.setIZone(kIz);
-        lController.setFF(kFF);
+        lMotorConfig.closedLoop.p(kP);
+        lMotorConfig.closedLoop.i(kI);
+        lMotorConfig.closedLoop.d(kD);
+        lMotorConfig.closedLoop.iZone(kIz);
+        lMotorConfig.closedLoop.velocityFF(kFF);
         // lController.setOutputRange(kMinOutput, kMaxOutput);
-        lController.setSmartMotionMaxVelocity(slowVel, smartMotionSlot);
+        lMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
         // lController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
         // lController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
         // lController.setSmartMotionAllowedClosedLoopError(allowedErr,
         // smartMotionSlot);
         // right
-        rController.setP(kP);
-        rController.setI(kI);
-        rController.setD(kD);
-        rController.setIZone(kIz);
-        rController.setFF(kFF);
-        // rController.setOutputRange(kMinOutput, kMaxOutput);
-        rController.setSmartMotionMaxVelocity(slowVel, smartMotionSlot);
+        rMotorConfig.closedLoop.p(kP);
+        rMotorConfig.closedLoop.i(kI);
+        rMotorConfig.closedLoop.d(kD);
+        rMotorConfig.closedLoop.iZone(kIz);
+        rMotorConfig.closedLoop.velocityFF(kFF);
+        // lController.setOutputRange(kMinOutput, kMaxOutput);
+        rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
         // rController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
         // rController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
         // rController.setSmartMotionAllowedClosedLoopError(allowedErr,
@@ -104,10 +110,13 @@ public class Climber extends SubsystemBase {
         rEncoder.setPosition(0.0);
 
         // Update the settings
-        lMotor.burnFlash();
-        rMotor.burnFlash();
+        // lMotor.burnFlash();
+        // rMotor.burnFlash();
         // Logger.Log("L position: " + lEncoder.getPosition());
         // Logger.Log("R position: " + rEncoder.getPosition());
+
+        lMotor.configure(lMotorConfig, null, null);
+        rMotor.configure(rMotorConfig, null, null);
     }
 
     public void Lintake() {
@@ -132,35 +141,39 @@ public class Climber extends SubsystemBase {
 
     public void leftStop() {
         lMotor.set(0);
-        lMotor.setIdleMode(IdleMode.kBrake);
+        lMotorConfig.idleMode(IdleMode.kBrake);
+        lMotor.configure(lMotorConfig, null, null);
     }
 
     public void rightStop() {
         rMotor.set(0);
-        rMotor.setIdleMode(IdleMode.kBrake);
+        rMotorConfig.idleMode(IdleMode.kBrake);
+        rMotor.configure(rMotorConfig, null, null);
     }
 
     public void climb() {
-        lController.setReference(270, CANSparkMax.ControlType.kPosition);
-        rController.setReference(270, CANSparkMax.ControlType.kPosition);
+        lController.setReference(270, SparkMax.ControlType.kPosition);
+        rController.setReference(270, SparkMax.ControlType.kPosition);
     }
 
     public void drop() {
-        lController.setReference(0, CANSparkMax.ControlType.kPosition);
-        rController.setReference(0, CANSparkMax.ControlType.kPosition);
+        lController.setReference(0, SparkMax.ControlType.kPosition);
+        rController.setReference(0, SparkMax.ControlType.kPosition);
     }
 
     public void fastDeploy() {
         // increase the max velocity
-        lController.setSmartMotionMaxVelocity(fastVel, smartMotionSlot);
-        rController.setSmartMotionMaxVelocity(fastVel, smartMotionSlot);
+        lMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
+        rMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
         // drop
-        lController.setReference(0, CANSparkMax.ControlType.kPosition);
-        rController.setReference(0, CANSparkMax.ControlType.kPosition);
+        lController.setReference(0, SparkMax.ControlType.kPosition);
+        rController.setReference(0, SparkMax.ControlType.kPosition);
         // decrease the max velocity
-        lController.setSmartMotionMaxVelocity(slowVel, smartMotionSlot);
-        rController.setSmartMotionMaxVelocity(slowVel, smartMotionSlot);
+        rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
+        rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
 
+        lMotor.configure(lMotorConfig, null, null);
+        rMotor.configure(rMotorConfig, null, null);
     }
 
 }
