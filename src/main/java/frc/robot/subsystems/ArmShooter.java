@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,9 +14,11 @@ import frc.robot.Settings;
 
 public class ArmShooter extends SubsystemBase {
 
-    public CANSparkMax leftMotor;
-    public CANSparkMax rightMotor;
-
+    public SparkMax leftMotor;
+    public SparkMax rightMotor;
+    
+    private SparkMaxConfig lMoterConfig = new SparkMaxConfig();
+    private SparkMaxConfig rMoterConfig = new SparkMaxConfig();
 
     public RelativeEncoder leftEncoder;
     public RelativeEncoder rightEncoder;
@@ -22,32 +27,35 @@ public class ArmShooter extends SubsystemBase {
 
     public ArmShooter() {
 
-        leftMotor = new CANSparkMax(Settings.SHOOTER_MOTOR_ID, MotorType.kBrushless);
-        rightMotor = new CANSparkMax(Settings.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
+        leftMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID, MotorType.kBrushless);
+        rightMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
 
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        leftMotor.restoreFactoryDefaults();
-        rightMotor.restoreFactoryDefaults();
+        // leftMotor.restoreFactoryDefaults();
+        // rightMotor.restoreFactoryDefaults();
 
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        lMoterConfig.idleMode(IdleMode.kCoast);
+        rMoterConfig.idleMode(IdleMode.kCoast);
 
-        leftMotor.setSmartCurrentLimit(100, 80);
-        leftMotor.setSecondaryCurrentLimit(105);
+        lMoterConfig.smartCurrentLimit(100, 80);
+        lMoterConfig.secondaryCurrentLimit(105);
 
-        rightMotor.setSmartCurrentLimit(100, 80);
-        rightMotor.setSecondaryCurrentLimit(105);
+        rMoterConfig.smartCurrentLimit(100, 80);
+        rMoterConfig.secondaryCurrentLimit(105);
 
         // sMotor.setOpenLoopRampRate(0.2);
         // sMotor2.setOpenLoopRampRate(0.2);
 
-        leftMotor.setCANTimeout(20);
-        rightMotor.setCANTimeout(20);
+        // lMoterConfig.setCANTimeout(20);
+        // rMoterConfig.setCANTimeout(20);
 
-        leftMotor.burnFlash();
-        rightMotor.burnFlash();
+        // lMoterConfig.burnFlash();
+        // rMoterConfig.burnFlash();
+
+        leftMotor.configure(lMoterConfig, null, null);
+        rightMotor.configure(rMoterConfig, null, null);
     }
 
     @Override
@@ -62,7 +70,6 @@ public class ArmShooter extends SubsystemBase {
     public void shoot() {
         leftMotor.set(Settings.SHOOTER_OUT_SPEED);
         rightMotor.set(-Settings.SHOOTER_OUT_SPEED);
-
     }
 
     public void stop() {
@@ -72,11 +79,12 @@ public class ArmShooter extends SubsystemBase {
     }
 
     public void gethard() {
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
+        lMoterConfig.idleMode(IdleMode.kBrake);
+        rMoterConfig.idleMode(IdleMode.kBrake);
     }
 
     public boolean isAbletoShoot() {
         return true;
     }
 }
+
