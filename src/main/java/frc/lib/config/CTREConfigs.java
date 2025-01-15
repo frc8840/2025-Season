@@ -11,7 +11,7 @@ public final class CTREConfigs {
 
         /* Swerve CANCoder Configuration */
         config.MagnetSensor.MagnetOffset = 0.26;
-        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
+        // config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
         config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     }
 }
