@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.team_8840_lib.info.console.Logger;
 
@@ -110,6 +111,22 @@ public class NewSwerve extends SubsystemBase {
         // Constants.Swerve.maxSpeed);
         setModuleStates(swerveModuleStates);
     }
+    
+
+    public void runEachMotorForOneSecond() {
+    for (NewSwerveModule module : mSwerveMods) {
+        // Run the current module's motor at full speed (or desired speed).
+        module.setDesiredState(new SwerveModuleState(Constants.Swerve.maxSpeed, new Rotation2d()));
+        Logger.Log("Running module " + module.moduleNumber + " for 1 second.");
+
+        // Wait for 1 second.
+        Timer.delay(1.0);
+
+        // Stop the current module's motor.
+        module.stop();
+    }
+}
+
 
     // used by auto
     public void setModuleStates(SwerveModuleState[] desiredStates) {

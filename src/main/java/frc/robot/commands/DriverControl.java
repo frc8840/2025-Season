@@ -34,6 +34,10 @@ public class DriverControl extends Command {
             swerve.zeroGyro();
         }
 
+        if (xboxcontroller.getYButtonPressed()) {
+            swerve.runEachMotorForOneSecond();
+        }
+
         // get values from the Xbox Controller joysticks
         // apply the deadband so we don't do anything right around the center of the
         // joysticks
