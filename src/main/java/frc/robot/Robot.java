@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
+import frc.team_8840_lib.info.console.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,6 +32,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    Logger.Log("RobotInitRan");
     ctreConfigs = new CTREConfigs();
     container = new RobotContainer();
     // PWM port 9
@@ -72,6 +74,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Logger.Log("Autonomous Init Called");
     Command autonomousCommand = container.getAutoCommand();
     // schedule the autonomous command - adds it to the scheduler
     if (autonomousCommand != null) {

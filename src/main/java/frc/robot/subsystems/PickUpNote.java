@@ -21,7 +21,7 @@ public class PickUpNote extends SubsystemBase {
     public PickUpNote() {
 
         iMotor = new SparkMax(Settings.INTAKE_MOTOR_ID, MotorType.kBrushless);
-
+        // System.out.print(Settings.INTAKE_MOTOR_ID);
         // iMotor.restoreFactoryDefaults();
         iMotorConfig.idleMode(IdleMode.kCoast);
 
@@ -46,6 +46,8 @@ public class PickUpNote extends SubsystemBase {
 
     public void intake() {
         iMotor.set(Settings.PICKUP_INTAKE_SPEED);
+        // Logger.Log("This is working here");
+        // System.out.println("tis is working here");
         Logger.Log("Intake Motor Amperage: " + iMotor.getOutputCurrent());
         // if (motorStartTime < 0) {
         // motorStartTime = System.currentTimeMillis();
@@ -54,6 +56,8 @@ public class PickUpNote extends SubsystemBase {
 
     public void outtake() {
         iMotor.set(Settings.PICKUP_OUTTAKE_SPEED);
+        // Logger.Log("This is working here too");
+        // System.out.println("tis is working here too");
         Logger.Log("Outtake Motor Amperage: " + iMotor.getOutputCurrent());
     }
 

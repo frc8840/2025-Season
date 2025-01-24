@@ -39,7 +39,7 @@ public class Settings {
     public static final double CLOSED_LOOP_RAMP_RATE = 1.0;
 
     // INTAKE SETTINGS
-    public static final int INTAKE_MOTOR_ID = 50;
+    public static final int INTAKE_MOTOR_ID = 3;
     public static final double PICKUP_OUTTAKE_SPEED = -0.2;
     public static final double PICKUP_INTAKE_SPEED = 0.25;
     // SHOOTER SETTINGS
