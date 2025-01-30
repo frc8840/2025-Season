@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -100,10 +102,6 @@ public class NewSwerveModule {
 
     private void configAngleMotor() {
         angleConfig = new SparkMaxConfig();
-        // angleMotor.restoreFactoryDefaults();
-    
-        // CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
-
         angleConfig.smartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
         angleConfig.inverted(Constants.Swerve.angleInvert);
         angleConfig.idleMode(Constants.Swerve.angleNeutralMode);
@@ -113,17 +111,12 @@ public class NewSwerveModule {
         angleConfig.closedLoop.d(Constants.Swerve.angleKD);
         angleConfig.closedLoop.velocityFF(Constants.Swerve.angleKFF);
         angleConfig.voltageCompensation(Constants.Swerve.voltageComp);
-        angleMotor.configure(angleConfig, null, null); // is this correct?
+        angleMotor.configure(angleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); // is this correct?
         resetToAbsolute();
-        // angleMotor.burnFlash();
     }
 
     private void configDriveMotor() {
         driveConfig = new SparkMaxConfig();
-        // driveMotor.restoreFactoryDefaults();
-
-        // CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll);
-
         driveConfig.smartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
         driveConfig.inverted(Constants.Swerve.driveInvert);
         driveConfig.idleMode(Constants.Swerve.driveNeutralMode);
@@ -135,8 +128,7 @@ public class NewSwerveModule {
         driveConfig.closedLoop.velocityFF(Constants.Swerve.angleKFF);
         driveConfig.voltageCompensation(Constants.Swerve.voltageComp);
         driveEncoder.setPosition(0.0);
-        driveMotor.configure(driveConfig, null, null);
-        // driveMotor.burnFlash();
+        driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {

@@ -94,18 +94,18 @@ public final class Constants {
                 /* Module Specific Constants */
                 /* Front Left Module - Module 0 */
                 public static final SwerveModuleConstants FLconstants = new SwerveModuleConstants(12, 11,
-                                21, Rotation2d.fromDegrees(128.0));
+                                52, Rotation2d.fromDegrees(128.0));
 
                 /* Front Right Module - Module 1 */
-                public static final SwerveModuleConstants FRconstants = new SwerveModuleConstants(14, 13, 22,
+                public static final SwerveModuleConstants FRconstants = new SwerveModuleConstants(14, 13, 53,
                                 Rotation2d.fromDegrees(339.0));
 
                 /* Back Left Module - Module 2 */
-                public static final SwerveModuleConstants BLconstants = new SwerveModuleConstants(18, 17, 24,
+                public static final SwerveModuleConstants BLconstants = new SwerveModuleConstants(18, 17, 55,
                                 Rotation2d.fromDegrees(200.0));
 
                 /* Back Right Module - Module 3 */
-                public static final SwerveModuleConstants BRconstants = new SwerveModuleConstants(16, 15, 23,
+                public static final SwerveModuleConstants BRconstants = new SwerveModuleConstants(16, 15, 54,
                                 Rotation2d.fromDegrees(50.0));
         }
 

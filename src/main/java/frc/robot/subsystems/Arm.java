@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -31,8 +33,6 @@ public class Arm extends SubsystemBase {
     public Arm() {
 
         // set up the motor configs
-        // shoulderConfig.restoreFactoryDefaults();
-        // shoulderConfig.restoreFactoryDefaults();
 
         shoulderConfig.idleMode(IdleMode.kBrake);
         wristConfig.idleMode(IdleMode.kBrake);
@@ -70,8 +70,8 @@ public class Arm extends SubsystemBase {
         shoulderMotor = new SparkMax(Settings.SHOULDER_MOTOR_ID, MotorType.kBrushless);
         wristMotor = new SparkMax(Settings.WRIST_MOTOR_ID, MotorType.kBrushless);
 
-        shoulderMotor.configure(wristConfig, null, null);
-        wristMotor.configure(wristConfig, null, null);
+        shoulderMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
         
         // setup the encoders
@@ -88,8 +88,6 @@ public class Arm extends SubsystemBase {
         // shoulderPID.setOutputRange(-Settings.MAX_SHOULDER_SPEED, Settings.MAX_SHOULDER_SPEED);
         // wristPID.setOutputRange(-Settings.MAX_WRIST_SPEED, Settings.MAX_WRIST_SPEED);
 
-        // shoulderMotor.burnFlash();
-        // wristMotor.burnFlash();
     }
 
     public void setArmPosition(ArmPosition position) {
@@ -112,21 +110,21 @@ public class Arm extends SubsystemBase {
 
     public void relax() {
         shoulderConfig.idleMode(IdleMode.kCoast);
-        shoulderMotor.configure(shoulderConfig, null, null);
+        shoulderMotor.configure(shoulderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         shoulderMotor.set(0);
         // elbowMotor.setIdleMode(IdleMode.kCoast);
         // elbowMotor.set(0);
         wristConfig.idleMode(IdleMode.kCoast);
-        wristMotor.configure(wristConfig, null, null);
+        wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         wristMotor.set(0);
     }
 
     public void gethard() {
         shoulderConfig.idleMode(IdleMode.kBrake);
-        shoulderMotor.configure(shoulderConfig, null, null);
+        shoulderMotor.configure(shoulderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         wristConfig.idleMode(IdleMode.kBrake);
-        wristMotor.configure(wristConfig, null, null);
+        wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public ArmPosition getArmPosition() {

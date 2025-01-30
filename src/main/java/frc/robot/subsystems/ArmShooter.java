@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -31,9 +33,6 @@ public class ArmShooter extends SubsystemBase {
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        // leftMotor.restoreFactoryDefaults();
-        // rightMotor.restoreFactoryDefaults();
-
         lMoterConfig.idleMode(IdleMode.kCoast);
         rMoterConfig.idleMode(IdleMode.kCoast);
 
@@ -49,11 +48,8 @@ public class ArmShooter extends SubsystemBase {
         // lMoterConfig.setCANTimeout(20);
         // rMoterConfig.setCANTimeout(20);
 
-        // lMoterConfig.burnFlash();
-        // rMoterConfig.burnFlash();
-
-        leftMotor.configure(lMoterConfig, null, null);
-        rightMotor.configure(rMoterConfig, null, null);
+        leftMotor.configure(lMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rightMotor.configure(rMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override

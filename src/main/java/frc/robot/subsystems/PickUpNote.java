@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,8 +23,6 @@ public class PickUpNote extends SubsystemBase {
     public PickUpNote() {
 
         iMotor = new SparkMax(Settings.INTAKE_MOTOR_ID, MotorType.kBrushless);
-        // System.out.print(Settings.INTAKE_MOTOR_ID);
-        // iMotor.restoreFactoryDefaults();
         iMotorConfig.idleMode(IdleMode.kCoast);
 
         iMotorConfig.smartCurrentLimit(80, 80);
@@ -32,8 +32,7 @@ public class PickUpNote extends SubsystemBase {
 
         // iMotor.setCANTimeout(20);
 
-        // iMotor.burnFlash();
-        iMotor.configure(iMotorConfig, null, null);
+        iMotor.configure(iMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 

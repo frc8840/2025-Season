@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -55,10 +57,6 @@ public class Climber extends SubsystemBase {
         rController = rMotor.getClosedLoopController();
 
 
-        // Restore factory defaults
-        // lMotor.restoreFactoryDefaults();
-        // rMotor.restoreFactoryDefaults();
-
         // Set the current limits
         lMotorConfig.smartCurrentLimit(80, 80);
         lMotorConfig.secondaryCurrentLimit(85);
@@ -110,13 +108,8 @@ public class Climber extends SubsystemBase {
         rEncoder.setPosition(0.0);
 
         // Update the settings
-        // lMotor.burnFlash();
-        // rMotor.burnFlash();
-        // Logger.Log("L position: " + lEncoder.getPosition());
-        // Logger.Log("R position: " + rEncoder.getPosition());
-
-        lMotor.configure(lMotorConfig, null, null);
-        rMotor.configure(rMotorConfig, null, null);
+        lMotor.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void Lintake() {
@@ -142,13 +135,13 @@ public class Climber extends SubsystemBase {
     public void leftStop() {
         lMotor.set(0);
         lMotorConfig.idleMode(IdleMode.kBrake);
-        lMotor.configure(lMotorConfig, null, null);
+        lMotor.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void rightStop() {
         rMotor.set(0);
         rMotorConfig.idleMode(IdleMode.kBrake);
-        rMotor.configure(rMotorConfig, null, null);
+        rMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void climb() {
@@ -172,8 +165,8 @@ public class Climber extends SubsystemBase {
         rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
         rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
 
-        lMotor.configure(lMotorConfig, null, null);
-        rMotor.configure(rMotorConfig, null, null);
+        lMotor.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        rMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
 }
