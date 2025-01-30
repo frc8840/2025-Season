@@ -1,5 +1,7 @@
 package frc.lib.util;
 
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 /** Sets status frames for the CTRE CANCoder. */
