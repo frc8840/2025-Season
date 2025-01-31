@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage
+import frc.lib.config.KrakenModuleConstants;
 import frc.lib.config.SwerveModuleConstants;
 
 public final class Constants {
@@ -107,6 +110,13 @@ public final class Constants {
                 /* Back Right Module - Module 3 */
                 public static final SwerveModuleConstants BRconstants = new SwerveModuleConstants(16, 15, 54,
                                 Rotation2d.fromDegrees(50.0));
+
+                /* Update these kracken motor ids */
+                public static final KrakenModuleConstants FLKrakenConstants = new KrakenModuleConstants(20, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants FRKrakenConstants = new KrakenModuleConstants(21, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants BLKrakenConstants = new KrakenModuleConstants(22, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants BRKrakenConstants = new KrakenModuleConstants(22, Rotation2d.fromDegrees(128.0));
+
         }
 
         public static final class AutoConstants {
