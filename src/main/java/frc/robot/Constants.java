@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Voltage
 import frc.lib.config.KrakenModuleConstants;
 import frc.lib.config.SwerveModuleConstants;
 
@@ -97,19 +95,19 @@ public final class Constants {
                 /* Module Specific Constants */
                 /* Front Left Module - Module 0 */
                 public static final SwerveModuleConstants FLconstants = new SwerveModuleConstants(12, 11,
-                                52, Rotation2d.fromDegrees(128.0));
+                                52, Rotation2d.fromDegrees(-164.5));
 
                 /* Front Right Module - Module 1 */
                 public static final SwerveModuleConstants FRconstants = new SwerveModuleConstants(14, 13, 53,
-                                Rotation2d.fromDegrees(339.0));
+                                Rotation2d.fromDegrees(-32.3));
 
                 /* Back Left Module - Module 2 */
                 public static final SwerveModuleConstants BLconstants = new SwerveModuleConstants(18, 17, 55,
-                                Rotation2d.fromDegrees(200.0));
+                                Rotation2d.fromDegrees(-235.0));
 
                 /* Back Right Module - Module 3 */
                 public static final SwerveModuleConstants BRconstants = new SwerveModuleConstants(16, 15, 54,
-                                Rotation2d.fromDegrees(50.0));
+                                Rotation2d.fromDegrees(-300.8));
 
                 /* Update these kracken motor ids */
                 public static final KrakenModuleConstants FLKrakenConstants = new KrakenModuleConstants(20, Rotation2d.fromDegrees(128.0));
