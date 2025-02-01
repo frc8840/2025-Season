@@ -40,8 +40,12 @@ public class DriverControl extends Command {
         if (xboxcontroller.getYButtonPressed()) {
             swerve.runEachMotorForOneSecond();
         }
-        if (xboxcontroller.getBButtonPressed()) {
+
+        // this is for testing only
+        if (xboxcontroller.getBButton()) {
             krakenTest.setSpeed(0.1);
+        } else {
+            krakenTest.setSpeed(0);
         }
 
         // get values from the Xbox Controller joysticks
