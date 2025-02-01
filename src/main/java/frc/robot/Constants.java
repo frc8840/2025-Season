@@ -110,10 +110,10 @@ public final class Constants {
                                 Rotation2d.fromDegrees(-300.8));
 
                 /* Update these kracken motor ids */
-                public static final KrakenModuleConstants FLKrakenConstants = new KrakenModuleConstants(20, Rotation2d.fromDegrees(128.0));
-                public static final KrakenModuleConstants FRKrakenConstants = new KrakenModuleConstants(21, Rotation2d.fromDegrees(128.0));
-                public static final KrakenModuleConstants BLKrakenConstants = new KrakenModuleConstants(22, Rotation2d.fromDegrees(128.0));
-                public static final KrakenModuleConstants BRKrakenConstants = new KrakenModuleConstants(22, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants FLKrakenConstants = new KrakenModuleConstants(20, 24, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants FRKrakenConstants = new KrakenModuleConstants(21, 25, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants BLKrakenConstants = new KrakenModuleConstants(22, 26, Rotation2d.fromDegrees(128.0));
+                public static final KrakenModuleConstants BRKrakenConstants = new KrakenModuleConstants(23, 27, Rotation2d.fromDegrees(128.0));
 
         }
 

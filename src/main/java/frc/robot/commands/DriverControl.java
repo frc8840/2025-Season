@@ -9,11 +9,13 @@ import frc.robot.Constants;
 import frc.robot.Settings;
 import frc.robot.subsystems.NewSwerve;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.KrakenTest;
 
 public class DriverControl extends Command {
 
     private XboxController xboxcontroller;
     private NewSwerve swerve;
+    private KrakenTest krakenTest;
 
     private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(10);
@@ -24,6 +26,7 @@ public class DriverControl extends Command {
         addRequirements(swerve);
 
         this.swerve = swerve;
+        this.krakenTest = new KrakenTest();
         xboxcontroller = new XboxController(Settings.DRIVER_CONTROLLER_PORT);
     }
 
@@ -36,6 +39,9 @@ public class DriverControl extends Command {
 
         if (xboxcontroller.getYButtonPressed()) {
             swerve.runEachMotorForOneSecond();
+        }
+        if (xboxcontroller.getBButtonPressed()) {
+            krakenTest.setSpeed(0.1);
         }
 
         // get values from the Xbox Controller joysticks

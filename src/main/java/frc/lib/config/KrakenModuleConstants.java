@@ -3,19 +3,22 @@ package frc.lib.config;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class KrakenModuleConstants {
-    public final int krakenMotorID;
+    public final int krakenDriveID;
+    public final int krakenAngleID;
     public final Rotation2d angleOffset;
     
         /**
          * Swerve Module Constants to be used when creating swerve modules.
          *
-         * @param krakenMotorID
+         * @param krakenDriveID
+         * @param krakenAngleID
          * @param angleOffset
          */
         public KrakenModuleConstants(
-            int krakenMotorID, Rotation2d angleOffset) {
+            int krakenDriveID, int krakenAngleID, Rotation2d angleOffset) {
     
-            this.krakenMotorID = krakenMotorID;
+            this.krakenDriveID = krakenDriveID;
+            this.krakenAngleID = krakenAngleID;
             this.angleOffset = angleOffset;
     }
 }
