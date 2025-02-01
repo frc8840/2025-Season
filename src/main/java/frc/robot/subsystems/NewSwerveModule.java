@@ -76,23 +76,17 @@ public class NewSwerveModule {
     }
 
     private void resetToAbsolute() {
-        Logger.Log("integratedAngleEncoder for " + angleEncoder.getDeviceID() + 
-        "position: "
-        + integratedAngleEncoder.getPosition());
-        Logger.Log("integratedAngleEncoder for " + angleEncoder.getDeviceID() + 
-        "conversion factor: "
-        + Constants.Swerve.angleConversionFactor);
-        double canAngleDegrees = getCanCoderAngle().getDegrees();
-        Logger.Log("raw canAngleDegrees for " + angleEncoder.getDeviceID() + ": " +
-        canAngleDegrees);
-        double absolutePosition = canAngleDegrees - angleOffset.getDegrees();
-        Logger.Log("fixed canAngleDegrees for " + angleEncoder.getDeviceID() + ": " +
-        absolutePosition);
-        integratedAngleEncoder.setPosition(absolutePosition);
-        Logger.Log("integratedAngleEncoder for " + angleEncoder.getDeviceID() + 
-        "position (after): "
-        + integratedAngleEncoder.getPosition());
 
+        double canAngleDegrees = getCanCoderAngle().getDegrees();
+        double absolutePosition = canAngleDegrees - angleOffset.getDegrees();
+        integratedAngleEncoder.setPosition(absolutePosition);
+
+        Logger.Log("angleEncoder" + angleEncoder.getDeviceID() + " position: " + integratedAngleEncoder.getPosition());
+        Logger.Log("angleEncoder" + angleEncoder.getDeviceID() + " conversion factor: " + Constants.Swerve.angleConversionFactor);
+        Logger.Log("angleEncoder" + angleEncoder.getDeviceID() + " degrees: " + canAngleDegrees);
+        Logger.Log("angleEncoder" + angleEncoder.getDeviceID() + " absolutePosition: " + absolutePosition);
+        Logger.Log("angleEncoder" + angleEncoder.getDeviceID() + " getPosition: " + integratedAngleEncoder.getPosition());
+        Logger.Log("");
     }
 
     private void configAngleEncoder() {

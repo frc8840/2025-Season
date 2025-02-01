@@ -56,7 +56,6 @@ public class Climber extends SubsystemBase {
         rEncoder = rMotor.getEncoder();
         rController = rMotor.getClosedLoopController();
 
-
         // Set the current limits
         lMotorConfig.smartCurrentLimit(80, 80);
         lMotorConfig.secondaryCurrentLimit(85);
