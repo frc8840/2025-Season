@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
@@ -13,6 +14,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.lib.config.KrakenModuleConstants;
 import frc.lib.math.OnboardModuleState;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class KrakenModule {
     public int moduleNumber;
@@ -21,6 +23,7 @@ public class KrakenModule {
 
     private TalonFX angleMotor;
     private TalonFX driveMotor;
+    private CANcoder angleEncoder;
     private TalonFXConfiguration angleConfig;
     private TalonFXConfiguration driveConfig;
     
@@ -36,6 +39,10 @@ public class KrakenModule {
         angleMotor = new TalonFX(moduleConstants.krakenAngleID);
         angleConfig = new TalonFXConfiguration();
         configAngleMotor();
+
+        /* Angle Encoder Config */
+        angleEncoder = new CANcoder(moduleConstants.encoderID);
+        configAngleEncoder();
 
         /* Drive Motor Config */
         driveMotor = new TalonFX(moduleConstants.krakenDriveID);
@@ -64,6 +71,11 @@ public class KrakenModule {
         resetToAbsolute();
     }
 
+    private void configAngleEncoder() {
+        // CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kMinimal);
+        angleEncoder.getConfigurator().apply(Robot.ctreConfigs.config);
+    }
+
     private void configDriveMotor() {
         driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveContinuousCurrentLimit;
         driveConfig.MotorOutput.Inverted = Constants.Swerve.driveInverted;
@@ -88,19 +100,24 @@ public class KrakenModule {
     }
 
     private Rotation2d getAngle() {
-        StatusSignal<Angle> anglePosition = angleMotor.getPosition();
-        return Rotation2d.fromDegrees(anglePosition.getValueAsDouble());
+        StatusSignal<Double> anglePosition = angleMotor.getPosition();
+        return Rotation2d.fromDegrees(anglePosition.getValue());
     }
 
 
+
+    public Rotation2d getCanCoderAngle() {
+        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
+    }
+
     public SwerveModuleState getState() {
-        StatusSignal<AngularVelocity> velocity = driveMotor.getVelocity();
-        return new SwerveModuleState(velocity.getValueAsDouble(), getAngle());
+        StatusSignal<Double> velocity = driveMotor.getVelocity();
+        return new SwerveModuleState(velocity.getValue(), getAngle());
     }
 
     public SwerveModulePosition getPosition() {
-        StatusSignal<Angle> position = driveMotor.getPosition();
-        return new SwerveModulePosition(position.getValueAsDouble(), getAngle());
+        StatusSignal<Double> position = driveMotor.getPosition();
+        return new SwerveModulePosition(position.getValue(), getAngle());
     }
 
     public void stop() {
