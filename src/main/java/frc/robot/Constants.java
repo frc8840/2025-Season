@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -88,6 +89,8 @@ public final class Constants {
                 /* Motor Inverts */
                 public static final boolean driveInvert = false;
                 public static final boolean angleInvert = false;
+                public static final InvertedValue angleInverted = InvertedValue.Clockwise_Positive;
+                public static final InvertedValue driveInverted = InvertedValue.Clockwise_Positive;
 
                 /* Angle Encoder Invert */
                 public static final boolean canCoderInvert = false;

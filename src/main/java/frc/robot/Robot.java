@@ -4,7 +4,14 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
@@ -94,11 +101,24 @@ public class Robot extends TimedRobot {
     container.shooter.stop();
     container.intake.stop();
   }
+//Line 104 to 120 can be commented out, js don't command out teleopPeriodic
+//   private final SwerveRequest.FieldCentric m_driveRequest = new SwerveRequest.FieldCentric()
+//    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+//    .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+//    .withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {
-  }
+// private final XboxController m_joystick = new XboxController(0);
+// public final SwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
+
+/** This function is called periodically during operator control. */
+@Override
+public void teleopPeriodic() {
+  //  m_drivetrain.setControl(
+  //     m_driveRequest.withVelocityX(-joystick.getLeftY())
+  //        .withVelocityY(-joystick.getLeftX())
+  //        .withRotationalRate(-joystick.getRightX())
+  //  );
+}
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -128,5 +148,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-  }
+
+}
 }
