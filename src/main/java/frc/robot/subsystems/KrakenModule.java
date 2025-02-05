@@ -100,8 +100,8 @@ public class KrakenModule {
     }
 
     private Rotation2d getAngle() {
-        StatusSignal<Double> anglePosition = angleMotor.getPosition();
-        return Rotation2d.fromDegrees(anglePosition.getValue());
+        StatusSignal anglePosition = angleMotor.getPosition(); // syntax highlighting is broken here
+        return Rotation2d.fromDegrees(((StatusSignal<Double>)anglePosition).getValue());
     }
 
 
@@ -111,13 +111,13 @@ public class KrakenModule {
     }
 
     public SwerveModuleState getState() {
-        StatusSignal<Double> velocity = driveMotor.getVelocity();
-        return new SwerveModuleState(velocity.getValue(), getAngle());
+        StatusSignal velocity =  driveMotor.getVelocity(); // syntax highlighting is broken here
+        return new SwerveModuleState(((StatusSignal<Double>)velocity).getValue(), getAngle());
     }
 
     public SwerveModulePosition getPosition() {
-        StatusSignal<Double> position = driveMotor.getPosition();
-        return new SwerveModulePosition(position.getValue(), getAngle());
+        StatusSignal position = driveMotor.getPosition(); // syntax highlighting is broken here
+        return new SwerveModulePosition(((StatusSignal<Double>)position).getValue(), getAngle());
     }
 
     public void stop() {
