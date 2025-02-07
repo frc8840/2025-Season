@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.team_8840_lib.info.console.Logger;
 
 public class KrakenSwerve extends SubsystemBase {
   TalonSRX motor =
@@ -45,10 +48,42 @@ public class KrakenSwerve extends SubsystemBase {
         };
   }
 
-  public void runMotor(double speed) {
-    motor.set(ControlMode.PercentOutput, speed); // Set the motor to run at the specified speed
+  // translation and rotation are the desired behavior of the robot at this moment
+  public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
+    // first, we compute our desired chassis speeds
+    ChassisSpeeds chassisSpeeds =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getYaw())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    driveFromSpeeds(chassisSpeeds);
   }
 
+  // used by tele
+  public void driveFromSpeeds(ChassisSpeeds speeds) {
+    SwerveModuleState[] swerveModuleStates =
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
+    // do we need the below?
+    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
+    // Constants.Swerve.maxSpeed);
+    setModuleStates(swerveModuleStates);
+  }
+
+  public void runEachMotorForOneSecond() {
+    for (KrakenSwerveModule module : mSwerveMods) {
+      // Run the current module's motor at full speed (or desired speed).
+      module.setDesiredState(new SwerveModuleState(Constants.Swerve.maxSpeed, new Rotation2d()));
+      Logger.Log("Running module " + module.moduleNumber + " for 1 second.");
+
+      // Wait for 1 second.
+      Timer.delay(1.0);
+
+      // Stop the current module's motor.
+      module.stop();
+    }
+  }
+
+  // used by auto
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     for (KrakenSwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber]);
@@ -93,7 +128,33 @@ public class KrakenSwerve extends SubsystemBase {
   public void periodic() {
     odometer.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
+    for (KrakenSwerveModule mod : mSwerveMods) {
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+    }
+    // tell dashboard where the robot thinks it is
     SmartDashboard.putNumber("Robot heading:", getYawValue());
     SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+  }
+
+  public void stopModules() {
+    for (KrakenSwerveModule mod : mSwerveMods) {
+      mod.stop();
+    }
+  }
+
+  // constructs current estimate of chassis speeds from module encoders
+  public ChassisSpeeds getChassisSpeeds() {
+    var frontLeftState = mSwerveMods[0].getState();
+    var frontRightState = mSwerveMods[1].getState();
+    var backLeftState = mSwerveMods[2].getState();
+    var backRightState = mSwerveMods[3].getState();
+
+    // Convert to chassis speeds
+    ChassisSpeeds chassisSpeeds =
+        Constants.Swerve.swerveKinematics.toChassisSpeeds(
+            frontLeftState, frontRightState, backLeftState, backRightState);
+
+    return chassisSpeeds;
   }
 }
