@@ -1,84 +1,84 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Settings;
 
 public class ArmShooter extends SubsystemBase {
 
-    public SparkMax leftMotor;
-    public SparkMax rightMotor;
-    
-    private SparkMaxConfig lMoterConfig = new SparkMaxConfig();
-    private SparkMaxConfig rMoterConfig = new SparkMaxConfig();
+  public SparkMax leftMotor;
+  public SparkMax rightMotor;
 
-    public RelativeEncoder leftEncoder;
-    public RelativeEncoder rightEncoder;
+  private SparkMaxConfig lMoterConfig = new SparkMaxConfig();
+  private SparkMaxConfig rMoterConfig = new SparkMaxConfig();
 
-    public boolean inShooterComplexAction = false;
+  public RelativeEncoder leftEncoder;
+  public RelativeEncoder rightEncoder;
 
-    public ArmShooter() {
+  public boolean inShooterComplexAction = false;
 
-        leftMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID, MotorType.kBrushless);
-        rightMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
+  public ArmShooter() {
 
-        leftEncoder = leftMotor.getEncoder();
-        rightEncoder = rightMotor.getEncoder();
+    leftMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID, MotorType.kBrushless);
+    rightMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
 
-        lMoterConfig.idleMode(IdleMode.kCoast);
-        rMoterConfig.idleMode(IdleMode.kCoast);
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
 
-        lMoterConfig.smartCurrentLimit(100, 80);
-        lMoterConfig.secondaryCurrentLimit(105);
+    lMoterConfig.idleMode(IdleMode.kCoast);
+    rMoterConfig.idleMode(IdleMode.kCoast);
 
-        rMoterConfig.smartCurrentLimit(100, 80);
-        rMoterConfig.secondaryCurrentLimit(105);
+    lMoterConfig.smartCurrentLimit(100, 80);
+    lMoterConfig.secondaryCurrentLimit(105);
 
-        // sMotor.setOpenLoopRampRate(0.2);
-        // sMotor2.setOpenLoopRampRate(0.2);
+    rMoterConfig.smartCurrentLimit(100, 80);
+    rMoterConfig.secondaryCurrentLimit(105);
 
-        // lMoterConfig.setCANTimeout(20);
-        // rMoterConfig.setCANTimeout(20);
+    // sMotor.setOpenLoopRampRate(0.2);
+    // sMotor2.setOpenLoopRampRate(0.2);
 
-        leftMotor.configure(lMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        rightMotor.configure(rMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
+    // lMoterConfig.setCANTimeout(20);
+    // rMoterConfig.setCANTimeout(20);
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Shooter left ", leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Shooter right ", rightEncoder.getVelocity());
-        boolean isReady = (Math.abs(leftEncoder.getVelocity()) > 4300 && Math.abs(rightEncoder.getVelocity()) > 4300);
-        SmartDashboard.putBoolean("Shooter Ready", isReady);
+    leftMotor.configure(
+        lMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    rightMotor.configure(
+        rMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
 
-    }
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Shooter left ", leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter right ", rightEncoder.getVelocity());
+    boolean isReady =
+        (Math.abs(leftEncoder.getVelocity()) > 4300 && Math.abs(rightEncoder.getVelocity()) > 4300);
+    SmartDashboard.putBoolean("Shooter Ready", isReady);
+  }
 
-    public void shoot() {
-        leftMotor.set(Settings.SHOOTER_OUT_SPEED);
-        rightMotor.set(-Settings.SHOOTER_OUT_SPEED);
-    }
+  public void shoot() {
+    leftMotor.set(Settings.SHOOTER_OUT_SPEED);
+    rightMotor.set(-Settings.SHOOTER_OUT_SPEED);
+  }
 
-    public void stop() {
-        leftMotor.set(0);
-        rightMotor.set(0);
-        inShooterComplexAction = false;
-    }
+  public void stop() {
+    leftMotor.set(0);
+    rightMotor.set(0);
+    inShooterComplexAction = false;
+  }
 
-    public void gethard() {
-        lMoterConfig.idleMode(IdleMode.kBrake);
-        rMoterConfig.idleMode(IdleMode.kBrake);
-    }
+  public void gethard() {
+    lMoterConfig.idleMode(IdleMode.kBrake);
+    rMoterConfig.idleMode(IdleMode.kBrake);
+  }
 
-    public boolean isAbletoShoot() {
-        return true;
-    }
+  public boolean isAbletoShoot() {
+    return true;
+  }
 }
-
