@@ -22,8 +22,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.KrakenSwerve;
 import frc.robot.subsystems.PickUpNote;
-import frc.robot.subsystems.SparkSwerve;
 import frc.team_8840_lib.info.console.Logger;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class RobotContainer {
   private static RobotContainer instance;
   private Arm arm;
   public Climber climber;
-  private SparkSwerve swerve;
+  private KrakenSwerve swerve;
   public PickUpNote intake;
   public ArmShooter shooter;
 
@@ -57,7 +57,7 @@ public class RobotContainer {
     instance = this;
 
     // construct the subsystems
-    swerve = new SparkSwerve();
+    swerve = new KrakenSwerve();
     arm = new Arm();
     climber = new Climber();
     intake = new PickUpNote();
