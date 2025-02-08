@@ -70,7 +70,7 @@ public class KrakenSwerveModule {
     Logger.Log(
         "angleEncoder" + angleEncoder.getDeviceID() + " angleOffset: " + angleOffset.getDegrees());
     double absolutePosition = canCoderDegrees - angleOffset.getDegrees();
-    angleMotor.setPosition(absolutePosition);
+    angleMotor.setPosition(getOurRotations(absolutePosition));
     try {
       Thread.sleep(1000);
     } catch (Exception e) {
@@ -126,6 +126,10 @@ public class KrakenSwerveModule {
 
   public Rotation2d getCanCoderAngle() {
     return Rotation2d.fromRotations(angleEncoder.getPosition().getValueAsDouble());
+  }
+
+  private double getOurRotations(double degrees) {
+    return degrees / 360.0;
   }
 
   public SwerveModuleState getState() {
