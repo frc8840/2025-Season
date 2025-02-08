@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.config.KrakenModuleConstants;
 import frc.lib.math.OnboardModuleState;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.Robot;
 
 public class KrakenSwerveModule {
@@ -56,9 +57,33 @@ public class KrakenSwerveModule {
   }
 
   private void resetToAbsolute() {
-    double krakenAngleDegrees = getAngle().getDegrees();
-    double absolutePosition = krakenAngleDegrees - angleOffset.getDegrees();
+    double canCoderDegrees = getCanCoderAngle().getDegrees();
+
+    Logger.Log("");
+    Logger.Log(
+        "angleEncoder"
+            + angleEncoder.getDeviceID()
+            + " initMotorPosition: "
+            + angleMotor.getPosition());
+    Logger.Log(
+        "angleEncoder" + angleEncoder.getDeviceID() + " canCoderDegrees: " + canCoderDegrees);
+    Logger.Log(
+        "angleEncoder" + angleEncoder.getDeviceID() + " angleOffset: " + angleOffset.getDegrees());
+    double absolutePosition = canCoderDegrees - angleOffset.getDegrees();
     angleMotor.setPosition(absolutePosition);
+    try {
+      Thread.sleep(1000);
+    } catch (Exception e) {
+    }
+
+    Logger.Log(
+        "angleEncoder" + angleEncoder.getDeviceID() + " absolutePosition: " + absolutePosition);
+    Logger.Log(
+        "angleEncoder"
+            + angleEncoder.getDeviceID()
+            + " finalMotorPosition: "
+            + angleMotor.getPosition());
+    Logger.Log("");
   }
 
   private void configAngleMotor() {

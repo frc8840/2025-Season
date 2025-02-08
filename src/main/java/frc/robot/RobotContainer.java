@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -9,8 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -35,9 +32,9 @@ public class RobotContainer {
   public ArmShooter shooter;
 
   // the old chooser
-  private final SendableChooser<String> oldAutoChooser;
-  // for the choosing stage of pathplanner auto
-  private final SendableChooser<Command> newAutoChooser;
+  // private final SendableChooser<String> oldAutoChooser;
+  // // for the choosing stage of pathplanner auto
+  // private final SendableChooser<Command> newAutoChooser;
 
   // controllers
   DriverControl driverControl;
@@ -57,10 +54,10 @@ public class RobotContainer {
 
     // construct the subsystems
     swerve = new KrakenSwerve();
-    arm = new Arm();
-    climber = new Climber();
-    intake = new PickUpNote();
-    shooter = new ArmShooter();
+    // arm = new Arm();
+    // climber = new Climber();
+    // intake = new PickUpNote();
+    // shooter = new ArmShooter();
 
     Logger.Log("finished constructing subsystems, going to sleep");
     try {
@@ -71,11 +68,11 @@ public class RobotContainer {
     Logger.Log("finished sleeping");
 
     // now make the controllers
-    driverControl = new DriverControl(swerve, arm);
+    driverControl = new DriverControl(swerve);
     swerve.setDefaultCommand(driverControl);
 
-    operatorControl = new OperatorControl(arm, climber, intake, shooter);
-    climber.setDefaultCommand(operatorControl);
+    // operatorControl = new OperatorControl(arm, climber, intake, shooter);
+    // climber.setDefaultCommand(operatorControl);
 
     // now we set up things for auto selection and pathplanner
     // these are commands that the path from pathplanner will use
@@ -84,39 +81,39 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", getShootCommand());
 
     // The old autonomous chooser
-    oldAutoChooser = new SendableChooser<>();
-    oldAutoChooser.setDefaultOption("Straight", "Straight");
-    oldAutoChooser.setDefaultOption("Left", "Left");
-    oldAutoChooser.setDefaultOption("Right", "Right");
-    oldAutoChooser.setDefaultOption("PathPlanner", "PathPlanner");
-    SmartDashboard.putData("Old Auto Chooser", oldAutoChooser);
+    // oldAutoChooser = new SendableChooser<>();
+    // oldAutoChooser.setDefaultOption("Straight", "Straight");
+    // oldAutoChooser.setDefaultOption("Left", "Left");
+    // oldAutoChooser.setDefaultOption("Right", "Right");
+    // oldAutoChooser.setDefaultOption("PathPlanner", "PathPlanner");
+    // SmartDashboard.putData("Old Auto Chooser", oldAutoChooser);
 
     // The new autonomouse chooser
-    newAutoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("PathPlanner Auto Chooser", newAutoChooser);
+    //   newAutoChooser = AutoBuilder.buildAutoChooser();
+    //   SmartDashboard.putData("PathPlanner Auto Chooser", newAutoChooser);
 
-    trajectoryConfig =
-        new TrajectoryConfig(
-                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            .setKinematics(Constants.Swerve.swerveKinematics);
+    //   trajectoryConfig =
+    //       new TrajectoryConfig(
+    //               Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+    //               Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    //           .setKinematics(Constants.Swerve.swerveKinematics);
   }
 
-  public Command getAutoCommand() {
-    String oldAutoSelection = oldAutoChooser.getSelected();
-    if (oldAutoSelection == "PathPlanner") {
-      return newAutoChooser.getSelected();
-    }
-    // otherwise, use the old auto
-    switch (oldAutoSelection) {
-      case "Left":
-        return shootAndDriveForwardCommand(SimpleDirection.diagonalLeft);
-      case "Right":
-        return shootAndDriveForwardCommand(SimpleDirection.diagonalRight);
-      default:
-        return shootAndDriveForwardCommand(SimpleDirection.straight);
-    }
-  }
+  // public Command getAutoCommand() {
+  //   String oldAutoSelection = oldAutoChooser.getSelected();
+  //   if (oldAutoSelection == "PathPlanner") {
+  //     return newAutoChooser.getSelected();
+  //   }
+  //   // otherwise, use the old auto
+  //   switch (oldAutoSelection) {
+  //     case "Left":
+  //       return shootAndDriveForwardCommand(SimpleDirection.diagonalLeft);
+  //     case "Right":
+  //       return shootAndDriveForwardCommand(SimpleDirection.diagonalRight);
+  //     default:
+  //       return shootAndDriveForwardCommand(SimpleDirection.straight);
+  //   }
+  // }
 
   public Command shootAndDriveForwardCommand(SimpleDirection direction) {
     // get the pose for the direction

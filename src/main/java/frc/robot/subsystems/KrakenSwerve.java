@@ -41,6 +41,8 @@ public class KrakenSwerve extends SubsystemBase {
           new KrakenSwerveModule(2, Constants.Swerve.BLKrakenConstants),
           new KrakenSwerveModule(3, Constants.Swerve.BRKrakenConstants)
         };
+
+    field = new Field2d();
   }
 
   // translation and rotation are the desired behavior of the robot at this moment

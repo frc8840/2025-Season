@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Settings;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.KrakenSwerve;
 import frc.robot.subsystems.KrakenTest;
 
@@ -22,7 +21,7 @@ public class DriverControl extends Command {
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(10);
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
-  public DriverControl(KrakenSwerve swerve, Arm arm) {
+  public DriverControl(KrakenSwerve swerve) {
     addRequirements(swerve);
 
     this.swerve = swerve;
