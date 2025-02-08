@@ -33,14 +33,14 @@ public class KrakenSwerveModule {
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
 
+    /* Angle Encoder Config */
+    angleEncoder = new CANcoder(moduleConstants.encoderID);
+    configAngleEncoder();
+    
     /* Angle Motor Config */
     angleMotor = new TalonFX(moduleConstants.krakenAngleID);
     angleConfig = new TalonFXConfiguration();
     configAngleMotor();
-
-    /* Angle Encoder Config */
-    angleEncoder = new CANcoder(moduleConstants.encoderID);
-    configAngleEncoder();
 
     /* Drive Motor Config */
     driveMotor = new TalonFX(moduleConstants.krakenDriveID);
@@ -125,7 +125,7 @@ public class KrakenSwerveModule {
   }
 
   public Rotation2d getCanCoderAngle() {
-    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
+    return Rotation2d.fromRotations(angleEncoder.getPosition().getValueAsDouble());
   }
 
   public SwerveModuleState getState() {
