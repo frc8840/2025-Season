@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -97,8 +96,7 @@ public class KrakenSwerveModule {
   }
 
   private Rotation2d getAngle() {
-    StatusSignal anglePosition = angleMotor.getPosition(); // syntax highlighting is broken here
-    return Rotation2d.fromDegrees(((StatusSignal<Double>) anglePosition).getValue());
+    return Rotation2d.fromDegrees(angleMotor.getPosition().getValueAsDouble());
   }
 
   public Rotation2d getCanCoderAngle() {
@@ -106,13 +104,11 @@ public class KrakenSwerveModule {
   }
 
   public SwerveModuleState getState() {
-    StatusSignal velocity = driveMotor.getVelocity(); // syntax highlighting is broken here
-    return new SwerveModuleState(((StatusSignal<Double>) velocity).getValue(), getAngle());
+    return new SwerveModuleState(driveMotor.getVelocity().getValueAsDouble(), getAngle());
   }
 
   public SwerveModulePosition getPosition() {
-    StatusSignal position = driveMotor.getPosition(); // syntax highlighting is broken here
-    return new SwerveModulePosition(((StatusSignal<Double>) position).getValue(), getAngle());
+    return new SwerveModulePosition(driveMotor.getPosition().getValueAsDouble(), getAngle());
   }
 
   public void stop() {
