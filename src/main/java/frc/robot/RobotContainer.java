@@ -24,7 +24,6 @@ import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.KrakenSwerve;
 import frc.robot.subsystems.PickUpNote;
-import frc.team_8840_lib.info.console.Logger;
 import java.util.List;
 
 public class RobotContainer {

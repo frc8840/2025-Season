@@ -17,8 +17,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.config.SwerveModuleConstants;
 import frc.lib.math.OnboardModuleState;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.Robot;
-import frc.team_8840_lib.info.console.Logger;
 
 public class SparkSwerveModule {
   public int moduleNumber;
