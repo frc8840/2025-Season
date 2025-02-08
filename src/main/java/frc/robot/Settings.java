@@ -4,7 +4,7 @@ public class Settings {
 
   // CLIMBER SETTINGS
   public static final int LCLIMBER_MOTOR_ID = 30;
-  public static final int RCLIMBER_MOTOR_ID = 31;
+  public static final int RCLIMBER_MOTOR_ID = 5;
   public static final double CLIMBER_OUTTAKE_SPEED = 0.5;
   public static final double CLIMBER_INTAKE_SPEED = -0.5;
 
@@ -41,8 +41,8 @@ public class Settings {
   public static final double PICKUP_OUTTAKE_SPEED = -0.2;
   public static final double PICKUP_INTAKE_SPEED = 0.25;
   // SHOOTER SETTINGS
-  public static final int SHOOTER_MOTOR_ID = 51;
-  public static final int SHOOTER_MOTOR_ID2 = 52;
+  public static final int SHOOTER_MOTOR_ID = 3;
+  public static final int SHOOTER_MOTOR_ID2 = 4;
   public static final double SHOOTER_OUT_SPEED = 1.0;
   public static final double SHOOTER_IN_SPEED = -1.0;
 }
