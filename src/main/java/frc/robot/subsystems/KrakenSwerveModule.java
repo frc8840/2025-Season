@@ -116,7 +116,7 @@ public class KrakenSwerveModule {
   private void setAngle(SwerveModuleState desiredState) {
     if (Math.abs(desiredState.angle.getDegrees() - lastAngle.getDegrees()) <= 1.0) return;
 
-    angleMotor.setControl(new PositionVoltage(desiredState.angle.getDegrees()));
+    angleMotor.setControl(new PositionVoltage(desiredState.angle.getRotations()));
     lastAngle = desiredState.angle;
   }
 
