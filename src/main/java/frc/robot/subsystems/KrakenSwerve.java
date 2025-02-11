@@ -130,8 +130,12 @@ public class KrakenSwerve extends SubsystemBase {
           "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
     }
     // tell dashboard where the robot thinks it is
-    SmartDashboard.putNumber("Robot heading:", getYawValue());
-    SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+    // SmartDashboard.putNumber("Robot heading:", getYawValue());
+    // SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+    // for (KrakenSwerveModule mod : mSwerveMods) {
+    //   // No voltage being sent to angleMotor, but is being sent to driveMotor
+    //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" + mod.angleMotor.getMotorVoltage().getValueAsDouble());
+    // }
   }
 
   public void stopModules() {

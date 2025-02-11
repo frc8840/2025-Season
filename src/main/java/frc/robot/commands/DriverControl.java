@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.KrakenSwerve;
 import frc.robot.subsystems.KrakenTest;
@@ -37,6 +38,7 @@ public class DriverControl extends Command {
     }
 
     if (xboxcontroller.getYButtonPressed()) {
+      Logger.Log("Y Button Pressed");
       swerve.runEachMotorForOneSecond();
     }
 

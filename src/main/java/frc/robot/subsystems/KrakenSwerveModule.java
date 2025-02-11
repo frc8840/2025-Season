@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -19,8 +23,8 @@ public class KrakenSwerveModule {
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
 
-  private TalonFX angleMotor;
-  private TalonFX driveMotor;
+  public TalonFX angleMotor;
+  public TalonFX driveMotor;
   private CANcoder angleEncoder;
   private TalonFXConfiguration angleConfig;
   private TalonFXConfiguration driveConfig;
@@ -51,6 +55,7 @@ public class KrakenSwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
+    // Logger.Log("setDesiredState is running");
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
     setSpeed(desiredState, true);
@@ -89,6 +94,8 @@ public class KrakenSwerveModule {
   private void configAngleMotor() {
     angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
+    //need to figure out neutral mode, could be the problem
+    // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
     angleMotor.getConfigurator().apply(angleConfig);
     resetToAbsolute();
   }
@@ -114,10 +121,27 @@ public class KrakenSwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState) {
-    if (Math.abs(desiredState.angle.getDegrees() - lastAngle.getDegrees()) <= 1.0) return;
+    //this code is somewhat broken
+    double targetDegrees = desiredState.angle.getDegrees();
+    double currentDegrees = lastAngle.getDegrees();
+
+    // Logger.Log("Module " + moduleNumber + " Target Angle: " + targetDegrees);
+    // Logger.Log("Module " + moduleNumber + " Current Angle: " + currentDegrees);
+
+    if (Math.abs(targetDegrees - currentDegrees) <= 1.0) { 
+      // Logger.Log("Skipping Small Angle Change");
+      return;
+    }
+    //Prints out and works fine, problem further up the chain, maybe PID values?
+    Logger.Log("Module " + moduleNumber + " Voltage Command: " + desiredState.angle.getRotations());
 
     angleMotor.setControl(new PositionVoltage(desiredState.angle.getRotations()));
     lastAngle = desiredState.angle;
+  }
+
+//Works unlike setTestAngle
+  private void setTestAngle(SwerveModuleState desiredState) {
+    angleMotor.setControl(new DutyCycleOut(0.2));
   }
 
   private Rotation2d getAngle() {
