@@ -15,7 +15,6 @@ public class DriverControl extends Command {
 
   private XboxController xboxcontroller;
   private KrakenSwerve swerve;
-  private KrakenTest krakenTest;
 
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(10);
@@ -26,7 +25,6 @@ public class DriverControl extends Command {
     addRequirements(swerve);
 
     this.swerve = swerve;
-    this.krakenTest = new KrakenTest();
     xboxcontroller = new XboxController(Settings.DRIVER_CONTROLLER_PORT);
   }
 
@@ -43,10 +41,14 @@ public class DriverControl extends Command {
     }
 
     // this is for testing only
-    if (xboxcontroller.getBButton()) {
-      krakenTest.setSpeed(0.1);
+    if (xboxcontroller.getBButtonPressed()) {
+      swerve.setAngleMotorPosition(20.5);
+    } 
+
+    if (xboxcontroller.getAButton()) {
+      swerve.setAngleMotorSpeed(true);
     } else {
-      krakenTest.setSpeed(0);
+      swerve.setAngleMotorSpeed(false);
     }
 
     // get values from the Xbox Controller joysticks

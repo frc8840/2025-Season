@@ -35,8 +35,7 @@ public final class Constants {
     public static final double closedLoopRamp = 0.0;
 
     public static final double driveGearRatio = (6.75 / 1.0); // SDS website for MK4i says 6.75:1
-    public static final double angleGearRatio =
-        (21.4 / 1.0); // SDS website for MK4i says 150/7:1 (was
+    public static final double angleGearRatio = 21.4; // SDS website for MK4i says 150/7:1 (was
     // 12.8:1)
 
     // assuming coordinates from WPILIB from here:
@@ -53,7 +52,7 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 40;
+    public static final int angleContinuousCurrentLimit = 25;
     public static final int driveContinuousCurrentLimit = 40;
 
     /* Angle Motor PID Values */
@@ -77,7 +76,7 @@ public final class Constants {
     public static final double driveConversionPositionFactor =
         (wheelDiameter * Math.PI) / driveGearRatio;
     public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
-    public static final double angleConversionFactor = 360.0 / angleGearRatio;
+    // public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 1.8; // meters per second
@@ -90,7 +89,7 @@ public final class Constants {
     /* Motor Inverts */
     public static final boolean driveInvert = false;
     public static final boolean angleInvert = false;
-    public static final InvertedValue angleInverted = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue angleInverted = InvertedValue.CounterClockwise_Positive;
     public static final InvertedValue driveInverted = InvertedValue.Clockwise_Positive;
 
     /* Angle Encoder Invert */

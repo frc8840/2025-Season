@@ -116,7 +116,7 @@ public class SparkSwerveModule {
     angleConfig.smartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleConfig.inverted(Constants.Swerve.angleInvert);
     angleConfig.idleMode(Constants.Swerve.angleNeutralMode);
-    angleConfig.encoder.positionConversionFactor(Constants.Swerve.angleConversionFactor);
+    angleConfig.encoder.positionConversionFactor(360 / Constants.Swerve.angleGearRatio);
     angleConfig.closedLoop.p(Constants.Swerve.angleKP);
     angleConfig.closedLoop.i(Constants.Swerve.angleKI);
     angleConfig.closedLoop.d(Constants.Swerve.angleKD);

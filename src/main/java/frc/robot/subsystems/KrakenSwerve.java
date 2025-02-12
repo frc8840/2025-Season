@@ -45,6 +45,18 @@ public class KrakenSwerve extends SubsystemBase {
     field = new Field2d();
   }
 
+  public void setAngleMotorSpeed(boolean isActive) {
+    for (int i=0; i<4; i++) {
+      mSwerveMods[i].setAngleMotorSpeed(isActive);
+    }
+  }
+
+  public void setAngleMotorPosition(double position) {
+    for (int i=0; i<4; i++) {
+      mSwerveMods[i].setAngleMotorPosition(position);
+    }
+  }
+
   // translation and rotation are the desired behavior of the robot at this moment
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
     // first, we compute our desired chassis speeds

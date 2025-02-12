@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,6 +29,8 @@ public class KrakenSwerveModule {
   private CANcoder angleEncoder;
   private TalonFXConfiguration angleConfig;
   private TalonFXConfiguration driveConfig;
+
+  private final PositionVoltage anglePosition = new PositionVoltage(0);
 
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
@@ -62,7 +65,7 @@ public class KrakenSwerveModule {
   }
 
   private void resetToAbsolute() {
-    double canCoderDegrees = getCanCoderAngle().getDegrees();
+    double canCoderRotations = getCanCoderAngle().getRotations();
 
     Logger.Log("");
     Logger.Log(
@@ -71,10 +74,10 @@ public class KrakenSwerveModule {
             + " initMotorPosition: "
             + angleMotor.getPosition());
     Logger.Log(
-        "angleEncoder" + angleEncoder.getDeviceID() + " canCoderDegrees: " + canCoderDegrees);
+        "angleEncoder" + angleEncoder.getDeviceID() + " canCoderDegrees: " + canCoderRotations);
     Logger.Log(
-        "angleEncoder" + angleEncoder.getDeviceID() + " angleOffset: " + angleOffset.getDegrees());
-    double absolutePosition = canCoderDegrees - angleOffset.getDegrees();
+        "angleEncoder" + angleEncoder.getDeviceID() + " angleOffset: " + angleOffset.getRotations());
+    double absolutePosition = canCoderRotations - angleOffset.getRotations();
     angleMotor.setPosition(getOurRotations(absolutePosition));
     try {
       Thread.sleep(1000);
@@ -92,8 +95,19 @@ public class KrakenSwerveModule {
   }
 
   private void configAngleMotor() {
+//    angleConfig.voltageCompensation(Constants.Swerve.voltageComp);
+
     angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
+    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    angleConfig.Feedback.SensorToMechanismRatio = 24.1;
+    angleConfig.ClosedLoopGeneral.ContinuousWrap = true;
+
+    angleConfig.Slot0.kP = 1;
+    angleConfig.Slot0.kI = 0.0;
+    angleConfig.Slot0.kD = 0;
+
     //need to figure out neutral mode, could be the problem
     // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
     angleMotor.getConfigurator().apply(angleConfig);
@@ -121,7 +135,6 @@ public class KrakenSwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState) {
-    //this code is somewhat broken
     double targetDegrees = desiredState.angle.getDegrees();
     double currentDegrees = lastAngle.getDegrees();
 
@@ -135,13 +148,24 @@ public class KrakenSwerveModule {
     //Prints out and works fine, problem further up the chain, maybe PID values?
     Logger.Log("Module " + moduleNumber + " Voltage Command: " + desiredState.angle.getRotations());
 
-    angleMotor.setControl(new PositionVoltage(desiredState.angle.getRotations()));
+    // idea here is that the desired angle is for the wheel, e.g., move 0.25 rotations or 90 degrees
+    // but the angle motor has to turn 24 rotations for just 1 of the wheel, so we multiple by 24 (angleGear)
+    angleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()).withSlot(0));
     lastAngle = desiredState.angle;
   }
 
 //Works unlike setTestAngle
-  private void setTestAngle(SwerveModuleState desiredState) {
-    angleMotor.setControl(new DutyCycleOut(0.2));
+  public void setAngleMotorSpeed(boolean isActive) {
+    if (isActive) {
+    angleMotor.setControl(new DutyCycleOut(0.2)); // make it run a little
+    } else {
+      angleMotor.setControl(new DutyCycleOut(0.0)); // make it run a little      
+    }
+  }
+
+  public void setAngleMotorPosition(double rotations) {
+    System.out.println("setAngleMotorPosition to " + rotations);
+    angleMotor.setControl(anglePosition.withPosition(rotations).withSlot(0));
   }
 
   private Rotation2d getAngle() {
