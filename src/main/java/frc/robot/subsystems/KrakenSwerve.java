@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,15 +13,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+
 
 public class KrakenSwerve extends SubsystemBase {
-  private final Pigeon2 gyro;
+  private final AHRS gyro;
   private SwerveDriveOdometry odometer;
   private KrakenSwerveModule[] mSwerveMods;
   private Field2d field;
 
   public KrakenSwerve() {
-    gyro = new Pigeon2(Constants.Swerve.pigeonID);
+    gyro = new AHRS(NavXComType.kMXP_SPI);
     zeroGyro();
 
     SwerveModulePosition[] startPositions = new SwerveModulePosition[4];
@@ -120,11 +122,12 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public void zeroGyro() {
-    gyro.setYaw(180);
+    gyro.setAngleAdjustment(180);
   }
 
   public double getYawValue() {
-    return gyro.getYaw().getValueAsDouble();
+     return gyro.getYaw();
+
   }
 
   public Rotation2d getYaw() {
