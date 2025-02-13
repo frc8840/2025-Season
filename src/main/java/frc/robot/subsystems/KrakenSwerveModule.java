@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,9 +30,15 @@ public class KrakenSwerveModule {
 
   private final PositionVoltage anglePosition = new PositionVoltage(0);
 
+  // needed if we use feedforward PID for the drive motor speeds
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
+  
+  private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
+  private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
+
+  private final PositionVoltage positionVoltage = new PositionVoltage(0);
 
   public KrakenSwerveModule(int moduleNumber, KrakenModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -104,6 +108,7 @@ public class KrakenSwerveModule {
     angleConfig.Feedback.SensorToMechanismRatio = 24.1;
     angleConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
+    angleConfig.Slot0 = new Slot0Configs();
     angleConfig.Slot0.kP = 1;
     angleConfig.Slot0.kI = 0.0;
     angleConfig.Slot0.kD = 0;
@@ -169,11 +174,11 @@ public class KrakenSwerveModule {
   }
 
   private Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(angleMotor.getPosition().getValueAsDouble());
+    return Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
   }
 
   public Rotation2d getCanCoderAngle() {
-    return Rotation2d.fromRotations(angleEncoder.getPosition().getValueAsDouble());
+    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
   }
 
   private double getOurRotations(double degrees) {
