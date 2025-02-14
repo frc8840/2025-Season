@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,9 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
-
 
 public class KrakenSwerve extends SubsystemBase {
   private final AHRS gyro;
@@ -48,13 +47,13 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public void setAngleMotorSpeed(boolean isActive) {
-    for (int i=0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
       mSwerveMods[i].setAngleMotorSpeed(isActive);
     }
   }
 
   public void setAngleMotorPosition(double position) {
-    for (int i=0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
       mSwerveMods[i].setAngleMotorPosition(position);
     }
   }
@@ -126,8 +125,7 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public double getYawValue() {
-     return gyro.getYaw();
-
+    return gyro.getYaw();
   }
 
   public Rotation2d getYaw() {
@@ -149,7 +147,8 @@ public class KrakenSwerve extends SubsystemBase {
     // SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
     // for (KrakenSwerveModule mod : mSwerveMods) {
     //   // No voltage being sent to angleMotor, but is being sent to driveMotor
-    //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" + mod.angleMotor.getMotorVoltage().getValueAsDouble());
+    //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" +
+    // mod.angleMotor.getMotorVoltage().getValueAsDouble());
     // }
   }
 

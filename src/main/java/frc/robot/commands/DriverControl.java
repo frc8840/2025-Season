@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.KrakenSwerve;
-import frc.robot.subsystems.KrakenTest;
 
 public class DriverControl extends Command {
 
@@ -43,7 +42,7 @@ public class DriverControl extends Command {
     // this is for testing only
     if (xboxcontroller.getBButtonPressed()) {
       swerve.setAngleMotorPosition(20.5);
-    } 
+    }
 
     if (xboxcontroller.getAButton()) {
       swerve.setAngleMotorSpeed(true);
