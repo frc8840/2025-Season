@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -27,17 +26,11 @@ public class KrakenSwerveModule {
   private TalonFXConfiguration angleConfig;
   private TalonFXConfiguration driveConfig;
 
-  private final PositionVoltage anglePosition = new PositionVoltage(0);
-
-  // needed if we use feedforward PID for the drive motor speeds
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
-  private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
-  private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
-
-  private final PositionVoltage positionVoltage = new PositionVoltage(0);
+  private final PositionVoltage anglePosition = new PositionVoltage(0);
 
   public KrakenSwerveModule(int moduleNumber, KrakenModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -103,22 +96,23 @@ public class KrakenSwerveModule {
   private void configAngleMotor() {
     //    angleConfig.voltageCompensation(Constants.Swerve.voltageComp);
 
-    angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
-    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
 
     angleConfig.Feedback.SensorToMechanismRatio = 24.1;
     angleConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
-    angleConfig.Slot0 = new Slot0Configs();
-    angleConfig.Slot0.kP = 1;
+    angleConfig.CurrentLimits.SupplyCurrentLimit = 25;
+    angleConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    angleConfig.Slot0.kP = 1.0;
     angleConfig.Slot0.kI = 0.0;
-    angleConfig.Slot0.kD = 0;
+    angleConfig.Slot0.kD = 0.0;
 
     // need to figure out neutral mode, could be the problem
     // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
     angleMotor.getConfigurator().apply(angleConfig);
-    resetToAbsolute();
+    // resetToAbsolute();
   }
 
   private void configAngleEncoder() {
