@@ -30,7 +30,7 @@ public class KrakenSwerveModule {
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
-  private final PositionVoltage anglePosition = new PositionVoltage(0);
+  private final PositionVoltage anglePosition = new PositionVoltage(0).withSlot(0);
 
   public KrakenSwerveModule(int moduleNumber, KrakenModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -105,9 +105,12 @@ public class KrakenSwerveModule {
     angleConfig.CurrentLimits.SupplyCurrentLimit = 25;
     angleConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    angleConfig.Slot0.kP = 1.0;
+    angleConfig.Slot0.kP = 9.6;
     angleConfig.Slot0.kI = 0.0;
-    angleConfig.Slot0.kD = 0.0;
+    angleConfig.Slot0.kD = 0.1;
+    angleConfig.Slot0.kS = 0.25;
+    angleConfig.Slot0.kV = 0.12;
+    angleConfig.Slot0.kA = 0.01;
 
     // need to figure out neutral mode, could be the problem
     // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
@@ -136,24 +139,14 @@ public class KrakenSwerveModule {
   }
 
   private void setAngle(SwerveModuleState desiredState) {
-    double targetDegrees = desiredState.angle.getDegrees();
-    double currentDegrees = lastAngle.getDegrees();
-
-    // Logger.Log("Module " + moduleNumber + " Target Angle: " + targetDegrees);
-    // Logger.Log("Module " + moduleNumber + " Current Angle: " + currentDegrees);
-
-    if (Math.abs(targetDegrees - currentDegrees) <= 1.0) {
-      // Logger.Log("Skipping Small Angle Change");
+    double oldRotations = angleMotor.getPosition().getValueAsDouble();
+    double newRotations = desiredState.angle.getRotations();
+    System.out.println(
+        "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
+    if (Math.abs(newRotations - oldRotations) < 0.02) {
       return;
     }
-    // Prints out and works fine, problem further up the chain, maybe PID values?
-    Logger.Log("Module " + moduleNumber + " Voltage Command: " + desiredState.angle.getRotations());
-
-    // idea here is that the desired angle is for the wheel, e.g., move 0.25 rotations or 90 degrees
-    // but the angle motor has to turn 24 rotations for just 1 of the wheel, so we multiple by 24
-    // (angleGear)
-    angleMotor.setControl(
-        anglePosition.withPosition(desiredState.angle.getRotations()).withSlot(0));
+    angleMotor.setControl(anglePosition.withPosition(newRotations));
     lastAngle = desiredState.angle;
   }
 
@@ -166,9 +159,11 @@ public class KrakenSwerveModule {
     }
   }
 
-  public void setAngleMotorPosition(double rotations) {
-    System.out.println("setAngleMotorPosition to " + rotations);
-    angleMotor.setControl(anglePosition.withPosition(rotations).withSlot(0));
+  public void setAngleMotorPosition(double newRotations) {
+    double oldRotations = angleMotor.getPosition().getValueAsDouble();
+    System.out.println(
+        "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
+    angleMotor.setControl(anglePosition.withPosition(newRotations).withSlot(0));
   }
 
   private Rotation2d getAngle() {
