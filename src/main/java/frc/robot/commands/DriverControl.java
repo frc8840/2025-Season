@@ -39,17 +39,6 @@ public class DriverControl extends Command {
       swerve.runEachMotorForOneSecond();
     }
 
-    // this is for testing only
-    if (xboxcontroller.getBButtonPressed()) {
-      swerve.setAngleMotorPosition(20.5);
-    }
-
-    if (xboxcontroller.getAButton()) {
-      swerve.setAngleMotorSpeed(true);
-    } else {
-      swerve.setAngleMotorSpeed(false);
-    }
-
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
     // joysticks

@@ -16,7 +16,7 @@ import frc.robot.Logger;
 import frc.robot.Robot;
 
 public class KrakenSwerveModule {
-  public int moduleNumber;
+  public String moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
 
@@ -32,7 +32,7 @@ public class KrakenSwerveModule {
 
   private final PositionVoltage anglePosition = new PositionVoltage(0).withSlot(0);
 
-  public KrakenSwerveModule(int moduleNumber, KrakenModuleConstants moduleConstants) {
+  public KrakenSwerveModule(String moduleNumber, KrakenModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
 
@@ -62,34 +62,31 @@ public class KrakenSwerveModule {
 
   private void resetToAbsolute() {
     double canCoderRotations = getCanCoderAngle().getRotations();
-
-    Logger.Log("");
     Logger.Log(
-        "angleEncoder"
-            + angleEncoder.getDeviceID()
+        "\n\nangleEncoder"
+            + moduleNumber
             + " initMotorPosition: "
-            + angleMotor.getPosition());
+            + angleMotor.getPosition().getValueAsDouble());
     Logger.Log(
-        "angleEncoder" + angleEncoder.getDeviceID() + " canCoderDegrees: " + canCoderRotations);
+        "angleEncoder" + moduleNumber + " canCoderPosition: " + canCoderRotations);
     Logger.Log(
         "angleEncoder"
-            + angleEncoder.getDeviceID()
+            + moduleNumber
             + " angleOffset: "
             + angleOffset.getRotations());
     double absolutePosition = canCoderRotations - angleOffset.getRotations();
-    angleMotor.setPosition(getOurRotations(absolutePosition));
+    angleMotor.setPosition(absolutePosition);
     try {
       Thread.sleep(1000);
     } catch (Exception e) {
     }
-
     Logger.Log(
-        "angleEncoder" + angleEncoder.getDeviceID() + " absolutePosition: " + absolutePosition);
+        "angleEncoder" + moduleNumber + " absolutePosition: " + absolutePosition);
     Logger.Log(
         "angleEncoder"
-            + angleEncoder.getDeviceID()
+            + moduleNumber
             + " finalMotorPosition: "
-            + angleMotor.getPosition());
+            + angleMotor.getPosition().getValueAsDouble());
     Logger.Log("");
   }
 
@@ -115,7 +112,7 @@ public class KrakenSwerveModule {
     // need to figure out neutral mode, could be the problem
     // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
     angleMotor.getConfigurator().apply(angleConfig);
-    // resetToAbsolute();
+    resetToAbsolute();
   }
 
   private void configAngleEncoder() {
@@ -141,29 +138,13 @@ public class KrakenSwerveModule {
   private void setAngle(SwerveModuleState desiredState) {
     double oldRotations = angleMotor.getPosition().getValueAsDouble();
     double newRotations = desiredState.angle.getRotations();
-    System.out.println(
-        "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
     if (Math.abs(newRotations - oldRotations) < 0.02) {
       return;
     }
-    angleMotor.setControl(anglePosition.withPosition(newRotations));
-    lastAngle = desiredState.angle;
-  }
-
-  // Works unlike setTestAngle
-  public void setAngleMotorSpeed(boolean isActive) {
-    if (isActive) {
-      angleMotor.setControl(new DutyCycleOut(0.2)); // make it run a little
-    } else {
-      angleMotor.setControl(new DutyCycleOut(0.0)); // make it run a little
-    }
-  }
-
-  public void setAngleMotorPosition(double newRotations) {
-    double oldRotations = angleMotor.getPosition().getValueAsDouble();
     System.out.println(
         "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
-    angleMotor.setControl(anglePosition.withPosition(newRotations).withSlot(0));
+    angleMotor.setControl(anglePosition.withPosition(newRotations));
+    lastAngle = desiredState.angle;
   }
 
   private Rotation2d getAngle() {
@@ -172,10 +153,6 @@ public class KrakenSwerveModule {
 
   public Rotation2d getCanCoderAngle() {
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
-  }
-
-  private double getOurRotations(double degrees) {
-    return degrees / 360.0;
   }
 
   public SwerveModuleState getState() {

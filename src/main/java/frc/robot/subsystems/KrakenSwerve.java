@@ -37,25 +37,13 @@ public class KrakenSwerve extends SubsystemBase {
     // Initialize swerve modules with Talon FX Krakens
     mSwerveMods =
         new KrakenSwerveModule[] {
-          new KrakenSwerveModule(0, Constants.Swerve.FLKrakenConstants),
-          new KrakenSwerveModule(1, Constants.Swerve.FRKrakenConstants),
-          new KrakenSwerveModule(2, Constants.Swerve.BLKrakenConstants),
-          new KrakenSwerveModule(3, Constants.Swerve.BRKrakenConstants)
+          new KrakenSwerveModule("FL", Constants.Swerve.FLKrakenConstants),
+          new KrakenSwerveModule("FR", Constants.Swerve.FRKrakenConstants),
+          new KrakenSwerveModule("BL", Constants.Swerve.BLKrakenConstants),
+          new KrakenSwerveModule("BR", Constants.Swerve.BRKrakenConstants)
         };
 
     field = new Field2d();
-  }
-
-  public void setAngleMotorSpeed(boolean isActive) {
-    for (int i = 0; i < 4; i++) {
-      mSwerveMods[i].setAngleMotorSpeed(isActive);
-    }
-  }
-
-  public void setAngleMotorPosition(double position) {
-    for (int i = 0; i < 4; i++) {
-      mSwerveMods[i].setAngleMotorPosition(position);
-    }
   }
 
   // translation and rotation are the desired behavior of the robot at this moment
@@ -95,8 +83,8 @@ public class KrakenSwerve extends SubsystemBase {
 
   // used by auto
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    for (KrakenSwerveModule mod : mSwerveMods) {
-      mod.setDesiredState(desiredStates[mod.moduleNumber]);
+    for (int i=0; i<mSwerveMods.length; i++) {
+      mSwerveMods[i].setDesiredState(desiredStates[i]);
     }
   }
 
