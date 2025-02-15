@@ -81,6 +81,20 @@ public class KrakenSwerve extends SubsystemBase {
     }
   }
 
+  public void testDriveForOneSec() {
+    for (KrakenSwerveModule module : mSwerveMods) {
+      // Run the current module's motor at full speed (or desired speed).
+      module.testDrive(0.2);
+    }
+  }
+
+  public void printCancoderAngles() {
+    for (KrakenSwerveModule module : mSwerveMods) {
+      // Run the current module's motor at full speed (or desired speed).
+      module.printCancoderAngle();
+    }
+  }
+
   // used by auto
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     for (int i=0; i<mSwerveMods.length; i++) {

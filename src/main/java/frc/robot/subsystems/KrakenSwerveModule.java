@@ -102,12 +102,12 @@ public class KrakenSwerveModule {
     angleConfig.CurrentLimits.SupplyCurrentLimit = 25;
     angleConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    angleConfig.Slot0.kP = 9.6;
+    angleConfig.Slot0.kP = 20;
     angleConfig.Slot0.kI = 0.0;
     angleConfig.Slot0.kD = 0.1;
-    angleConfig.Slot0.kS = 0.25;
-    angleConfig.Slot0.kV = 0.12;
-    angleConfig.Slot0.kA = 0.01;
+    // angleConfig.Slot0.kS = 0.25;
+    // angleConfig.Slot0.kV = 0.12;
+    // angleConfig.Slot0.kA = 0.01;
 
     // need to figure out neutral mode, could be the problem
     // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
@@ -121,8 +121,20 @@ public class KrakenSwerveModule {
   }
 
   private void configDriveMotor() {
-    driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveContinuousCurrentLimit;
+    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
     driveConfig.MotorOutput.Inverted = Constants.Swerve.driveInverted;
+
+    driveConfig.Feedback.SensorToMechanismRatio = 24.1;
+    driveConfig.ClosedLoopGeneral.ContinuousWrap = true;
+
+    driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveContinuousCurrentLimit;
+    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    driveConfig.Slot0.kP = 20;
+    driveConfig.Slot0.kI = 0.0;
+    driveConfig.Slot0.kD = 0.1;
+
+
     driveMotor.getConfigurator().apply(driveConfig);
   }
 
@@ -135,14 +147,18 @@ public class KrakenSwerveModule {
     }
   }
 
+  public void testDrive(double speed) {
+      driveMotor.setControl(new VelocityVoltage(speed));   
+  }
+
   private void setAngle(SwerveModuleState desiredState) {
     double oldRotations = angleMotor.getPosition().getValueAsDouble();
     double newRotations = desiredState.angle.getRotations();
     if (Math.abs(newRotations - oldRotations) < 0.02) {
       return;
     }
-    System.out.println(
-        "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
+    // System.out.println(
+    //     "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
     angleMotor.setControl(anglePosition.withPosition(newRotations));
     lastAngle = desiredState.angle;
   }
@@ -167,4 +183,9 @@ public class KrakenSwerveModule {
     driveMotor.setControl(new DutyCycleOut(0));
     angleMotor.setControl(new DutyCycleOut(0));
   }
+
+  public void printCancoderAngle() {
+    Logger.Log("Cancoder " + moduleNumber + ": "+ angleEncoder.getAbsolutePosition().getValueAsDouble() + " (" + angleOffset + ")");
+  }
 }
+ 

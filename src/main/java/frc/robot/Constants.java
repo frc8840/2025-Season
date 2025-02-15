@@ -27,7 +27,7 @@ public final class Constants {
     /* Drivetrain Constants */
     // our robot this year is longer than wide
     public static final double trackWidth = Units.inchesToMeters(24.0); // width 22.75
-    public static final double wheelBase = Units.inchesToMeters(24.0); // length 24.75
+    public static final double wheelBase = Units.inchesToMeters(36.0); // length 24.75
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -79,7 +79,7 @@ public final class Constants {
     // public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
-    public static final double maxSpeed = 1.8; // meters per second
+    public static final double maxSpeed = 4.5; // meters per second
     public static final double maxAngularVelocity = 5.0;
 
     /* Neutral Modes */
@@ -107,13 +107,13 @@ public final class Constants {
 
     /* Constants for the Kraken swerve modules */
     public static final KrakenModuleConstants FLKrakenConstants =
-        new KrakenModuleConstants(25, 27, 52, Rotation2d.fromRotations(0.543));
+        new KrakenModuleConstants(25, 27, 52, Rotation2d.fromRotations(0.043));
     public static final KrakenModuleConstants FRKrakenConstants =
-        new KrakenModuleConstants(34, 37, 54, Rotation2d.fromRotations(0.409));
+        new KrakenModuleConstants(34, 37, 54, Rotation2d.fromRotations(0.909));
     public static final KrakenModuleConstants BLKrakenConstants =
-        new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.409));
+        new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.909));
     public static final KrakenModuleConstants BRKrakenConstants =
-        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.581));
+        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.081));
   }
 
   public static final class AutoConstants {
