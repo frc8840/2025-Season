@@ -67,21 +67,15 @@ public class KrakenSwerveModule {
             + moduleNumber
             + " initMotorPosition: "
             + angleMotor.getPosition().getValueAsDouble());
-    Logger.Log(
-        "angleEncoder" + moduleNumber + " canCoderPosition: " + canCoderRotations);
-    Logger.Log(
-        "angleEncoder"
-            + moduleNumber
-            + " angleOffset: "
-            + angleOffset.getRotations());
+    Logger.Log("angleEncoder" + moduleNumber + " canCoderPosition: " + canCoderRotations);
+    Logger.Log("angleEncoder" + moduleNumber + " angleOffset: " + angleOffset.getRotations());
     double absolutePosition = canCoderRotations - angleOffset.getRotations();
     angleMotor.setPosition(absolutePosition);
     try {
       Thread.sleep(1000);
     } catch (Exception e) {
     }
-    Logger.Log(
-        "angleEncoder" + moduleNumber + " absolutePosition: " + absolutePosition);
+    Logger.Log("angleEncoder" + moduleNumber + " absolutePosition: " + absolutePosition);
     Logger.Log(
         "angleEncoder"
             + moduleNumber
@@ -96,15 +90,15 @@ public class KrakenSwerveModule {
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
 
-    angleConfig.Feedback.SensorToMechanismRatio = 24.1;
-    angleConfig.ClosedLoopGeneral.ContinuousWrap = true;
+    angleConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.sensorToMechanismRatio;
+    angleConfig.ClosedLoopGeneral.ContinuousWrap = Constants.Swerve.continuousWrap;
 
-    angleConfig.CurrentLimits.SupplyCurrentLimit = 25;
-    angleConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
+    angleConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    angleConfig.Slot0.kP = 20;
-    angleConfig.Slot0.kI = 0.0;
-    angleConfig.Slot0.kD = 0.1;
+    angleConfig.Slot0.kP = Constants.Swerve.angleKP;
+    angleConfig.Slot0.kI = Constants.Swerve.angleKI;
+    angleConfig.Slot0.kD = Constants.Swerve.angleKD;
     // angleConfig.Slot0.kS = 0.25;
     // angleConfig.Slot0.kV = 0.12;
     // angleConfig.Slot0.kA = 0.01;
@@ -124,16 +118,15 @@ public class KrakenSwerveModule {
     driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
     driveConfig.MotorOutput.Inverted = Constants.Swerve.driveInverted;
 
-    driveConfig.Feedback.SensorToMechanismRatio = 24.1;
-    driveConfig.ClosedLoopGeneral.ContinuousWrap = true;
+    driveConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.sensorToMechanismRatio;
+    driveConfig.ClosedLoopGeneral.ContinuousWrap = Constants.Swerve.continuousWrap;
 
     driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveContinuousCurrentLimit;
-    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    driveConfig.Slot0.kP = 20;
-    driveConfig.Slot0.kI = 0.0;
-    driveConfig.Slot0.kD = 0.1;
-
+    driveConfig.Slot0.kP = Constants.Swerve.krakenKP;
+    driveConfig.Slot0.kI = Constants.Swerve.krakenKI;
+    driveConfig.Slot0.kD = Constants.Swerve.krakenKD;
 
     driveMotor.getConfigurator().apply(driveConfig);
   }
@@ -148,7 +141,7 @@ public class KrakenSwerveModule {
   }
 
   public void testDrive(double speed) {
-      driveMotor.setControl(new VelocityVoltage(speed));   
+    driveMotor.setControl(new VelocityVoltage(speed));
   }
 
   private void setAngle(SwerveModuleState desiredState) {
@@ -158,7 +151,8 @@ public class KrakenSwerveModule {
       return;
     }
     // System.out.println(
-    //     "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " + newRotations);
+    //     "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " +
+    // newRotations);
     angleMotor.setControl(anglePosition.withPosition(newRotations));
     lastAngle = desiredState.angle;
   }
@@ -185,7 +179,13 @@ public class KrakenSwerveModule {
   }
 
   public void printCancoderAngle() {
-    Logger.Log("Cancoder " + moduleNumber + ": "+ angleEncoder.getAbsolutePosition().getValueAsDouble() + " (" + angleOffset + ")");
+    Logger.Log(
+        "Cancoder "
+            + moduleNumber
+            + ": "
+            + angleEncoder.getAbsolutePosition().getValueAsDouble()
+            + " ("
+            + angleOffset
+            + ")");
   }
 }
- 

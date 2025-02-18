@@ -30,6 +30,7 @@ public final class Constants {
     public static final double wheelBase = Units.inchesToMeters(36.0); // length 24.75
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
+    public static final double sensorToMechanismRatio = 24.1;
 
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
@@ -48,12 +49,16 @@ public final class Constants {
             new Translation2d(-wheelBase / 2.0, trackWidth / 2.0) // back left
             );
 
+    /* Extra stuff for Kraken Motor Setup */
+    public static final boolean continuousWrap = true;
+
     /* Swerve Voltage Compensation */
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
     public static final int angleContinuousCurrentLimit = 25;
     public static final int driveContinuousCurrentLimit = 40;
+    public static final boolean supplyCurrentLimitEnable = true;
 
     /* Angle Motor PID Values */
     public static final double angleKP = 0.01;
@@ -66,6 +71,11 @@ public final class Constants {
     public static final double driveKI = 0.0;
     public static final double driveKD = 0.0;
     public static final double driveKFF = 0.0;
+
+    /* Kraken Motor PID Values */
+    public static final double krakenKP = 20.0;
+    public static final double krakenKI = 0.0;
+    public static final double krakenKD = 0.1;
 
     /* Drive Motor Characterization Values */
     public static final double driveKS = 0.667;

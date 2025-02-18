@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.KrakenSwerve;
-import frc.robot.subsystems.KrakenSwerveModule;
 
 public class DriverControl extends Command {
 
@@ -42,13 +41,11 @@ public class DriverControl extends Command {
 
     if (xboxcontroller.getAButtonPressed()) {
       swerve.testDriveForOneSec();
-    } 
+    }
 
     if (xboxcontroller.getBButtonPressed()) {
       swerve.stopModules();
     }
-
-
 
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
