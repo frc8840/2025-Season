@@ -96,9 +96,9 @@ public class KrakenSwerveModule {
     angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
     angleConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    angleConfig.Slot0.kP = Constants.Swerve.angleKP;
-    angleConfig.Slot0.kI = Constants.Swerve.angleKI;
-    angleConfig.Slot0.kD = Constants.Swerve.angleKD;
+    angleConfig.Slot0.kP = Constants.Swerve.krakenKP;
+    angleConfig.Slot0.kI = Constants.Swerve.krakenKI;
+    angleConfig.Slot0.kD = Constants.Swerve.krakenKD;
     // angleConfig.Slot0.kS = 0.25;
     // angleConfig.Slot0.kV = 0.12;
     // angleConfig.Slot0.kA = 0.01;
