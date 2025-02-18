@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
 
@@ -58,11 +59,11 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // Logger.Log("Autonomous Init Called");
-    // Command autonomousCommand = container.getAutoCommand();
-    // // schedule the autonomous command - adds it to the scheduler
-    // if (autonomousCommand != null) {
-    //   autonomousCommand.schedule();
-    // }
+    Command autonomousCommand = container.getPathPlannerAutonomousCommand();
+    // schedule the autonomous command - adds it to the scheduler
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
