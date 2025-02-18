@@ -107,13 +107,13 @@ public final class Constants {
 
     /* Constants for the Kraken swerve modules */
     public static final KrakenModuleConstants FLKrakenConstants =
-        new KrakenModuleConstants(25, 27, 52, Rotation2d.fromRotations(0.043));
+        new KrakenModuleConstants(25, 27, 52, Rotation2d.fromRotations(0.543));
     public static final KrakenModuleConstants FRKrakenConstants =
-        new KrakenModuleConstants(34, 37, 54, Rotation2d.fromRotations(0.909));
+        new KrakenModuleConstants(34, 37, 54, Rotation2d.fromRotations(0.419));
     public static final KrakenModuleConstants BLKrakenConstants =
-        new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.909));
+        new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.421));
     public static final KrakenModuleConstants BRKrakenConstants =
-        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.081));
+        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.584));
   }
 
   public static final class AutoConstants {
