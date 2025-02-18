@@ -133,6 +133,17 @@ public class KrakenSwerve extends SubsystemBase {
     }
   }
 
+  public void setAnglesForReef(double speed) {
+    mSwerveMods[0].setDesiredState(
+        new SwerveModuleState(speed, Rotation2d.fromRotations(0.164))); // FL
+    mSwerveMods[1].setDesiredState(
+        new SwerveModuleState(speed, Rotation2d.fromRotations(0.275))); // FR
+    mSwerveMods[2].setDesiredState(
+        new SwerveModuleState(speed, Rotation2d.fromRotations(0.336))); // BL
+    mSwerveMods[3].setDesiredState(
+        new SwerveModuleState(speed, Rotation2d.fromRotations(0.442))); // BR
+  }
+
   public void printCancoderAngles() {
     for (KrakenSwerveModule module : mSwerveMods) {
       // Run the current module's motor at full speed (or desired speed).

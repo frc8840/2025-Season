@@ -19,6 +19,8 @@ public class DriverControl extends Command {
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(10);
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(10);
 
+  private boolean isReefRotating = false;
+
   // Make sure the roller imported is the one from subsystems! Not from settings.
   public DriverControl(KrakenSwerve swerve) {
     addRequirements(swerve);
@@ -45,6 +47,22 @@ public class DriverControl extends Command {
 
     if (xboxcontroller.getBButtonPressed()) {
       swerve.stopModules();
+    }
+
+    if (xboxcontroller.getRightStickButtonPressed()) {
+      isReefRotating = !isReefRotating;
+      if (!isReefRotating) {
+        swerve.setAnglesForReef(0.0);
+      }
+    }
+
+    if (isReefRotating) {
+      if (xboxcontroller.getAButtonPressed()) {
+        swerve.setAnglesForReef(0.2);
+      } else if (xboxcontroller.getBButtonPressed()) {
+        swerve.setAnglesForReef(0.0);
+      }
+      return;
     }
 
     // get values from the Xbox Controller joysticks
