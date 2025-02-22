@@ -73,9 +73,9 @@ public class DriverControl extends Command {
       if (isHuggingReef) {
         swerve.rotateAroundReef(true, translationVal);
       } else {
-        swerve.rotateAroundReef(false, strafeVal);;
+        swerve.rotateAroundReef(false, strafeVal);
+        ;
       }
-   
     }
   }
 }

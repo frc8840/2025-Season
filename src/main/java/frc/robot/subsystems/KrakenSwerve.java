@@ -160,7 +160,8 @@ public class KrakenSwerve extends SubsystemBase {
       mSwerveMods[3].setDesiredState(
           new SwerveModuleState(speed, Rotation2d.fromRotations(0.442))); // BR
     } else {
-      //Changing to be orthogonal to the current rotation pattern. should make it closer/farther from the reef
+      // Changing to be orthogonal to the current rotation pattern. should make it closer/farther
+      // from the reef
       mSwerveMods[0].setDesiredState(
           new SwerveModuleState(speed, Rotation2d.fromRotations(0.664))); // FL
       mSwerveMods[1].setDesiredState(
