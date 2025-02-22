@@ -64,7 +64,6 @@ public class DriverControl extends Command {
       }
       return;
     }
-
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
     // joysticks
@@ -75,10 +74,16 @@ public class DriverControl extends Command {
     double rotationVal =
         rotationLimiter.calculate(MathUtil.applyDeadband(-xboxcontroller.getRightX(), 0.05));
 
+    
+    
     /* Drive */
-    swerve.drive(
+    if (!isReefRotating) {
+      swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity,
         true);
+    } else {
+      swerve.setAnglesForReef(strafeVal);
+    }
   }
 }
