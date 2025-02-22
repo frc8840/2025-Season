@@ -133,6 +133,20 @@ public class KrakenSwerve extends SubsystemBase {
     }
   }
 
+  public void testAngleMotors() {
+    for (KrakenSwerveModule module : mSwerveMods) {
+      // Run the current module's motor at full speed (or desired speed).
+      module.testAngle(0.2);
+      Logger.Log("Running module " + module.moduleNumber + " for 1 second.");
+
+      // Wait for 1 second.
+      Timer.delay(1.0);
+
+      // Stop the current module's motor.
+      module.testAngle(0);
+    }
+  }
+
   public void setAnglesForReef(double speed) {
     mSwerveMods[0].setDesiredState(
         new SwerveModuleState(speed, Rotation2d.fromRotations(0.164))); // FL

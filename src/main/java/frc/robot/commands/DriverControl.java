@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.KrakenSwerve;
 
@@ -37,32 +36,18 @@ public class DriverControl extends Command {
     }
 
     if (xboxcontroller.getYButtonPressed()) {
-      Logger.Log("Y Button Pressed");
-      swerve.printCancoderAngles();
-    }
-
-    if (xboxcontroller.getAButtonPressed()) {
-      swerve.testDriveForOneSec();
+      swerve.testAngleMotors();
     }
 
     if (xboxcontroller.getBButtonPressed()) {
       swerve.stopModules();
     }
 
-    if (xboxcontroller.getRightStickButtonPressed()) {
+    if (xboxcontroller.getAButtonPressed()) {
       isReefRotating = !isReefRotating;
       if (!isReefRotating) {
         swerve.setAnglesForReef(0.0);
       }
-    }
-
-    if (isReefRotating) {
-      if (xboxcontroller.getAButtonPressed()) {
-        swerve.setAnglesForReef(0.2);
-      } else if (xboxcontroller.getBButtonPressed()) {
-        swerve.setAnglesForReef(0.0);
-      }
-      return;
     }
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
@@ -74,14 +59,12 @@ public class DriverControl extends Command {
     double rotationVal =
         rotationLimiter.calculate(MathUtil.applyDeadband(-xboxcontroller.getRightX(), 0.05));
 
-    
-    
     /* Drive */
     if (!isReefRotating) {
       swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-        rotationVal * Constants.Swerve.maxAngularVelocity,
-        true);
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+          rotationVal * Constants.Swerve.maxAngularVelocity,
+          true);
     } else {
       swerve.setAnglesForReef(strafeVal);
     }

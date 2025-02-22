@@ -72,10 +72,15 @@ public final class Constants {
     public static final double driveKD = 0.0;
     public static final double driveKFF = 0.0;
 
-    /* Kraken Motor PID Values */
-    public static final double krakenKP = 20.0;
-    public static final double krakenKI = 0.0;
-    public static final double krakenKD = 0.1;
+    /* Kraken Drive Motor PID Values */
+    public static final double dKrakenKP = 20.0;
+    public static final double dKrakenKI = 0.0;
+    public static final double dKrakenKD = 0.0;
+
+    /* Kraken Angle Motor PID Values */
+    public static final double aKrakenKP = 20.0;
+    public static final double aKrakenKI = 0.0;
+    public static final double aKrakenKD = 0.0;
 
     /* Drive Motor Characterization Values */
     public static final double driveKS = 0.667;
@@ -89,7 +94,7 @@ public final class Constants {
     // public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
-    public static final double maxSpeed = 4.5; // meters per second
+    public static final double maxSpeed = 2; // meters per second
     public static final double maxAngularVelocity = 5.0;
 
     /* Neutral Modes */
@@ -117,13 +122,13 @@ public final class Constants {
 
     /* Constants for the Kraken swerve modules */
     public static final KrakenModuleConstants FLKrakenConstants =
-        new KrakenModuleConstants(25, 27, 52, Rotation2d.fromRotations(0.543));
+        new KrakenModuleConstants(25, 27, 52, Rotation2d.fromRotations(0.545));
     public static final KrakenModuleConstants FRKrakenConstants =
-        new KrakenModuleConstants(34, 37, 54, Rotation2d.fromRotations(0.419));
+        new KrakenModuleConstants(34, 37, 54, Rotation2d.fromRotations(0.411));
     public static final KrakenModuleConstants BLKrakenConstants =
-        new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.421));
+        new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.412));
     public static final KrakenModuleConstants BRKrakenConstants =
-        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.584));
+        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.58));
   }
 
   public static final class AutoConstants {

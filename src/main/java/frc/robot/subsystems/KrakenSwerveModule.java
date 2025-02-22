@@ -96,9 +96,9 @@ public class KrakenSwerveModule {
     angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
     angleConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    angleConfig.Slot0.kP = Constants.Swerve.krakenKP;
-    angleConfig.Slot0.kI = Constants.Swerve.krakenKI;
-    angleConfig.Slot0.kD = Constants.Swerve.krakenKD;
+    angleConfig.Slot0.kP = Constants.Swerve.aKrakenKP;
+    angleConfig.Slot0.kI = Constants.Swerve.aKrakenKI;
+    angleConfig.Slot0.kD = Constants.Swerve.aKrakenKD;
     // angleConfig.Slot0.kS = 0.25;
     // angleConfig.Slot0.kV = 0.12;
     // angleConfig.Slot0.kA = 0.01;
@@ -124,9 +124,9 @@ public class KrakenSwerveModule {
     driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveContinuousCurrentLimit;
     driveConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    driveConfig.Slot0.kP = Constants.Swerve.krakenKP;
-    driveConfig.Slot0.kI = Constants.Swerve.krakenKI;
-    driveConfig.Slot0.kD = Constants.Swerve.krakenKD;
+    driveConfig.Slot0.kP = Constants.Swerve.dKrakenKP;
+    driveConfig.Slot0.kI = Constants.Swerve.dKrakenKI;
+    driveConfig.Slot0.kD = Constants.Swerve.dKrakenKD;
 
     driveMotor.getConfigurator().apply(driveConfig);
   }
@@ -155,6 +155,10 @@ public class KrakenSwerveModule {
     // newRotations);
     angleMotor.setControl(anglePosition.withPosition(newRotations));
     lastAngle = desiredState.angle;
+  }
+
+  public void testAngle(double speed) {
+    angleMotor.setControl(new DutyCycleOut(speed));
   }
 
   private Rotation2d getAngle() {
