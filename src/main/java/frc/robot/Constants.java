@@ -35,9 +35,8 @@ public final class Constants {
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
-    public static final double driveGearRatio = (6.75 / 1.0); // SDS website for MK4i says 6.75:1
-    public static final double angleGearRatio = 21.4; // SDS website for MK4i says 150/7:1 (was
-    // 12.8:1)
+    public static final double driveGearRatio = 6.75; // MK4i says 6.75:1 (motor : wheel rotation)
+    public static final double angleGearRatio = 21.4; // MK4i says 150/7:1 (motor : wheel rotation)
 
     // assuming coordinates from WPILIB from here:
     // https://www.chiefdelphi.com/t/swerve-x-and-y-flipped-in-odometry/451670/2
@@ -94,8 +93,8 @@ public final class Constants {
     // public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
-    public static final double maxSpeed = 2; // meters per second
-    public static final double maxAngularVelocity = 5.0;
+    public static final double maxSpeed = 1.0; // meters per second
+    public static final double maxAngularVelocity = 1.57; // radians per second, 1.57 == 90 degree turn per second
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
