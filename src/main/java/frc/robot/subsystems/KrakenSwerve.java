@@ -66,7 +66,9 @@ public class KrakenSwerve extends SubsystemBase {
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting
         // pose)
         this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        this::driveFromSpeeds, // Method that will drive the robot given ROBOT RELATIVE(speeds), //
+        (speeds, feedforwards) ->
+            driveFromSpeeds(
+                speeds), // Method that will drive the robot given ROBOT RELATIVE(speeds), //
         // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds. Also optionally outputs individual module
         // feedforwards
@@ -147,15 +149,28 @@ public class KrakenSwerve extends SubsystemBase {
     }
   }
 
-  public void setAnglesForReef(double speed) {
-    mSwerveMods[0].setDesiredState(
-        new SwerveModuleState(speed, Rotation2d.fromRotations(0.164))); // FL
-    mSwerveMods[1].setDesiredState(
-        new SwerveModuleState(speed, Rotation2d.fromRotations(0.275))); // FR
-    mSwerveMods[2].setDesiredState(
-        new SwerveModuleState(speed, Rotation2d.fromRotations(0.336))); // BL
-    mSwerveMods[3].setDesiredState(
-        new SwerveModuleState(speed, Rotation2d.fromRotations(0.442))); // BR
+  public void rotateAroundReef(boolean hugReef, double speed) {
+    if (hugReef) {
+      mSwerveMods[0].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.164))); // FL
+      mSwerveMods[1].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.275))); // FR
+      mSwerveMods[2].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.336))); // BL
+      mSwerveMods[3].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.442))); // BR
+    } else {
+      // Changing to be orthogonal to the current rotation pattern. should make it closer/farther
+      // from the reef
+      mSwerveMods[0].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.664))); // FL
+      mSwerveMods[1].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.775))); // FR
+      mSwerveMods[2].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.836))); // BL
+      mSwerveMods[3].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.942))); // BR
+    }
   }
 
   public void printCancoderAngles() {

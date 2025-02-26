@@ -19,6 +19,7 @@ public class DriverControl extends Command {
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(10);
 
   private boolean isReefRotating = false;
+  private boolean isHuggingReef = false;
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
   public DriverControl(KrakenSwerve swerve) {
@@ -46,8 +47,11 @@ public class DriverControl extends Command {
     if (xboxcontroller.getAButtonPressed()) {
       isReefRotating = !isReefRotating;
       if (!isReefRotating) {
-        swerve.setAnglesForReef(0.0);
+        swerve.rotateAroundReef(false, 0.0);
       }
+    }
+    if (xboxcontroller.getBackButtonPressed()) {
+      isHuggingReef = !isHuggingReef;
     }
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
@@ -66,7 +70,12 @@ public class DriverControl extends Command {
           rotationVal * Constants.Swerve.maxAngularVelocity,
           false);
     } else {
-      swerve.setAnglesForReef(strafeVal);
+      if (isHuggingReef) {
+        swerve.rotateAroundReef(true, translationVal);
+      } else {
+        swerve.rotateAroundReef(false, strafeVal);
+        ;
+      }
     }
   }
 }

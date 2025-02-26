@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+// import edu.wpi.first.math.MathUtil;
+// import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,6 +22,13 @@ public class OperatorControl extends Command {
   private PickUpNote intake;
   private ArmShooter shooter;
   private Arm arm;
+
+  // private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
+
+  // private ArmPosition L1ArmPosition = ArmPosition.L1;
+  // private ArmPosition L2ArmPosition = ArmPosition.L2;
+  // private ArmPosition L3ArmPosition = ArmPosition.L3;
+  // private ArmPosition L4ArmPosition = ArmPosition.L4;
 
   long shooterStarted = -1;
 
@@ -120,5 +129,28 @@ public class OperatorControl extends Command {
                   }));
       c.schedule();
     }
+
+    // Starting to set up mode to control the arm with the left stick
+    // double translationVal =
+    //     translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
+    // Arm.ArmPosition armPosition = arm.getArmPosition();
+    // Arm.ArmPosition newArmPosition = armPosition - (int) Math.round(translationVal * 10);
+    // if (Math.abs(translationVal) > 0.1) {
+    //   setArmPosition(newArmPosition);
+    // }
+
+    // Saves current arm position as the values to be used for the future (only this session)
+    // if (ps4controller.getPOV() == 0) {
+    //   L1ArmPosition = armPosition;
+    // }
+    // if (ps4controller.getPOV() == 90) {
+    //   L2ArmPosition = armPosition;
+    // }
+    // if (ps4controller.getPOV() == 180) {
+    //   L3ArmPosition = armPosition;
+    // }
+    // if (ps4controller.getPOV() == 270) {
+    //   L4ArmPosition = armPosition;
+    // }
   }
 }
