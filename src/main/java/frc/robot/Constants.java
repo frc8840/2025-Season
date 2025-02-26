@@ -57,7 +57,7 @@ public final class Constants {
 
     /* Swerve Current Limiting */
     public static final int angleContinuousCurrentLimit = 25;
-    public static final int driveContinuousCurrentLimit = 40;
+    public static final int driveContinuousCurrentLimit = 35;
     public static final boolean supplyCurrentLimitEnable = true;
 
     /* Angle Motor PID Values */
@@ -78,8 +78,8 @@ public final class Constants {
     public static final double dKrakenKD = 0.0;
 
     /* Kraken Angle Motor PID Values */
-    public static final double aKrakenKP = 20.0;
-    public static final double aKrakenKI = 0.0;
+    public static final double aKrakenKP = 15.0;
+    public static final double aKrakenKI = 0.1;
     public static final double aKrakenKD = 0.0;
 
     /* Drive Motor Characterization Values */
@@ -128,7 +128,7 @@ public final class Constants {
     public static final KrakenModuleConstants BLKrakenConstants =
         new KrakenModuleConstants(29, 31, 53, Rotation2d.fromRotations(0.412));
     public static final KrakenModuleConstants BRKrakenConstants =
-        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(-0.58));
+        new KrakenModuleConstants(35, 36, 55, Rotation2d.fromRotations(0.42));
   }
 
   public static final class AutoConstants {

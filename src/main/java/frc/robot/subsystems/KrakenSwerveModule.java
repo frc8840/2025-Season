@@ -88,7 +88,7 @@ public class KrakenSwerveModule {
     //    angleConfig.voltageCompensation(Constants.Swerve.voltageComp);
 
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
-    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
+    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; // TEG was Brake
 
     angleConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.sensorToMechanismRatio;
     angleConfig.ClosedLoopGeneral.ContinuousWrap = Constants.Swerve.continuousWrap;
@@ -187,9 +187,7 @@ public class KrakenSwerveModule {
         "Cancoder "
             + moduleNumber
             + ": "
-            + angleEncoder.getAbsolutePosition().getValueAsDouble()
-            + " ("
-            + angleOffset
-            + ")");
+            + (angleEncoder.getAbsolutePosition().getValueAsDouble() - angleOffset.getRotations())
+            );
   }
 }

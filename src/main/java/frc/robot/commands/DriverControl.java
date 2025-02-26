@@ -36,7 +36,7 @@ public class DriverControl extends Command {
     }
 
     if (xboxcontroller.getYButtonPressed()) {
-      swerve.testAngleMotors();
+      swerve.printCancoderAngles();
     }
 
     if (xboxcontroller.getBButtonPressed()) {
@@ -64,7 +64,7 @@ public class DriverControl extends Command {
       swerve.drive(
           new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
           rotationVal * Constants.Swerve.maxAngularVelocity,
-          true);
+          false);
     } else {
       swerve.setAnglesForReef(strafeVal);
     }
