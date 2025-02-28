@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -26,6 +27,7 @@ public class KrakenSwerve extends SubsystemBase {
   private SwerveDriveOdometry odometer;
   private KrakenSwerveModule[] mSwerveMods;
   private Field2d field;
+  private int driveCounter = 0;
 
   public KrakenSwerve() {
     gyro = new AHRS(NavXComType.kMXP_SPI);
@@ -74,8 +76,8 @@ public class KrakenSwerve extends SubsystemBase {
         // feedforwards
         new PPHolonomicDriveController( // PPHolonomicController is the built in path following
             // controller for holonomic drive trains
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            new PIDConstants(0.2, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(1.0, 0.0, 0.0) // Rotation PID constants
             ),
         config, // The robot configuration
         () -> {
@@ -108,11 +110,15 @@ public class KrakenSwerve extends SubsystemBase {
 
   // used by DriverControl and AutoBuilder
   public void driveFromSpeeds(ChassisSpeeds speeds) {
+    if (driveCounter%10==0) {
+      Logger.Log("drive() called with " + speeds.vxMetersPerSecond + "," + speeds.vyMetersPerSecond + " and " + speeds.omegaRadiansPerSecond);
+    }
+    driveCounter++;
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
     // do we need the below?
-    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
-    // Constants.Swerve.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
+    Constants.Swerve.maxSpeed);
     setModuleStates(swerveModuleStates);
   }
 
@@ -250,10 +256,10 @@ public class KrakenSwerve extends SubsystemBase {
 
   // constructs current estimate of chassis speeds from module encoders
   public ChassisSpeeds getChassisSpeeds() {
-    var frontLeftState = mSwerveMods[0].getState();
-    var frontRightState = mSwerveMods[1].getState();
-    var backLeftState = mSwerveMods[2].getState();
-    var backRightState = mSwerveMods[3].getState();
+    SwerveModuleState frontLeftState = mSwerveMods[0].getState();
+    SwerveModuleState frontRightState = mSwerveMods[1].getState();
+    SwerveModuleState backLeftState = mSwerveMods[2].getState();
+    SwerveModuleState backRightState = mSwerveMods[3].getState();
 
     // Convert to chassis speeds
     ChassisSpeeds chassisSpeeds =
