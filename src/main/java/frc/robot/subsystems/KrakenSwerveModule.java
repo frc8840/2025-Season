@@ -177,7 +177,10 @@ public class KrakenSwerveModule {
   }
 
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveMotor.getVelocity().getValueAsDouble(), getAngle());
+    // compute wheel speed m/s from the motor velocity in rotations per second
+    double speedMetersPerSecond =
+        driveMotor.getVelocity().getValueAsDouble() * Constants.Swerve.driveConversionPositionFactor;
+    return new SwerveModuleState(speedMetersPerSecond, getAngle());
   }
 
   public SwerveModulePosition getPosition() {
