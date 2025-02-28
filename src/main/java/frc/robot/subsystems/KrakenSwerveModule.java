@@ -57,7 +57,7 @@ public class KrakenSwerveModule {
     // Logger.Log("setDesiredState is running");
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
-    setSpeed(desiredState, true);
+    setSpeed(desiredState, false);
   }
 
   private void resetToAbsolute() {
@@ -136,10 +136,14 @@ public class KrakenSwerveModule {
       Logger.Log("setSpeed: " + desiredState.speedMetersPerSecond);
     }
     if (isOpenLoop) {
+      // convert speed in m/s to percent output
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       driveMotor.setControl(new DutyCycleOut(percentOutput));
     } else {
-      driveMotor.setControl(new VelocityVoltage(desiredState.speedMetersPerSecond));
+      // convert speed  in m/s to motor velocity in rotations per second
+      // driveConversionPositionFactor is the number of rotations the motor makes per meter
+      double rotationsPerSecond = desiredState.speedMetersPerSecond / Constants.Swerve.driveConversionPositionFactor;
+      driveMotor.setControl(new VelocityVoltage(rotationsPerSecond));
     }
   }
 

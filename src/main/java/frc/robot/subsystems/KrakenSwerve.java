@@ -94,6 +94,8 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   // translation and rotation are the desired behavior of the robot at this moment
+  // translation vector is the desired velocity in m/s and 
+  // rotation is the desired angular velocity in rotations per second
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
     // first, we compute our desired chassis speeds
     ChassisSpeeds chassisSpeeds =
@@ -104,7 +106,7 @@ public class KrakenSwerve extends SubsystemBase {
     driveFromSpeeds(chassisSpeeds);
   }
 
-  // used by tele
+  // used by DriverControl and AutoBuilder
   public void driveFromSpeeds(ChassisSpeeds speeds) {
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
@@ -114,6 +116,7 @@ public class KrakenSwerve extends SubsystemBase {
     setModuleStates(swerveModuleStates);
   }
 
+  // for testing
   public void runEachMotorForOneSecond() {
     for (KrakenSwerveModule module : mSwerveMods) {
       // Run the current module's motor at full speed (or desired speed).
