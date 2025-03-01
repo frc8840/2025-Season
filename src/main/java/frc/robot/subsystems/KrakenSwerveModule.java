@@ -17,7 +17,6 @@ import frc.robot.Robot;
 
 public class KrakenSwerveModule {
   public String moduleNumber;
-  private Rotation2d lastAngle;
   private Rotation2d angleOffset;
 
   public TalonFX angleMotor;
@@ -25,6 +24,9 @@ public class KrakenSwerveModule {
   private CANcoder angleEncoder;
   private TalonFXConfiguration angleConfig;
   private TalonFXConfiguration driveConfig;
+
+  // to limit frequency of printing
+  private int printCounter = 0;
 
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
@@ -50,11 +52,12 @@ public class KrakenSwerveModule {
     driveConfig = new TalonFXConfiguration();
     configDriveMotor();
 
-    lastAngle = getState().angle;
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
-    // Logger.Log("setDesiredState is running");
+    if (printCounter % 10 == 0) {
+      Logger.Log("setDesiredState()" + moduleNumber + " speed=" + desiredState.speedMetersPerSecond + " angle=" + desiredState.angle.getRotations());
+    }
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
     setSpeed(desiredState, false);
@@ -132,9 +135,9 @@ public class KrakenSwerveModule {
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    if (desiredState.speedMetersPerSecond > 0.01) {
-      Logger.Log("setSpeed: " + desiredState.speedMetersPerSecond);
-    }
+    // if (desiredState.speedMetersPerSecond > 0.01) {
+    //   Logger.Log("setSpeed: " + desiredState.speedMetersPerSecond);
+    // }
     if (isOpenLoop) {
       // convert speed in m/s to percent output
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
@@ -157,11 +160,7 @@ public class KrakenSwerveModule {
     if (Math.abs(newRotations - oldRotations) < 0.02) {
       return;
     }
-    // System.out.println(
-    //     "setAngleMotorPosition " + moduleNumber + " from " + oldRotations + " to " +
-    // newRotations);
     angleMotor.setControl(anglePosition.withPosition(newRotations));
-    lastAngle = desiredState.angle;
   }
 
   public void testAngle(double speed) {
@@ -180,7 +179,12 @@ public class KrakenSwerveModule {
     // compute wheel speed m/s from the motor velocity in rotations per second
     double speedMetersPerSecond =
         driveMotor.getVelocity().getValueAsDouble() * Constants.Swerve.driveConversionPositionFactor;
-    return new SwerveModuleState(speedMetersPerSecond, getAngle());
+    Rotation2d angle = getAngle();
+    if (printCounter % 10 == 0) {
+      Logger.Log("getState(): " + moduleNumber + " speed=" + speedMetersPerSecond + " angle=" + angle.getRotations());
+    }
+    printCounter++;
+    return new SwerveModuleState(speedMetersPerSecond, angle);
   }
 
   public SwerveModulePosition getPosition() {

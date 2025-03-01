@@ -27,7 +27,7 @@ public class KrakenSwerve extends SubsystemBase {
   private SwerveDriveOdometry odometer;
   private KrakenSwerveModule[] mSwerveMods;
   private Field2d field;
-  private int driveCounter = 0;
+  private int printCounter = 0;
 
   public KrakenSwerve() {
     gyro = new AHRS(NavXComType.kMXP_SPI);
@@ -110,10 +110,10 @@ public class KrakenSwerve extends SubsystemBase {
 
   // used by DriverControl and AutoBuilder
   public void driveFromSpeeds(ChassisSpeeds speeds) {
-    if (driveCounter%10==0) {
+    if (printCounter%10==0) {
       Logger.Log("drive() called with " + speeds.vxMetersPerSecond + "," + speeds.vyMetersPerSecond + " and " + speeds.omegaRadiansPerSecond);
     }
-    driveCounter++;
+    printCounter++;
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
     // do we need the below?
