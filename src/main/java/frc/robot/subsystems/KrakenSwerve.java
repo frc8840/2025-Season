@@ -37,6 +37,7 @@ public class KrakenSwerve extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       startPositions[i] = new SwerveModulePosition();
     }
+    // is it true that every module is at angle 0.0 when we start?
     odometer =
         new SwerveDriveOdometry(
             Constants.Swerve.swerveKinematics, new Rotation2d(0), startPositions);
