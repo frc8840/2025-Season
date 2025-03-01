@@ -30,7 +30,7 @@ public final class Constants {
     public static final double wheelBase = Units.inchesToMeters(36.0); // length 24.75
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
-    public static final double sensorToMechanismRatio = 24.1;
+    // public static final double sensorToMechanismRatio = 24.1;
 
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
@@ -90,7 +90,7 @@ public final class Constants {
     // driveConversionPositionFactor is the number of rotations the motor makes per meter
     public static final double driveConversionPositionFactor =
         (wheelDiameter * Math.PI) / driveGearRatio;
-    public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
+    // public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
     // public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */

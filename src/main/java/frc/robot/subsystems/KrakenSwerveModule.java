@@ -98,7 +98,8 @@ public class KrakenSwerveModule {
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; // TEG was Brake
 
-    angleConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.sensorToMechanismRatio;
+    // after we do this, angleMotor.getPosition will always return wheel angle in rotations
+    angleConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
     angleConfig.ClosedLoopGeneral.ContinuousWrap = Constants.Swerve.continuousWrap;
 
     angleConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleContinuousCurrentLimit;
@@ -126,7 +127,8 @@ public class KrakenSwerveModule {
     driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
     driveConfig.MotorOutput.Inverted = Constants.Swerve.driveInverted;
 
-    driveConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.sensorToMechanismRatio;
+    // after we do this, driveMotor.getPosition will always return rotations of the wheel
+    driveConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.driveGearRatio;
     driveConfig.ClosedLoopGeneral.ContinuousWrap = Constants.Swerve.continuousWrap;
 
     driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.driveContinuousCurrentLimit;
@@ -174,7 +176,8 @@ public class KrakenSwerveModule {
   }
 
   private Rotation2d getAngle() {
-    return Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
+    // wheel angle in rotations, because we applied the mechanism ratio already in the config
+    return Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble()); 
   }
 
   public Rotation2d getCanCoderAngle() {
@@ -184,8 +187,8 @@ public class KrakenSwerveModule {
   public SwerveModuleState getState() {
     // compute wheel speed m/s from the motor velocity in rotations per second
     double speedMetersPerSecond =
-        driveMotor.getVelocity().getValueAsDouble()
-            * Constants.Swerve.driveConversionPositionFactor;
+        driveMotor.getVelocity().getValueAsDouble() // rotations per second of the wheel
+            * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     Rotation2d angle = getAngle();
     if (printCounter % 100 == 0) {
       Logger.Log(
@@ -202,8 +205,8 @@ public class KrakenSwerveModule {
 
   public SwerveModulePosition getPosition() {
     double distanceMeters =
-        driveMotor.getPosition().getValueAsDouble()
-            * Constants.Swerve.driveConversionPositionFactor;
+        driveMotor.getPosition().getValueAsDouble() // number of wheel rotations, because we used mechanism ratio already
+        * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     if (printCounter % 100 == 0) {
       Logger.Log(
           "getPosition(): "
