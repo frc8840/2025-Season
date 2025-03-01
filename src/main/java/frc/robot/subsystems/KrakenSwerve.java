@@ -97,7 +97,7 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   // translation and rotation are the desired behavior of the robot at this moment
-  // translation vector is the desired velocity in m/s and 
+  // translation vector is the desired velocity in m/s and
   // rotation is the desired angular velocity in rotations per second
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
     // first, we compute our desired chassis speeds
@@ -111,15 +111,20 @@ public class KrakenSwerve extends SubsystemBase {
 
   // used by DriverControl and AutoBuilder
   public void driveFromSpeeds(ChassisSpeeds speeds) {
-    if (printCounter%10==0) {
-      Logger.Log("drive() called with " + speeds.vxMetersPerSecond + "," + speeds.vyMetersPerSecond + " and " + speeds.omegaRadiansPerSecond);
+    if (printCounter % 10 == 0) {
+      Logger.Log(
+          "driveFromSpeeds() called with "
+              + speeds.vxMetersPerSecond
+              + ","
+              + speeds.vyMetersPerSecond
+              + " and "
+              + speeds.omegaRadiansPerSecond);
     }
     printCounter++;
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
     // do we need the below?
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
-    Constants.Swerve.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
     setModuleStates(swerveModuleStates);
   }
 
@@ -238,10 +243,17 @@ public class KrakenSwerve extends SubsystemBase {
     for (KrakenSwerveModule mod : mSwerveMods) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees());
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond);
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " Distance", mod.getPosition().distanceMeters);
     }
     // tell dashboard where the robot thinks it is
-    // SmartDashboard.putNumber("Robot heading:", getYawValue());
-    // SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+    SmartDashboard.putNumber("Robot heading:", getYawValue());
+    SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+    SmartDashboard.putString("Module Positions: ", getPositions().toString());
     // for (KrakenSwerveModule mod : mSwerveMods) {
     //   // No voltage being sent to angleMotor, but is being sent to driveMotor
     //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" +

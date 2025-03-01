@@ -51,12 +51,17 @@ public class KrakenSwerveModule {
     driveMotor = new TalonFX(moduleConstants.krakenDriveID);
     driveConfig = new TalonFXConfiguration();
     configDriveMotor();
-
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
     if (printCounter % 100 == 0) {
-      Logger.Log("setDesiredState()" + moduleNumber + " speed=" + desiredState.speedMetersPerSecond + " angle=" + desiredState.angle.getRotations());
+      Logger.Log(
+          "setDesiredState()"
+              + moduleNumber
+              + " speed="
+              + desiredState.speedMetersPerSecond
+              + " angle="
+              + desiredState.angle.getRotations());
     }
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
@@ -145,7 +150,8 @@ public class KrakenSwerveModule {
     } else {
       // convert speed  in m/s to motor velocity in rotations per second
       // driveConversionPositionFactor is the number of rotations the motor makes per meter
-      double rotationsPerSecond = desiredState.speedMetersPerSecond / Constants.Swerve.driveConversionPositionFactor;
+      double rotationsPerSecond =
+          desiredState.speedMetersPerSecond / Constants.Swerve.driveConversionPositionFactor;
       driveMotor.setControl(new VelocityVoltage(rotationsPerSecond));
     }
   }
@@ -178,19 +184,34 @@ public class KrakenSwerveModule {
   public SwerveModuleState getState() {
     // compute wheel speed m/s from the motor velocity in rotations per second
     double speedMetersPerSecond =
-        driveMotor.getVelocity().getValueAsDouble() * Constants.Swerve.driveConversionPositionFactor;
+        driveMotor.getVelocity().getValueAsDouble()
+            * Constants.Swerve.driveConversionPositionFactor;
     Rotation2d angle = getAngle();
     if (printCounter % 100 == 0) {
-      Logger.Log("getState(): " + moduleNumber + " speed=" + speedMetersPerSecond + " angle=" + angle.getRotations());
+      Logger.Log(
+          "getState(): "
+              + moduleNumber
+              + " speed="
+              + speedMetersPerSecond
+              + " angle="
+              + angle.getRotations());
     }
     printCounter++;
     return new SwerveModuleState(speedMetersPerSecond, angle);
   }
 
   public SwerveModulePosition getPosition() {
-    double distanceMeters = driveMotor.getPosition().getValueAsDouble() * Constants.Swerve.driveConversionPositionFactor;
+    double distanceMeters =
+        driveMotor.getPosition().getValueAsDouble()
+            * Constants.Swerve.driveConversionPositionFactor;
     if (printCounter % 100 == 0) {
-      Logger.Log("getPosition(): " + moduleNumber + " distance=" + distanceMeters + " angle=" + getAngle().getRotations());
+      Logger.Log(
+          "getPosition(): "
+              + moduleNumber
+              + " distance="
+              + distanceMeters
+              + " angle="
+              + getAngle().getRotations());
     }
     return new SwerveModulePosition(distanceMeters, getAngle());
   }
@@ -205,7 +226,6 @@ public class KrakenSwerveModule {
         "Cancoder "
             + moduleNumber
             + ": "
-            + (angleEncoder.getAbsolutePosition().getValueAsDouble() - angleOffset.getRotations())
-            );
+            + (angleEncoder.getAbsolutePosition().getValueAsDouble() - angleOffset.getRotations()));
   }
 }

@@ -66,7 +66,8 @@ public class DriverControl extends Command {
     /* Drive */
     if (!isReefRotating) {
       swerve.drive(
-          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),  // convert to m/s
+          new Translation2d(translationVal, strafeVal)
+              .times(Constants.Swerve.maxSpeed), // convert to m/s
           rotationVal * Constants.Swerve.maxAngularVelocity,
           false);
     } else {
