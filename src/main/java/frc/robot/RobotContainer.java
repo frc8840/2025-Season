@@ -1,11 +1,24 @@
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.DriverControl;
 import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
@@ -85,11 +98,11 @@ public class RobotContainer {
     //   newAutoChooser = AutoBuilder.buildAutoChooser();
     //   SmartDashboard.putData("PathPlanner Auto Chooser", newAutoChooser);
 
-    //   trajectoryConfig =
-    //       new TrajectoryConfig(
-    //               Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-    //               Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-    //           .setKinematics(Constants.Swerve.swerveKinematics);
+      trajectoryConfig =
+          new TrajectoryConfig(
+                  Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                  Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+              .setKinematics(Constants.Swerve.swerveKinematics);
   }
 
   // public Command getAutoCommand() {
@@ -107,6 +120,17 @@ public class RobotContainer {
   //       return shootAndDriveForwardCommand(SimpleDirection.straight);
   //   }
   // }
+
+  public Command getDriveForwardCommand() {
+    Pose2d pose = new Pose2d(2, 0, new Rotation2d(0)); // straight
+    Trajectory rollForward2Meters =
+        TrajectoryGenerator.generateTrajectory(
+            new Pose2d(0, 0, new Rotation2d(0)), List.of(), pose, trajectoryConfig);
+            return new SequentialCommandGroup(
+                    new InstantCommand(() -> swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)))),
+                    getAutonomousCommand(rollForward2Meters),
+                    new InstantCommand(() -> swerve.stopModules()));
+  }
 
   // public Command shootAndDriveForwardCommand(SimpleDirection direction) {
   //   // get the pose for the direction
@@ -170,33 +194,42 @@ public class RobotContainer {
   //       });
   // }
 
-  // public SwerveControllerCommand getAutonomousCommand(Trajectory trajectory) {
-  //   // create the PID controllers for feedback
-  //   PIDController xController = new PIDController(0.2, 0, 0);
-  //   PIDController yController = new PIDController(0.2, 0, 0);
-  //   ProfiledPIDController thetaController =
-  //       new ProfiledPIDController(0.2, 0, 0,
-  // Constants.AutoConstants.kThetaControllerConstraints);
-  //   ;
-  //   thetaController.enableContinuousInput(-Math.PI, Math.PI);
-  //   return new SwerveControllerCommand(
-  //       trajectory,
-  //       swerve::getPose,
-  //       Constants.Swerve.swerveKinematics,
-  //       xController,
-  //       yController,
-  //       thetaController,
-  //       swerve::setModuleStates,
-  //       swerve);
-  // }
+  public SwerveControllerCommand getAutonomousCommand(Trajectory trajectory) {
+    // create the PID controllers for feedback
+    PIDController xController = new PIDController(0.2, 0, 0);
+    PIDController yController = new PIDController(0.2, 0, 0);
+    ProfiledPIDController thetaController =
+        new ProfiledPIDController(0.2, 0, 0,
+  Constants.AutoConstants.kThetaControllerConstraints);
+    ;
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    return new SwerveControllerCommand(
+        trajectory,
+        swerve::getPose,
+        Constants.Swerve.swerveKinematics,
+        xController,
+        yController,
+        thetaController,
+        swerve::setModuleStates,
+        swerve);
+  }
 
   public Command getPathPlannerAutonomousCommand() {
     try {
       // Load the path you want to follow using its name in the GUI
-      PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+      PathPlannerPath path = PathPlannerPath.fromPathFile("New Path");
+      return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          swerve.zeroGyro();
+          swerve.zeroOdometry();
+          swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+          Logger.Log("PathPlannerAutoCommand() called. Current Pose (should be zero): " + swerve.getPose());
+        }
+      ),
 
       // Create a path following command using AutoBuilder. This will also trigger event markers.
-      return AutoBuilder.followPath(path);
+      AutoBuilder.followPath(path)
+      );
     } catch (Exception e) {
       DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
       return Commands.none();

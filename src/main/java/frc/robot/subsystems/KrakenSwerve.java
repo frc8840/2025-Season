@@ -111,7 +111,7 @@ public class KrakenSwerve extends SubsystemBase {
 
   // used by DriverControl and AutoBuilder
   public void driveFromSpeeds(ChassisSpeeds speeds) {
-    if (printCounter % 10 == 0) {
+    if (printCounter % 100 == 0) {
       Logger.Log(
           "driveFromSpeeds() called with "
               + speeds.vxMetersPerSecond
@@ -203,11 +203,19 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
+    if (printCounter % 1000 == 0) {
+      Logger.Log("Pose is " + odometer.getPoseMeters());
+    }
     return odometer.getPoseMeters();
   }
 
   public void resetOdometry(Pose2d pose) {
     odometer.resetPosition(getYaw(), getPositions(), pose);
+  }
+
+  public void zeroOdometry() {
+    Rotation2d zeroedPosition = new Rotation2d(0);
+    odometer.update(zeroedPosition, getPositions());
   }
 
   public KrakenSwerveModule[] getModules() {
@@ -222,8 +230,16 @@ public class KrakenSwerve extends SubsystemBase {
     return positions;
   }
 
+  public SwerveModulePosition[] getZeroedPositions() {
+    SwerveModulePosition[] zeroPositions = new SwerveModulePosition[4];
+    for (int i = 0; i < mSwerveMods.length; i++) {
+      zeroPositions[i] = new SwerveModulePosition(0.0, new Rotation2d(0.0));
+    }
+    return zeroPositions;
+  }
+
   public void zeroGyro() {
-    gyro.setAngleAdjustment(180);
+    gyro.setAngleAdjustment(0);
   }
 
   public double getYawValue() {

@@ -134,7 +134,7 @@ public class SparkSwerveModule {
     driveConfig.smartCurrentLimit(Constants.Swerve.driveContinuousCurrentLimit);
     driveConfig.inverted(Constants.Swerve.driveInvert);
     driveConfig.idleMode(Constants.Swerve.driveNeutralMode);
-    driveConfig.encoder.velocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
+    // driveConfig.encoder.velocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveConfig.encoder.positionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
     driveConfig.closedLoop.p(Constants.Swerve.angleKP);
     driveConfig.closedLoop.i(Constants.Swerve.angleKI);

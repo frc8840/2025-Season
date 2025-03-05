@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // Logger.Log("Autonomous Init Called");
-    Command autonomousCommand = container.getPathPlannerAutonomousCommand();
+    Command autonomousCommand = container.getDriveForwardCommand();
     // schedule the autonomous command - adds it to the scheduler
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
