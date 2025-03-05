@@ -25,6 +25,9 @@ public class KrakenSwerveModule {
   private TalonFXConfiguration angleConfig;
   private TalonFXConfiguration driveConfig;
 
+  private SwerveModuleState currentState = new SwerveModuleState();
+  private SwerveModuleState state;
+
   // to limit frequency of printing
   private int printCounter = 0;
 
@@ -154,7 +157,8 @@ public class KrakenSwerveModule {
       // driveConversionPositionFactor is the number of rotations the motor makes per meter
       double wheelRotationsPerSecond =
           desiredState.speedMetersPerSecond / Constants.Swerve.wheelCircumference;
-      // I think we send wheel rotations/sec to the motor because it is already using mechanism ratio
+      // I think we send wheel rotations/sec to the motor because it is already using mechanism
+      // ratio
       driveMotor.setControl(new VelocityVoltage(wheelRotationsPerSecond));
     }
   }
@@ -178,7 +182,7 @@ public class KrakenSwerveModule {
 
   private Rotation2d getAngle() {
     // wheel angle in rotations, because we applied the mechanism ratio already in the config
-    return Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble()); 
+    return Rotation2d.fromRotations(angleMotor.getPosition().getValueAsDouble());
   }
 
   public Rotation2d getCanCoderAngle() {
@@ -206,8 +210,11 @@ public class KrakenSwerveModule {
 
   public SwerveModulePosition getPosition() {
     double distanceMeters =
-        driveMotor.getPosition().getValueAsDouble() // number of wheel rotations, because we used mechanism ratio already
-        * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
+        driveMotor
+                .getPosition()
+                .getValueAsDouble() // number of wheel rotations, because we used mechanism ratio
+            // already
+            * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     if (printCounter % 100 == 0) {
       Logger.Log(
           "getPosition(): "

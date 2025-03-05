@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,6 +20,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
@@ -26,6 +30,7 @@ public class KrakenSwerve extends SubsystemBase {
   private final AHRS gyro;
   private SwerveDriveOdometry odometer;
   private KrakenSwerveModule[] mSwerveMods;
+  // private final SwerveDriveKinematics kinematics;
   private Field2d field;
   private int printCounter = 0;
 
@@ -37,6 +42,13 @@ public class KrakenSwerve extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       startPositions[i] = new SwerveModulePosition();
     }
+
+    // kinematics = new SwerveDriveKinematics(
+    //   Constants.Swerve.flModuleOffset,
+    //   Constants.Swerve.frModuleOffset,
+    //   Constants.Swerve.blModuleOffset,
+    //   Constants.Swerve.brModuleOffset
+    // );
     // is it true that every module is at angle 0.0 when we start?
     odometer =
         new SwerveDriveOdometry(
@@ -209,6 +221,7 @@ public class KrakenSwerve extends SubsystemBase {
     return odometer.getPoseMeters();
   }
 
+  //
   public void resetOdometry(Pose2d pose) {
     odometer.resetPosition(getYaw(), getPositions(), pose);
   }
@@ -246,6 +259,8 @@ public class KrakenSwerve extends SubsystemBase {
     return gyro.getYaw();
   }
 
+  // FROM THEIR DOCUMENTATION, NEED TO CHECK IF WE ARE HANDLING THIS THE RIGHT WAY: Returns the
+  // current yaw value (in degrees, from -180 to 180)
   public Rotation2d getYaw() {
     return Constants.Swerve.invertGyro
         ? Rotation2d.fromDegrees(360 - getYawValue())
@@ -297,4 +312,64 @@ public class KrakenSwerve extends SubsystemBase {
 
     return chassisSpeeds;
   }
+
+  public Command followPathCommand(String pathName) {
+    try {
+      PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+      RobotConfig config = RobotConfig.fromGUISettings();
+      return new FollowPathCommand(
+          path,
+          this::getPose, // Robot pose supplier
+          this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          (speeds, feedforwards) ->
+              driveFromSpeeds(
+                  speeds), // Method that will drive the robot given ROBOT RELATIVE(speeds), //, //
+          // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds,
+          // AND feedforwards
+          new PPHolonomicDriveController( // PPHolonomicController is the built in path following
+              // controller for holonomic drive trains
+              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+              ),
+          config, // The robot configuration
+          () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+          },
+          this // Reference to this subsystem to set requirements
+          );
+    } catch (Exception e) {
+      DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+      return Commands.none();
+    }
+  }
+
+  // public ChassisSpeeds getSpeeds() {
+  //   return kinematics.toChassisSpeeds(getModuleStates());
+  // }
+
+  // public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+  //   ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+  //   SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
+  //   for (int i = 0; i < mSwerveMods.length; i++) {
+  //     mSwerveMods[i].setDesiredState(targetStates[i]);
+  //   }
+  // }
+
+  // public SwerveModuleState[] getModuleStates() {
+  //   SwerveModuleState[] states = new SwerveModuleState[mSwerveMods.length];
+  //   for (int i = 0; i < mSwerveMods.length; i++) {
+  //     states[i] = mSwerveMods[i].getState();
+  //   }
+  //   return states;
+  // }
 }

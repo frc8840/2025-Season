@@ -90,7 +90,8 @@ public final class Constants {
     // driveConversionPositionFactor is the number of rotations the motor makes per meter
     public static final double driveConversionPositionFactor =
         (wheelDiameter * Math.PI) / driveGearRatio;
-    // public static final double driveConversionVelocityFactor = driveConversionPositionFactor / 60.0;
+    // public static final double driveConversionVelocityFactor = driveConversionPositionFactor /
+    // 60.0;
     // public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */

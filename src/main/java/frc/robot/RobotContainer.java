@@ -1,15 +1,11 @@
 package frc.robot;
 
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -26,6 +22,7 @@ import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.KrakenSwerve;
 import frc.robot.subsystems.PickUpNote;
+import java.util.List;
 
 public class RobotContainer {
   private static RobotContainer instance;
@@ -98,11 +95,11 @@ public class RobotContainer {
     //   newAutoChooser = AutoBuilder.buildAutoChooser();
     //   SmartDashboard.putData("PathPlanner Auto Chooser", newAutoChooser);
 
-      trajectoryConfig =
-          new TrajectoryConfig(
-                  Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                  Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-              .setKinematics(Constants.Swerve.swerveKinematics);
+    trajectoryConfig =
+        new TrajectoryConfig(
+                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            .setKinematics(Constants.Swerve.swerveKinematics);
   }
 
   // public Command getAutoCommand() {
@@ -126,10 +123,10 @@ public class RobotContainer {
     Trajectory rollForward2Meters =
         TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)), List.of(), pose, trajectoryConfig);
-            return new SequentialCommandGroup(
-                    new InstantCommand(() -> swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)))),
-                    getAutonomousCommand(rollForward2Meters),
-                    new InstantCommand(() -> swerve.stopModules()));
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)))),
+        getAutonomousCommand(rollForward2Meters),
+        new InstantCommand(() -> swerve.stopModules()));
   }
 
   // public Command shootAndDriveForwardCommand(SimpleDirection direction) {
@@ -199,8 +196,7 @@ public class RobotContainer {
     PIDController xController = new PIDController(0.2, 0, 0);
     PIDController yController = new PIDController(0.2, 0, 0);
     ProfiledPIDController thetaController =
-        new ProfiledPIDController(0.2, 0, 0,
-  Constants.AutoConstants.kThetaControllerConstraints);
+        new ProfiledPIDController(0.2, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
     ;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
     return new SwerveControllerCommand(
@@ -219,17 +215,19 @@ public class RobotContainer {
       // Load the path you want to follow using its name in the GUI
       PathPlannerPath path = PathPlannerPath.fromPathFile("New Path");
       return new SequentialCommandGroup(
-        new InstantCommand(() -> {
-          swerve.zeroGyro();
-          swerve.zeroOdometry();
-          swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-          Logger.Log("PathPlannerAutoCommand() called. Current Pose (should be zero): " + swerve.getPose());
-        }
-      ),
+          new InstantCommand(
+              () -> {
+                swerve.zeroGyro();
+                swerve.zeroOdometry();
+                swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+                Logger.Log(
+                    "PathPlannerAutoCommand() called. Current Pose (should be zero): "
+                        + swerve.getPose());
+              }),
 
-      // Create a path following command using AutoBuilder. This will also trigger event markers.
-      AutoBuilder.followPath(path)
-      );
+          // Create a path following command using AutoBuilder. This will also trigger event
+          // markers.
+          AutoBuilder.followPath(path));
     } catch (Exception e) {
       DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
       return Commands.none();
