@@ -150,11 +150,12 @@ public class KrakenSwerveModule {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       driveMotor.setControl(new DutyCycleOut(percentOutput));
     } else {
-      // convert speed  in m/s to motor velocity in rotations per second
+      // convert speed in m/s to wheel rotations per second
       // driveConversionPositionFactor is the number of rotations the motor makes per meter
-      double rotationsPerSecond =
-          desiredState.speedMetersPerSecond / Constants.Swerve.driveConversionPositionFactor;
-      driveMotor.setControl(new VelocityVoltage(rotationsPerSecond));
+      double wheelRotationsPerSecond =
+          desiredState.speedMetersPerSecond / Constants.Swerve.wheelCircumference;
+      // I think we send wheel rotations/sec to the motor because it is already using mechanism ratio
+      driveMotor.setControl(new VelocityVoltage(wheelRotationsPerSecond));
     }
   }
 
@@ -187,7 +188,7 @@ public class KrakenSwerveModule {
   public SwerveModuleState getState() {
     // compute wheel speed m/s from the motor velocity in rotations per second
     double speedMetersPerSecond =
-        driveMotor.getVelocity().getValueAsDouble() // rotations per second of the wheel
+        driveMotor.getVelocity().getValueAsDouble() // rotations of the wheel per second
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     Rotation2d angle = getAngle();
     if (printCounter % 100 == 0) {
