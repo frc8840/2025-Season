@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
+import frc.robot.subsystems.KrakenSwerve;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +20,7 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
 
   RobotContainer container;
+  KrakenSwerve swerve;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -29,6 +31,7 @@ public class Robot extends TimedRobot {
     Logger.Log("RobotInitRan");
     ctreConfigs = new CTREConfigs();
     container = new RobotContainer();
+    swerve = new KrakenSwerve();
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
 
@@ -59,7 +62,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // Logger.Log("Autonomous Init Called");
-    Command autonomousCommand = container.getDriveForwardCommand();
+    Command autonomousCommand = swerve.followPathCommand("Test Path");
     // schedule the autonomous command - adds it to the scheduler
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

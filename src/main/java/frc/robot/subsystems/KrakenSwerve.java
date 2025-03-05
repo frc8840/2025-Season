@@ -329,7 +329,7 @@ public class KrakenSwerve extends SubsystemBase {
           // AND feedforwards
           new PPHolonomicDriveController( // PPHolonomicController is the built in path following
               // controller for holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(40.0, 5, 0.0), // Translation PID constants, NEED TO ADJUST THESE, WHEELS AREN'T really moving, set very high but still barely moving
               new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
               ),
           config, // The robot configuration
