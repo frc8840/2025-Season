@@ -3,9 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.KrakenSwerve;
 
@@ -67,9 +69,13 @@ public class DriverControl extends Command {
     if (!isReefRotating) {
       swerve.drive(
           new Translation2d(translationVal, strafeVal)
-              .times(Constants.Swerve.maxSpeed), // convert to m/s
-          rotationVal * Constants.Swerve.maxAngularVelocity,
+              .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s
+          rotationVal * Constants.Swerve.maxAngularVelocityRadiansPerSecond,
           false);
+      // ask for ChassisSpeeds so we can print it to logs for debugging
+      ChassisSpeeds chassisSpeeds = swerve.getChassisSpeeds();
+      Logger.LogPeriodic("getChassisSpeeds: " + chassisSpeeds);
+
     } else {
       if (isHuggingReef) {
         swerve.rotateAroundReef(true, translationVal);

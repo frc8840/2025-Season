@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import au.grapplerobotics.CanBridge;
+// import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -20,11 +20,20 @@ import frc.robot.subsystems.KrakenSwerve;
  * project.
  */
 public class Robot extends TimedRobot {
+  private static Robot instance;
   public static CTREConfigs ctreConfigs;
 
   RobotContainer container;
   KrakenSwerve swerve;
   private LaserCan lc;
+
+  public static Robot getInstance() {
+    return instance;
+  }
+
+  public Robot() {
+    instance = this;
+  }
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -59,17 +68,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    Logger.loopCounter++;
     CommandScheduler.getInstance().run();
-    CanBridge.runTCP();
+    // CanBridge.runTCP();
     LaserCan.Measurement measurement = lc.getMeasurement();
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      System.out.println("The target is " + measurement.distance_mm + "mm away!");
-    } else {
-      System.out.println(
-          "Oh no! The target is out of range, or we can't get a reliable measurement!");
-      // You can still use distance_mm in here, if you're ok tolerating a clamped value or an
-      // unreliable measurement.
-    }
+    // if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+    //   System.out.println("The target is " + measurement.distance_mm + "mm away!");
+    // } else {
+    //   System.out.println(
+    //       "Oh no! The target is out of range, or we can't get a reliable measurement!");
+    //   // You can still use distance_mm in here, if you're ok tolerating a clamped value or an
+    //   // unreliable measurement.
+    // }
   }
 
   /**

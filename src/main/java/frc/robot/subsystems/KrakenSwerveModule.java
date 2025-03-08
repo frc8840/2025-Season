@@ -28,9 +28,6 @@ public class KrakenSwerveModule {
   private SwerveModuleState currentState = new SwerveModuleState();
   private SwerveModuleState state;
 
-  // to limit frequency of printing
-  private int printCounter = 0;
-
   private final SimpleMotorFeedforward feedforward =
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
@@ -57,15 +54,13 @@ public class KrakenSwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
-    if (printCounter % 100 == 0) {
-      Logger.Log(
-          "setDesiredState()"
-              + moduleNumber
-              + " speed="
-              + desiredState.speedMetersPerSecond
-              + " angle="
-              + desiredState.angle.getRotations());
-    }
+      // Logger.LogPeriodic(
+      //     " setDesiredState()"
+      //         + moduleNumber
+      //         + " speed="
+      //         + desiredState.speedMetersPerSecond
+      //         + " angle="
+      //         + desiredState.angle.getRotations());
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
     setSpeed(desiredState, false);
@@ -145,12 +140,9 @@ public class KrakenSwerveModule {
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    // if (desiredState.speedMetersPerSecond > 0.01) {
-    //   Logger.Log("setSpeed: " + desiredState.speedMetersPerSecond);
-    // }
     if (isOpenLoop) {
       // convert speed in m/s to percent output
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
       driveMotor.setControl(new DutyCycleOut(percentOutput));
     } else {
       // convert speed in m/s to wheel rotations per second
@@ -195,16 +187,13 @@ public class KrakenSwerveModule {
         driveMotor.getVelocity().getValueAsDouble() // rotations of the wheel per second
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     Rotation2d angle = getAngle();
-    if (printCounter % 100 == 0) {
-      Logger.Log(
-          "getState(): "
-              + moduleNumber
-              + " speed="
-              + speedMetersPerSecond
-              + " angle="
-              + angle.getRotations());
-    }
-    printCounter++;
+      // Logger.LogPeriodic(
+      //     " getState(): "
+      //         + moduleNumber
+      //         + " speed="
+      //         + speedMetersPerSecond
+      //         + " angle="
+      //         + angle.getRotations());
     return new SwerveModuleState(speedMetersPerSecond, angle);
   }
 
@@ -215,15 +204,12 @@ public class KrakenSwerveModule {
                 .getValueAsDouble() // number of wheel rotations, because we used mechanism ratio
             // already
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
-    if (printCounter % 100 == 0) {
-      Logger.Log(
-          "getPosition(): "
-              + moduleNumber
-              + " distance="
-              + distanceMeters
-              + " angle="
-              + getAngle().getRotations());
-    }
+      // Logger.LogPeriodic(" getPosition(): "
+      //         + moduleNumber
+      //         + " distance="
+      //         + distanceMeters
+      //         + " angle="
+      //         + getAngle().getRotations());
     return new SwerveModulePosition(distanceMeters, getAngle());
   }
 

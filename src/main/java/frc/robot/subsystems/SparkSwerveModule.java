@@ -148,7 +148,7 @@ public class SparkSwerveModule {
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
       driveMotor.set(percentOutput);
     } else {
       driveController.setReference(

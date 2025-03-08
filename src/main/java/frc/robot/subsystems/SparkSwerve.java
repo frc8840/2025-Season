@@ -123,7 +123,7 @@ public class SparkSwerve extends SubsystemBase {
   public void runEachMotorForOneSecond() {
     for (SparkSwerveModule module : mSwerveMods) {
       // Run the current module's motor at full speed (or desired speed).
-      module.setDesiredState(new SwerveModuleState(Constants.Swerve.maxSpeed, new Rotation2d()));
+      module.setDesiredState(new SwerveModuleState(Constants.Swerve.maxSpeedMetersPerSecond, new Rotation2d()));
       Logger.Log("Running module " + module.moduleNumber + " for 1 second.");
 
       // Wait for 1 second.
@@ -215,7 +215,6 @@ public class SparkSwerve extends SubsystemBase {
     ChassisSpeeds chassisSpeeds =
         Constants.Swerve.swerveKinematics.toChassisSpeeds(
             frontLeftState, frontRightState, backLeftState, backRightState);
-
     return chassisSpeeds;
   }
 }
