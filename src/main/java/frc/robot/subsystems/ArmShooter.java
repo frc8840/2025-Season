@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -13,33 +16,27 @@ import frc.robot.Settings;
 
 public class ArmShooter extends SubsystemBase {
 
-  public SparkMax leftMotor;
-  public SparkMax rightMotor;
+  public TalonFX leftMotor;
+  public TalonFX rightMotor;
 
-  private SparkMaxConfig lMoterConfig = new SparkMaxConfig();
-  private SparkMaxConfig rMoterConfig = new SparkMaxConfig();
-
-  public RelativeEncoder leftEncoder;
-  public RelativeEncoder rightEncoder;
+  private TalonFXConfiguration lMotorConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration rMotorConfig = new TalonFXConfiguration();
 
   public boolean inShooterComplexAction = false;
 
   public ArmShooter() {
 
-    leftMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID, MotorType.kBrushless);
-    rightMotor = new SparkMax(Settings.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
+    leftMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID);
+    rightMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID2);
 
-    leftEncoder = leftMotor.getEncoder();
-    rightEncoder = rightMotor.getEncoder();
+    lMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    rMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
-    lMoterConfig.idleMode(IdleMode.kCoast);
-    rMoterConfig.idleMode(IdleMode.kCoast);
+    lMotorConfig.CurrentLimits.SupplyCurrentLimit = 100; // was 100, 80, just used 100
+    // lMoterConfig.CurrentLimits.secondaryCurrentLimit(105); //Doesn't exist for TalonFX
 
-    lMoterConfig.smartCurrentLimit(100, 80);
-    lMoterConfig.secondaryCurrentLimit(105);
-
-    rMoterConfig.smartCurrentLimit(100, 80);
-    rMoterConfig.secondaryCurrentLimit(105);
+    rMotorConfig.CurrentLimits.SupplyCurrentLimit = 100; // was 100, 80, just used 100
+    // rMoterConfig.secondaryCurrentLimit(105); //Doesn't exist for TalonFX
 
     // sMotor.setOpenLoopRampRate(0.2);
     // sMotor2.setOpenLoopRampRate(0.2);
@@ -47,18 +44,20 @@ public class ArmShooter extends SubsystemBase {
     // lMoterConfig.setCANTimeout(20);
     // rMoterConfig.setCANTimeout(20);
 
-    leftMotor.configure(
-        lMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    rightMotor.configure(
-        rMoterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    leftMotor.getConfigurator().apply(lMotorConfig);
+    rightMotor.getConfigurator().apply(lMotorConfig);
+    // leftMotor.configure(
+    //     lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // rightMotor.configure(
+    //     rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Shooter left ", leftEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter right ", rightEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter left ", leftMotor.getVelocity().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter right ", rightMotor.getVelocity().getValueAsDouble());
     boolean isReady =
-        (Math.abs(leftEncoder.getVelocity()) > 4300 && Math.abs(rightEncoder.getVelocity()) > 4300);
+        (Math.abs(leftMotor.getVelocity().getValueAsDouble()) > 4300 && Math.abs(rightMotor.getVelocity().getValueAsDouble()) > 4300);
     SmartDashboard.putBoolean("Shooter Ready", isReady);
   }
 
@@ -74,8 +73,10 @@ public class ArmShooter extends SubsystemBase {
   }
 
   public void gethard() {
-    lMoterConfig.idleMode(IdleMode.kBrake);
-    rMoterConfig.idleMode(IdleMode.kBrake);
+    lMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    rMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    leftMotor.getConfigurator().apply(lMotorConfig);
+    rightMotor.getConfigurator().apply(lMotorConfig);
   }
 
   public boolean isAbletoShoot() {
