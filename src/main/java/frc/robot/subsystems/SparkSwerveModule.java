@@ -68,11 +68,12 @@ public class SparkSwerveModule {
     // Custom optimize command, since default WPILib optimize assumes continuous
     // controller which
     // REV and CTRE are not
-
+    Logger.LogPeriodic(moduleNumber + " desiredState BEFORE: " + desiredState);
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
+    Logger.LogPeriodic(moduleNumber + " desiredState AFTER: " + desiredState);
     setAngle(desiredState);
-    setSpeed(desiredState, true); // let's try open loop control for now
+    setSpeed(desiredState, true); 
   }
 
   private void resetToAbsolute() {
@@ -148,9 +149,11 @@ public class SparkSwerveModule {
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
+      double percentOutput = desiredState.speedMetersPerSecond / 5.0; // very rough approximation of top speed for now!
+      Logger.LogPeriodic(moduleNumber + " setSpeed %out: " + percentOutput);
       driveMotor.set(percentOutput);
     } else {
+      Logger.LogPeriodic(moduleNumber + " setSpeed m/s: " + desiredState.speedMetersPerSecond);
       driveController.setReference(
           desiredState.speedMetersPerSecond,
           ControlType.kVelocity,
