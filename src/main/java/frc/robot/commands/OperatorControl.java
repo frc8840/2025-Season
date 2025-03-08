@@ -87,9 +87,9 @@ public class OperatorControl extends Command {
     // arm.wristEncoder.setPosition(0);
     // }
 
-    if (ps4controller.getShareButtonPressed()) {
-      arm.relax();
-    }
+    // if (ps4controller.getShareButtonPressed()) {
+    //   arm.relax();
+    // }
 
     if (ps4controller.getOptionsButtonPressed()) {
       arm.gethard();
@@ -128,6 +128,17 @@ public class OperatorControl extends Command {
                     shooter.stop();
                   }));
       c.schedule();
+    }
+
+    if (ps4controller.getShareButtonPressed()) {
+      Command c =
+          new SequentialCommandGroup(
+              new InstantCommand(() -> shooter.shoot()),
+              new WaitCommand(1),
+              new InstantCommand(
+                  () -> {
+                    shooter.stop();
+                  }));
     }
 
     // Starting to set up mode to control the arm with the left stick
