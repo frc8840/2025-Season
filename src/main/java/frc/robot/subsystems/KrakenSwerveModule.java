@@ -143,18 +143,18 @@ public class KrakenSwerveModule {
     Logger.LogPeriodic(moduleNumber + " setSpeed mps: " + desiredState.speedMetersPerSecond);
     if (isOpenLoop) {
       // convert speed in m/s to percent output
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
+      double percentOutput = desiredState.speedMetersPerSecond / 5.0;
       Logger.LogPeriodic(moduleNumber + " setSpeed %: " + percentOutput);
       driveMotor.setControl(new DutyCycleOut(percentOutput));
     } else {
-      // convert speed in m/s to wheel rotations per second
-      // driveConversionPositionFactor is the number of rotations the motor makes per meter
+      // convert speed in m/s to motor rotations per second
       double wheelRotationsPerSecond =
           desiredState.speedMetersPerSecond / Constants.Swerve.wheelCircumference;
-          Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + wheelRotationsPerSecond);
+      double motorRotationsPerSecond = wheelRotationsPerSecond * Constants.Swerve.driveGearRatio;
+          Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
           // I think we send wheel rotations/sec to the motor because it is already using mechanism
       // ratio
-      driveMotor.setControl(new VelocityVoltage(wheelRotationsPerSecond));
+      driveMotor.setControl(new VelocityVoltage(motorRotationsPerSecond));
     }
   }
 
