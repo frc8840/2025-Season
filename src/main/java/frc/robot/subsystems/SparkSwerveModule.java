@@ -149,11 +149,10 @@ public class SparkSwerveModule {
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / 5.0; // very rough approximation of top speed for now!
-      Logger.LogPeriodic(moduleNumber + " setSpeed %out: " + percentOutput);
+      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
+      
       driveMotor.set(percentOutput);
     } else {
-      Logger.LogPeriodic(moduleNumber + " setSpeed m/s: " + desiredState.speedMetersPerSecond);
       driveController.setReference(
           desiredState.speedMetersPerSecond,
           ControlType.kVelocity,
