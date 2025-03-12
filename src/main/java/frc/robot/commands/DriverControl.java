@@ -59,14 +59,15 @@ public class DriverControl extends Command {
     // apply the deadband so we don't do anything right around the center of the
     // joysticks
     double translationVal =
-        translationLimiter.calculate(MathUtil.applyDeadband(xboxcontroller.getLeftY(), 0.05));
+        translationLimiter.calculate(MathUtil.applyDeadband(-xboxcontroller.getLeftY(), 0.05));
     double strafeVal =
-        strafeLimiter.calculate(MathUtil.applyDeadband(-xboxcontroller.getLeftX(), 0.05));
+        strafeLimiter.calculate(MathUtil.applyDeadband(xboxcontroller.getLeftX(), 0.05));
     double rotationVal =
-        rotationLimiter.calculate(MathUtil.applyDeadband(-xboxcontroller.getRightX(), 0.05));
+        rotationLimiter.calculate(MathUtil.applyDeadband(xboxcontroller.getRightX(), 0.05));
 
     /* Drive */
     if (!isReefRotating) {
+      Logger.LogPeriodic("swerve.drive() called with translation="+translationVal+" and strafe=" + strafeVal );
       swerve.drive(
           new Translation2d(translationVal, strafeVal)
               .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s

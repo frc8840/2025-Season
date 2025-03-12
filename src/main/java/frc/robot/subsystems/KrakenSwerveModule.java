@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -24,13 +23,6 @@ public class KrakenSwerveModule {
   private CANcoder angleEncoder;
   private TalonFXConfiguration angleConfig;
   private TalonFXConfiguration driveConfig;
-
-  private SwerveModuleState currentState = new SwerveModuleState();
-  private SwerveModuleState state;
-
-  private final SimpleMotorFeedforward feedforward =
-      new SimpleMotorFeedforward(
-          Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
   private final PositionVoltage anglePosition = new PositionVoltage(0).withSlot(0);
 
@@ -54,13 +46,6 @@ public class KrakenSwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
-      // Logger.LogPeriodic(
-      //     " setDesiredState()"
-      //         + moduleNumber
-      //         + " speed="
-      //         + desiredState.speedMetersPerSecond
-      //         + " angle="
-      //         + desiredState.angle.getRotations());
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
     setSpeed(desiredState, false);
@@ -91,8 +76,6 @@ public class KrakenSwerveModule {
   }
 
   private void configAngleMotor() {
-    //    angleConfig.voltageCompensation(Constants.Swerve.voltageComp);
-
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; // TEG was Brake
 
@@ -106,12 +89,6 @@ public class KrakenSwerveModule {
     angleConfig.Slot0.kP = Constants.Swerve.aKrakenKP;
     angleConfig.Slot0.kI = Constants.Swerve.aKrakenKI;
     angleConfig.Slot0.kD = Constants.Swerve.aKrakenKD;
-    // angleConfig.Slot0.kS = 0.25;
-    // angleConfig.Slot0.kV = 0.12;
-    // angleConfig.Slot0.kA = 0.01;
-
-    // need to figure out neutral mode, could be the problem
-    // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
     angleMotor.getConfigurator().apply(angleConfig);
     resetToAbsolute();
   }
@@ -137,6 +114,7 @@ public class KrakenSwerveModule {
     driveConfig.Slot0.kD = Constants.Swerve.dKrakenKD;
 
     driveMotor.getConfigurator().apply(driveConfig);
+    driveMotor.setPosition(0.0); // TEG: zero out the drive motor positions for odometry
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -154,7 +132,9 @@ public class KrakenSwerveModule {
           Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
           // I think we send wheel rotations/sec to the motor because it is already using mechanism
       // ratio
-      driveMotor.setControl(new VelocityVoltage(motorRotationsPerSecond));
+      VelocityVoltage velocityControl = new VelocityVoltage(motorRotationsPerSecond);
+      velocityControl.Slot = 0;
+      driveMotor.setControl(velocityControl);
     }
   }
 
@@ -190,13 +170,6 @@ public class KrakenSwerveModule {
         driveMotor.getVelocity().getValueAsDouble() // rotations of the wheel per second
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     Rotation2d angle = getAngle();
-      // Logger.LogPeriodic(
-      //     " getState(): "
-      //         + moduleNumber
-      //         + " speed="
-      //         + speedMetersPerSecond
-      //         + " angle="
-      //         + angle.getRotations());
     return new SwerveModuleState(speedMetersPerSecond, angle);
   }
 
@@ -205,14 +178,7 @@ public class KrakenSwerveModule {
         driveMotor
                 .getPosition()
                 .getValueAsDouble() // number of wheel rotations, because we used mechanism ratio
-            // already
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
-      // Logger.LogPeriodic(" getPosition(): "
-      //         + moduleNumber
-      //         + " distance="
-      //         + distanceMeters
-      //         + " angle="
-      //         + getAngle().getRotations());
     return new SwerveModulePosition(distanceMeters, getAngle());
   }
 

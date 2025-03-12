@@ -58,13 +58,13 @@ public final class Constants {
     public static final int driveContinuousCurrentLimit = 35;
     public static final boolean supplyCurrentLimitEnable = true;
 
-    /* Angle Motor PID Values */
+    /* Spark Angle Motor PID Values */
     public static final double angleKP = 0.01;
     public static final double angleKI = 0.0;
     public static final double angleKD = 0.0;
     public static final double angleKFF = 0.00;
 
-    /* Drive Motor PID Values */
+    /* Spark Drive Motor PID Values */
     public static final double driveKP = 0.1;
     public static final double driveKI = 0.0;
     public static final double driveKD = 0.0;
@@ -73,7 +73,7 @@ public final class Constants {
     /* Kraken Drive Motor PID Values */
     public static final double dKrakenKP = 0.2;
     public static final double dKrakenKI = 0.0;
-    public static final double dKrakenKD = 0.0;
+    public static final double dKrakenKD = 0.1;
 
     /* Kraken Angle Motor PID Values */
     public static final double aKrakenKP = 15.0;
@@ -106,7 +106,7 @@ public final class Constants {
     public static final boolean driveInvert = false;
     public static final boolean angleInvert = false;
     public static final InvertedValue angleInverted = InvertedValue.CounterClockwise_Positive;
-    public static final InvertedValue driveInverted = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue driveInverted = InvertedValue.CounterClockwise_Positive;
 
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
