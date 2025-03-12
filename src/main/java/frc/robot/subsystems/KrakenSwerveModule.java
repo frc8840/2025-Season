@@ -89,6 +89,12 @@ public class KrakenSwerveModule {
     angleConfig.Slot0.kP = Constants.Swerve.aKrakenKP;
     angleConfig.Slot0.kI = Constants.Swerve.aKrakenKI;
     angleConfig.Slot0.kD = Constants.Swerve.aKrakenKD;
+    // angleConfig.Slot0.kS = 0.25;
+    angleConfig.Slot0.kV = 0.12;
+    // angleConfig.Slot0.kA = 0.01;
+
+    // need to figure out neutral mode, could be the problem
+    // angleMotor.setNeutralMode(NeutralModeValue.valueOf(1));
     angleMotor.getConfigurator().apply(angleConfig);
     resetToAbsolute();
   }
@@ -112,6 +118,7 @@ public class KrakenSwerveModule {
     driveConfig.Slot0.kP = Constants.Swerve.dKrakenKP;
     driveConfig.Slot0.kI = Constants.Swerve.dKrakenKI;
     driveConfig.Slot0.kD = Constants.Swerve.dKrakenKD;
+    
 
     driveMotor.getConfigurator().apply(driveConfig);
     driveMotor.setPosition(0.0); // TEG: zero out the drive motor positions for odometry
