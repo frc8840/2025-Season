@@ -129,8 +129,8 @@ public class KrakenSwerveModule {
       double wheelRotationsPerSecond =
           desiredState.speedMetersPerSecond / Constants.Swerve.wheelCircumference;
       double motorRotationsPerSecond = wheelRotationsPerSecond * Constants.Swerve.driveGearRatio;
-          Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
-          // I think we send wheel rotations/sec to the motor because it is already using mechanism
+      Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
+      // I think we send wheel rotations/sec to the motor because it is already using mechanism
       // ratio
       VelocityVoltage velocityControl = new VelocityVoltage(motorRotationsPerSecond);
       velocityControl.Slot = 0;

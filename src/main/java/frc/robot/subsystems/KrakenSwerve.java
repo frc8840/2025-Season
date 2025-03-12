@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
-import frc.robot.Robot;
 
 public class KrakenSwerve extends SubsystemBase {
   private final AHRS gyro;
@@ -110,25 +109,34 @@ public class KrakenSwerve extends SubsystemBase {
   // translation and rotation are the desired behavior of the robot at this moment
   // translation vector is the desired velocity in m/s and
   // rotation is the desired angular velocity in radians per second
-  public void drive(Translation2d translationMetersPerSecond, double rotationRadiansPerSecond, boolean fieldRelative) {
+  public void drive(
+      Translation2d translationMetersPerSecond,
+      double rotationRadiansPerSecond,
+      boolean fieldRelative) {
     // first, we compute our desired chassis speeds
     ChassisSpeeds chassisSpeeds =
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-              translationMetersPerSecond.getX(), translationMetersPerSecond.getY(), rotationRadiansPerSecond, getYaw())
-            : new ChassisSpeeds(translationMetersPerSecond.getX(), translationMetersPerSecond.getY(), rotationRadiansPerSecond);
+                translationMetersPerSecond.getX(),
+                translationMetersPerSecond.getY(),
+                rotationRadiansPerSecond,
+                getYaw())
+            : new ChassisSpeeds(
+                translationMetersPerSecond.getX(),
+                translationMetersPerSecond.getY(),
+                rotationRadiansPerSecond);
     driveFromSpeeds(chassisSpeeds);
   }
 
   // used by DriverControl and AutoBuilder
   public void driveFromSpeeds(ChassisSpeeds speeds) {
-      Logger.LogPeriodic(
-          "driveFromSpeeds() called with "
-              + speeds.vxMetersPerSecond
-              + ","
-              + speeds.vyMetersPerSecond
-              + " and "
-              + speeds.omegaRadiansPerSecond);
+    Logger.LogPeriodic(
+        "driveFromSpeeds() called with "
+            + speeds.vxMetersPerSecond
+            + ","
+            + speeds.vyMetersPerSecond
+            + " and "
+            + speeds.omegaRadiansPerSecond);
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(speeds);
     // do we need the below?
@@ -140,7 +148,8 @@ public class KrakenSwerve extends SubsystemBase {
   public void runEachMotorForOneSecond() {
     for (KrakenSwerveModule module : mSwerveMods) {
       // Run the current module's motor at full speed (or desired speed).
-      module.setDesiredState(new SwerveModuleState(Constants.Swerve.maxSpeedMetersPerSecond, new Rotation2d()));
+      module.setDesiredState(
+          new SwerveModuleState(Constants.Swerve.maxSpeedMetersPerSecond, new Rotation2d()));
       Logger.Log("Running module " + module.moduleNumber + " for 1 second.");
 
       // Wait for 1 second.
@@ -211,7 +220,7 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-      Logger.LogPeriodic("Pose is " + odometer.getPoseMeters());
+    Logger.LogPeriodic("Pose is " + odometer.getPoseMeters());
     return odometer.getPoseMeters();
   }
 

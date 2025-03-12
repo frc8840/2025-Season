@@ -73,7 +73,7 @@ public class SparkSwerveModule {
 
     Logger.LogPeriodic(moduleNumber + " desiredState AFTER: " + desiredState);
     setAngle(desiredState);
-    setSpeed(desiredState, true); 
+    setSpeed(desiredState, true);
   }
 
   private void resetToAbsolute() {
@@ -149,8 +149,9 @@ public class SparkSwerveModule {
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
-      
+      double percentOutput =
+          desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeedMetersPerSecond;
+
       driveMotor.set(percentOutput);
     } else {
       driveController.setReference(
