@@ -72,7 +72,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // CanBridge.runTCP();
     LaserCan.Measurement measurement = lc.getMeasurement();
-    // if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+    // if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
+    // {
     //   System.out.println("The target is " + measurement.distance_mm + "mm away!");
     // } else {
     //   System.out.println(

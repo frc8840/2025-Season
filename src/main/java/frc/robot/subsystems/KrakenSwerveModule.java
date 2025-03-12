@@ -54,13 +54,13 @@ public class KrakenSwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
-      // Logger.LogPeriodic(
-      //     " setDesiredState()"
-      //         + moduleNumber
-      //         + " speed="
-      //         + desiredState.speedMetersPerSecond
-      //         + " angle="
-      //         + desiredState.angle.getRotations());
+    // Logger.LogPeriodic(
+    //     " setDesiredState()"
+    //         + moduleNumber
+    //         + " speed="
+    //         + desiredState.speedMetersPerSecond
+    //         + " angle="
+    //         + desiredState.angle.getRotations());
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
     setSpeed(desiredState, false);
@@ -151,8 +151,8 @@ public class KrakenSwerveModule {
       double wheelRotationsPerSecond =
           desiredState.speedMetersPerSecond / Constants.Swerve.wheelCircumference;
       double motorRotationsPerSecond = wheelRotationsPerSecond * Constants.Swerve.driveGearRatio;
-          Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
-          // I think we send wheel rotations/sec to the motor because it is already using mechanism
+      Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
+      // I think we send wheel rotations/sec to the motor because it is already using mechanism
       // ratio
       driveMotor.setControl(new VelocityVoltage(motorRotationsPerSecond));
     }
@@ -190,13 +190,13 @@ public class KrakenSwerveModule {
         driveMotor.getVelocity().getValueAsDouble() // rotations of the wheel per second
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
     Rotation2d angle = getAngle();
-      // Logger.LogPeriodic(
-      //     " getState(): "
-      //         + moduleNumber
-      //         + " speed="
-      //         + speedMetersPerSecond
-      //         + " angle="
-      //         + angle.getRotations());
+    // Logger.LogPeriodic(
+    //     " getState(): "
+    //         + moduleNumber
+    //         + " speed="
+    //         + speedMetersPerSecond
+    //         + " angle="
+    //         + angle.getRotations());
     return new SwerveModuleState(speedMetersPerSecond, angle);
   }
 
@@ -207,12 +207,12 @@ public class KrakenSwerveModule {
                 .getValueAsDouble() // number of wheel rotations, because we used mechanism ratio
             // already
             * Constants.Swerve.wheelCircumference; // times meters per wheel rotation
-      // Logger.LogPeriodic(" getPosition(): "
-      //         + moduleNumber
-      //         + " distance="
-      //         + distanceMeters
-      //         + " angle="
-      //         + getAngle().getRotations());
+    // Logger.LogPeriodic(" getPosition(): "
+    //         + moduleNumber
+    //         + " distance="
+    //         + distanceMeters
+    //         + " angle="
+    //         + getAngle().getRotations());
     return new SwerveModulePosition(distanceMeters, getAngle());
   }
 

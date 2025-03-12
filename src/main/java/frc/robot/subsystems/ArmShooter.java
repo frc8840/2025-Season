@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Settings;
 
 public class ArmShooter extends SubsystemBase {
@@ -26,12 +27,17 @@ public class ArmShooter extends SubsystemBase {
     // rMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     lMotorConfig.CurrentLimits.SupplyCurrentLimit = 100; // was 100, 80, just used 100
+    lMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
+
     // lMoterConfig.CurrentLimits.secondaryCurrentLimit(105); //Doesn't exist for TalonFX
 
     // rMotorConfig.CurrentLimits.SupplyCurrentLimit = 100; // was 100, 80, just used 100
     // rMoterConfig.secondaryCurrentLimit(105); //Doesn't exist for TalonFX
 
     // sMotor.setOpenLoopRampRate(0.2);
+
+    lMotorConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
+
     // sMotor2.setOpenLoopRampRate(0.2);
 
     // lMoterConfig.setCANTimeout(20);
