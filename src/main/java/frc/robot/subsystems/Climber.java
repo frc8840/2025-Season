@@ -1,30 +1,25 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Settings;
 
 public class Climber extends SubsystemBase {
 
-  private SparkMax lMotor;
-  private SparkMax rMotor;
+  private TalonFX cMotor;
 
-  private SparkMaxConfig lMotorConfig = new SparkMaxConfig();
-  private SparkMaxConfig rMotorConfig = new SparkMaxConfig();
+  private TalonFXConfiguration cMotorConfig = new TalonFXConfiguration();
 
   public RelativeEncoder lEncoder;
   public RelativeEncoder rEncoder;
 
-  private final SparkClosedLoopController lController;
-  private final SparkClosedLoopController rController;
+  // private final SparkClosedLoopController lController;
+  // private final SparkClosedLoopController rController;
 
   // constants
 
@@ -47,123 +42,89 @@ public class Climber extends SubsystemBase {
   public Climber() {
 
     // Assumption of use of a NEO brushless motor
-    lMotor = new SparkMax(Settings.LCLIMBER_MOTOR_ID, MotorType.kBrushless);
-    lEncoder = lMotor.getEncoder();
-    lController = lMotor.getClosedLoopController();
-
-    rMotor = new SparkMax(Settings.RCLIMBER_MOTOR_ID, MotorType.kBrushless);
-    rEncoder = rMotor.getEncoder();
-    rController = rMotor.getClosedLoopController();
+    cMotor = new TalonFX(Settings.LCLIMBER_MOTOR_ID);
+    // lEncoder = lMotor.getEncoder();
+    // lController = lMotor.getClosedLoopController();
 
     // Set the current limits
-    lMotorConfig.smartCurrentLimit(80, 80);
-    lMotorConfig.secondaryCurrentLimit(85);
-    rMotorConfig.smartCurrentLimit(80, 80);
-    rMotorConfig.secondaryCurrentLimit(85);
+    cMotorConfig.CurrentLimits.SupplyCurrentLimit = 80; // was 80, 80,
+    cMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
+    // cMotorConfig.secondaryCurrentLimit(85);
 
     // // Set the ramp rate since it jumps to full speed too quickly - don't want to
     // // break the robot!
-    lMotorConfig.openLoopRampRate(0.2);
-    rMotorConfig.openLoopRampRate(0.2);
+    cMotorConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2; // Not sure if this is correct
 
     // Set the idle mode to brake
-    lMotorConfig.idleMode(IdleMode.kBrake);
-    rMotorConfig.idleMode(IdleMode.kBrake);
+    cMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // Set the CAN timeout to 20ms
     // lMotorConfig.setCANTimeout(20);
     // rMotorConfig.setCANTimeout(20);
 
-    lMotorConfig.voltageCompensation(12.0);
-    rMotorConfig.voltageCompensation(12.0);
+    // cMotorConfig.voltageCompensation(12.0);
 
-    // left
-    lMotorConfig.closedLoop.p(kP);
-    lMotorConfig.closedLoop.i(kI);
-    lMotorConfig.closedLoop.d(kD);
-    lMotorConfig.closedLoop.iZone(kIz);
-    lMotorConfig.closedLoop.velocityFF(kFF);
+    cMotorConfig.Slot0.kP = kP;
+    cMotorConfig.Slot0.kI = kI;
+    cMotorConfig.Slot0.kD = kD;
+    // cMotorConfig.closedLoop.iZone(kIz);
+    cMotorConfig.Slot0.kV = kFF;
     // lController.setOutputRange(kMinOutput, kMaxOutput);
-    lMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
+    // cMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot); //Commented out, not
+    // sure if needed
     // lController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
     // lController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
     // lController.setSmartMotionAllowedClosedLoopError(allowedErr,
     // smartMotionSlot);
-    // right
-    rMotorConfig.closedLoop.p(kP);
-    rMotorConfig.closedLoop.i(kI);
-    rMotorConfig.closedLoop.d(kD);
-    rMotorConfig.closedLoop.iZone(kIz);
-    rMotorConfig.closedLoop.velocityFF(kFF);
     // lController.setOutputRange(kMinOutput, kMaxOutput);
-    rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
-    // rController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    // rController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    // rController.setSmartMotionAllowedClosedLoopError(allowedErr,
-    // smartMotionSlot);
 
     lEncoder.setPosition(0.0);
     rEncoder.setPosition(0.0);
 
     // Update the settings
-    lMotor.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    rMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    cMotor.getConfigurator().apply(cMotorConfig);
   }
 
-  public void Lintake() {
-    lMotor.set(Settings.CLIMBER_INTAKE_SPEED);
+  public void cIntake() {
+    cMotor.set(Settings.CLIMBER_INTAKE_SPEED);
     // Logger.Log("lMotor current: " + lMotor.getOutputCurrent());
   }
 
-  public void Rintake() {
-    rMotor.set(Settings.CLIMBER_INTAKE_SPEED);
-    // Logger.Log("rMotor current: " + lMotor.getOutputCurrent());
-  }
-
-  public void Louttake() {
-    lMotor.set(Settings.CLIMBER_OUTTAKE_SPEED);
+  public void cOuttake() {
+    cMotor.set(Settings.CLIMBER_OUTTAKE_SPEED);
     // Logger.Log("lMotor current: " + lMotor.getOutputCurrent());
   }
 
-  public void Routtake() {
-    rMotor.set(Settings.CLIMBER_OUTTAKE_SPEED);
-    // Logger.Log("rMotor current: " + lMotor.getOutputCurrent());
-  }
-
-  public void leftStop() {
-    lMotor.set(0);
-    lMotorConfig.idleMode(IdleMode.kBrake);
-    lMotor.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
-  public void rightStop() {
-    rMotor.set(0);
-    rMotorConfig.idleMode(IdleMode.kBrake);
-    rMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  public void cStop() {
+    cMotor.set(0);
+    cMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    cMotor.getConfigurator().apply(cMotorConfig);
   }
 
   public void climb() {
-    lController.setReference(270, SparkMax.ControlType.kPosition);
-    rController.setReference(270, SparkMax.ControlType.kPosition);
+    cMotor.setPosition(270);
+    // lController.setReference(270, SparkMax.ControlType.kPosition);
+    // rController.setReference(270, SparkMax.ControlType.kPosition);
   }
 
   public void drop() {
-    lController.setReference(0, SparkMax.ControlType.kPosition);
-    rController.setReference(0, SparkMax.ControlType.kPosition);
+    cMotor.setPosition(0);
+    // lController.setReference(0, SparkMax.ControlType.kPosition);
+    // rController.setReference(0, SparkMax.ControlType.kPosition);
   }
 
   public void fastDeploy() {
     // increase the max velocity
-    lMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
-    rMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
+    // Set the cruise velocity for Motion Magic (sensor units per 100ms)
+    cMotorConfig.MotionMagic.MotionMagicCruiseVelocity = fastVel; // Not sure if right
+    // lMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
     // drop
-    lController.setReference(0, SparkMax.ControlType.kPosition);
-    rController.setReference(0, SparkMax.ControlType.kPosition);
+    cMotor.setPosition(0);
+    // lController.setReference(0, SparkMax.ControlType.kPosition);
     // decrease the max velocity
-    rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
-    rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
+    cMotorConfig.MotionMagic.MotionMagicCruiseVelocity = slowVel; // Not sure if right
+    // rMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot);
 
-    lMotor.configure(lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    rMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    cMotor.getConfigurator().apply(cMotorConfig);
   }
 }

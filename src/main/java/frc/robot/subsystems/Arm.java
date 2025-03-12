@@ -1,13 +1,13 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Settings;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Arm extends SubsystemBase {
 
@@ -28,17 +28,19 @@ public class Arm extends SubsystemBase {
     shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     shoulderConfig.CurrentLimits.SupplyCurrentLimit = 80;
-    shoulderConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
-
+    shoulderConfig.CurrentLimits.SupplyCurrentLimitEnable =
+        Constants.Swerve.supplyCurrentLimitEnable;
 
     // shoulderConfig.secondaryCurrentLimit(85);
 
     shoulderConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
-    // shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE); //was this, not sure if it's right
+    // shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE); //was this, not sure if
+    // it's right
 
     // shoulderConfig.voltageCompensation(12);
 
-    //Don't want, this returns natively in rotations and turns it into degrees, which we Don't want to do.
+    // Don't want, this returns natively in rotations and turns it into degrees, which we Don't want
+    // to do.
     // shoulderConfig.encoder.positionConversionFactor((1 / Settings.SHOULDER_GEAR_RATIO) * 360);
 
     // PID configurations
@@ -82,7 +84,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void relax() {
-    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;    
+    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     shoulderMotor.getConfigurator().apply(shoulderConfig);
     shoulderMotor.set(0);
     // elbowMotor.setIdleMode(IdleMode.kCoast);
@@ -90,7 +92,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void gethard() {
-    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;    
+    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     shoulderMotor.getConfigurator().apply(shoulderConfig);
   }
 
@@ -105,13 +107,14 @@ public class Arm extends SubsystemBase {
   }
 
   public enum ArmPosition {
-    REST(0), //was 0,0
-    INTAKE(117 ), // was 0, 117
-    AMPSHOOTING(90), //was 90, 90
+    REST(0), // was 0,0
+    INTAKE(117), // was 0, 117
+    AMPSHOOTING(90), // was 90, 90
     SPEAKERSHOOTING(0110), // was 0, 110
     INTAKEDEMO(117); // was 0, 117
 
     public final double shoulderAngle;
+
     // public final double elbowAngle;
 
     private ArmPosition(double shoulderAngle) {
