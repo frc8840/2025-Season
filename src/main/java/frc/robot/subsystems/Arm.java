@@ -39,7 +39,7 @@ public class Arm extends SubsystemBase {
 
     // shoulderConfig.voltageCompensation(12);
 
-    // Don't want, this returns natively in rotations and turns it into degrees, which we Don't want
+    // Don't want, this takes something in rotations and turns it into degrees, which we don't want
     // to do.
     // shoulderConfig.encoder.positionConversionFactor((1 / Settings.SHOULDER_GEAR_RATIO) * 360);
 
@@ -107,11 +107,11 @@ public class Arm extends SubsystemBase {
   }
 
   public enum ArmPosition {
-    REST(0), // was 0,0
-    INTAKE(117), // was 0, 117
-    AMPSHOOTING(90), // was 90, 90
-    SPEAKERSHOOTING(0110), // was 0, 110
-    INTAKEDEMO(117); // was 0, 117
+    REST(0), // was 0,0, changing to rotations
+    INTAKE(0.325), // was 0, 117, changing to rotations
+    AMPSHOOTING(0.25), // was 90, 90, changing to rotations
+    SPEAKERSHOOTING(0.306), // was 0, 110, changing to rotations
+    INTAKEDEMO(0.325); // was 0, 117, changing to rotations
 
     public final double shoulderAngle;
 

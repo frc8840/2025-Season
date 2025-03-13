@@ -67,7 +67,8 @@ public class DriverControl extends Command {
 
     /* Drive */
     if (!isReefRotating) {
-      Logger.LogPeriodic("swerve.drive() called with translation="+translationVal+" and strafe=" + strafeVal );
+      Logger.LogPeriodic(
+          "swerve.drive() called with translation=" + translationVal + " and strafe=" + strafeVal);
       swerve.drive(
           new Translation2d(translationVal, strafeVal)
               .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s

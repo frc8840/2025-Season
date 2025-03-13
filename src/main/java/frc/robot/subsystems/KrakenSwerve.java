@@ -255,7 +255,7 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public void zeroGyro() {
-    gyro.zeroYaw(); 
+    gyro.zeroYaw();
   }
 
   public double getYawValue() {
