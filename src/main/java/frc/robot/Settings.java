@@ -13,9 +13,8 @@ public class Settings {
   public static final int OPERATOR_CONTROLLER_PORT = 1;
 
   // ARM SETTINGS
-  public static final int SHOULDER_MOTOR_ID = 40;
+  public static final int SHOULDER_MOTOR_ID = 33;
   // public static final int ELBOW_MOTOR_ID = 41;
-  public static final int WRIST_MOTOR_ID = 42;
 
   public static final double SHOULDER_GEAR_RATIO = 266 / 1;
   // public static final double ELBOW_GEAR_RATIO = 266 / 1;

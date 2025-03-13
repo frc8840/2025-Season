@@ -9,7 +9,7 @@ import frc.robot.Constants;
 import frc.robot.Logger;
 import frc.robot.Settings;
 
-public class PickUpNote extends SubsystemBase {
+public class Intake extends SubsystemBase {
 
   private TalonFX iMotor;
   public boolean inComplexAction = false;
@@ -18,7 +18,7 @@ public class PickUpNote extends SubsystemBase {
 
   // public long motorStartTime = -1; // not running
 
-  public PickUpNote() {
+  public Intake() {
 
     iMotor = new TalonFX(Settings.INTAKE_MOTOR_ID);
 

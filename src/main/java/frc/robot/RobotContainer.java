@@ -20,8 +20,8 @@ import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KrakenSwerve;
-import frc.robot.subsystems.PickUpNote;
 import java.util.List;
 
 public class RobotContainer {
@@ -29,7 +29,7 @@ public class RobotContainer {
   private Arm arm;
   public Climber climber;
   private KrakenSwerve swerve;
-  public PickUpNote intake;
+  public Intake intake;
   public ArmShooter shooter;
 
   // the old chooser

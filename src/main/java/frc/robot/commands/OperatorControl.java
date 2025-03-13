@@ -9,17 +9,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.PickUpNote;
+import frc.robot.subsystems.Intake;
 
 public class OperatorControl extends Command {
 
   private PS4Controller ps4controller;
 
   private Climber climber;
-  private PickUpNote intake;
+  private Intake intake;
   private ArmShooter shooter;
   private Arm arm;
 
@@ -33,7 +32,7 @@ public class OperatorControl extends Command {
   long shooterStarted = -1;
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
-  public OperatorControl(Arm arm, Climber climber, PickUpNote pIntake, ArmShooter shooter) {
+  public OperatorControl(Arm arm, Climber climber, Intake pIntake, ArmShooter shooter) {
     addRequirements(climber);
     this.climber = climber;
     this.intake = pIntake;
@@ -51,19 +50,19 @@ public class OperatorControl extends Command {
     // }
 
     if (ps4controller.getTriangleButton()) {
-      arm.setArmPosition(ArmPosition.AMPSHOOTING);
+      arm.setArmPosition(0.25); // was AMPSHOOTING
     }
 
     if (ps4controller.getL1ButtonPressed()) {
-      arm.setArmPosition(ArmPosition.INTAKE);
+      arm.setArmPosition(0.325); // was INTAKE
     }
 
     if (ps4controller.getR1ButtonPressed()) {
-      arm.setArmPosition(ArmPosition.REST);
+      arm.setArmPosition(0); // was REST
     }
 
     if (ps4controller.getSquareButtonPressed()) {
-      arm.setArmPosition(ArmPosition.SPEAKERSHOOTING);
+      arm.setArmPosition(0.306); // was SPEAKERSHOOTING
     }
 
     if (ps4controller.getCrossButtonPressed()) {

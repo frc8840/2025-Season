@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,11 +15,11 @@ public class Arm extends SubsystemBase {
 
   private TalonFX shoulderMotor;
 
-  private RelativeEncoder shoulderEncoder;
-
   // SparkClosedLoopController shoulderPID;
 
-  private ArmPosition position = ArmPosition.REST;
+  private double position = 0;
+
+  private final PositionVoltage shoulderPosition = new PositionVoltage(0).withSlot(0);
 
   public Arm() {
 
@@ -34,6 +34,8 @@ public class Arm extends SubsystemBase {
     // shoulderConfig.secondaryCurrentLimit(85);
 
     shoulderConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
+
+    shoulderConfig.Feedback.SensorToMechanismRatio = 31.5;
     // shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE); //was this, not sure if
     // it's right
 
@@ -59,7 +61,7 @@ public class Arm extends SubsystemBase {
     // shoulderEncoder = shoulderMotor.getEncoder();
     // shoulderMotor.
 
-    shoulderEncoder.setPosition(0);
+    shoulderMotor.setPosition(0);
 
     // // the PID controllers
     // shoulderPID = shoulderMotor.getClosedLoopController();
@@ -69,12 +71,10 @@ public class Arm extends SubsystemBase {
 
   }
 
-  public void setArmPosition(ArmPosition position) {
-    this.position = position;
-
+  public void setArmPosition(double position) {
     // Logger.Log("shoulder position before:" + shoulderEncoder.getPosition());
     // shoulderMotor.setReference(position.shoulderAngle);
-    shoulderMotor.setPosition(position.shoulderAngle);
+    shoulderMotor.setControl(shoulderPosition.withPosition(position));
 
     // elbowPID.setReference(
     // position.elbowAngle,
@@ -96,30 +96,21 @@ public class Arm extends SubsystemBase {
     shoulderMotor.getConfigurator().apply(shoulderConfig);
   }
 
-  public ArmPosition getArmPosition() {
-    return position;
+  public double getArmPosition() {
+    return shoulderMotor.getPosition().getValueAsDouble(); // returns number in rotations
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm/Shoulder Encoder", shoulderEncoder.getPosition());
+    SmartDashboard.putNumber(
+        "Arm/Shoulder Encoder", shoulderMotor.getPosition().getValueAsDouble());
     // SmartDashboard.putNumber("Arm/Elbow Encoder", elbowEncoder.getPosition());
   }
 
-  public enum ArmPosition {
-    REST(0), // was 0,0, changing to rotations
-    INTAKE(0.325), // was 0, 117, changing to rotations
-    AMPSHOOTING(0.25), // was 90, 90, changing to rotations
-    SPEAKERSHOOTING(0.306), // was 0, 110, changing to rotations
-    INTAKEDEMO(0.325); // was 0, 117, changing to rotations
+  // REST(0), // was 0,0, changing to rotations
+  //   INTAKE(0.325), // was 0, 117, changing to rotations
+  //   AMPSHOOTING(0.25), // was 90, 90, changing to rotations
+  //   SPEAKERSHOOTING(0.306), // was 0, 110, changing to rotations
+  //   INTAKEDEMO(0.325); // was 0, 117, changing to rotations
 
-    public final double shoulderAngle;
-
-    // public final double elbowAngle;
-
-    private ArmPosition(double shoulderAngle) {
-      this.shoulderAngle = shoulderAngle;
-      // this.elbowAngle = elbowAngle;
-    }
-  }
 }
