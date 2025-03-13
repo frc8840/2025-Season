@@ -11,14 +11,14 @@ import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class OperatorControl extends Command {
 
   private PS4Controller ps4controller;
 
   private Climber climber;
-  private Intake intake;
+  private IntakeSubsystem intake;
   private ArmShooter shooter;
   private Arm arm;
 
@@ -32,7 +32,7 @@ public class OperatorControl extends Command {
   long shooterStarted = -1;
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
-  public OperatorControl(Arm arm, Climber climber, Intake pIntake, ArmShooter shooter) {
+  public OperatorControl(Arm arm, Climber climber, IntakeSubsystem pIntake, ArmShooter shooter) {
     addRequirements(climber);
     this.climber = climber;
     this.intake = pIntake;

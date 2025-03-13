@@ -20,7 +20,7 @@ import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.KrakenSwerve;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class RobotContainer {
   private Arm arm;
   public Climber climber;
   private KrakenSwerve swerve;
-  public Intake intake;
+  public IntakeSubsystem intake;
   public ArmShooter shooter;
 
   // the old chooser
@@ -55,10 +55,10 @@ public class RobotContainer {
 
     // construct the subsystems
     swerve = new KrakenSwerve();
-    // arm = new Arm();
-    // climber = new Climber();
-    // intake = new PickUpNote();
-    // shooter = new ArmShooter();
+    arm = new Arm();
+    climber = new Climber();
+    intake = new IntakeSubsystem();
+    shooter = new ArmShooter();
 
     Logger.Log("finished constructing subsystems, going to sleep");
     try {
@@ -72,8 +72,8 @@ public class RobotContainer {
     driverControl = new DriverControl(swerve);
     swerve.setDefaultCommand(driverControl);
 
-    // operatorControl = new OperatorControl(arm, climber, intake, shooter);
-    // climber.setDefaultCommand(operatorControl);
+    operatorControl = new OperatorControl(arm, climber, intake, shooter);
+    arm.setDefaultCommand(operatorControl);
 
     // now we set up things for auto selection and pathplanner
     // // these are commands that the path from pathplanner will use

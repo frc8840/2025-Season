@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.Settings;
 
 public class Arm extends SubsystemBase {
@@ -75,6 +76,7 @@ public class Arm extends SubsystemBase {
     // Logger.Log("shoulder position before:" + shoulderEncoder.getPosition());
     // shoulderMotor.setReference(position.shoulderAngle);
     shoulderMotor.setControl(shoulderPosition.withPosition(position));
+    Logger.Log("shoulder position called with:" + position);
 
     // elbowPID.setReference(
     // position.elbowAngle,
