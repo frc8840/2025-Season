@@ -12,13 +12,9 @@ import frc.robot.Settings;
 
 public class Arm extends SubsystemBase {
 
-  private TalonFXConfiguration shoulderConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration armConfig = new TalonFXConfiguration();
 
-  private TalonFX shoulderMotor;
-
-  // SparkClosedLoopController shoulderPID;
-
-  private double position = 0;
+  private TalonFX armMotor;
 
   private final PositionVoltage shoulderPosition = new PositionVoltage(0).withSlot(0);
 
@@ -26,17 +22,17 @@ public class Arm extends SubsystemBase {
 
     // set up the motor configs
 
-    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    armConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    shoulderConfig.CurrentLimits.SupplyCurrentLimit = 80;
-    shoulderConfig.CurrentLimits.SupplyCurrentLimitEnable =
+    armConfig.CurrentLimits.SupplyCurrentLimit = 80;
+    armConfig.CurrentLimits.SupplyCurrentLimitEnable =
         Constants.Swerve.supplyCurrentLimitEnable;
 
     // shoulderConfig.secondaryCurrentLimit(85);
 
-    shoulderConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
+    armConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
 
-    shoulderConfig.Feedback.SensorToMechanismRatio = 36.0 * 3.5; // gearbox is 3*3*4 and chain is 3.5
+    armConfig.Feedback.SensorToMechanismRatio = 36.0 * 3.5; // gearbox is 3*3*4 and chain is 3.5
     // shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE); //was this, not sure if
     // it's right
 
@@ -48,21 +44,21 @@ public class Arm extends SubsystemBase {
 
     // PID configurations
 
-    shoulderConfig.Slot0.kP = Settings.SHOULDER_PID.kP;
-    shoulderConfig.Slot0.kI = Settings.SHOULDER_PID.kI;
-    shoulderConfig.Slot0.kD = Settings.SHOULDER_PID.kD;
+    armConfig.Slot0.kP = Settings.ARM_PID.kP;
+    armConfig.Slot0.kI = Settings.ARM_PID.kI;
+    armConfig.Slot0.kD = Settings.ARM_PID.kD;
     // shoulderConfig.Slot0.kV = Settings.SHOULDER_PID.kF; //Feedforward I think, not sure if needed
 
-    shoulderMotor = new TalonFX(Settings.SHOULDER_MOTOR_ID);
+    armMotor = new TalonFX(Settings.ARM_MOTOR_ID);
 
     // now set up the motors
-    shoulderMotor.getConfigurator().apply(shoulderConfig);
+    armMotor.getConfigurator().apply(armConfig);
 
     // setup the encoders
     // shoulderEncoder = shoulderMotor.getEncoder();
     // shoulderMotor.
 
-    shoulderMotor.setPosition(0);
+    armMotor.setPosition(0);
 
     // // the PID controllers
     // shoulderPID = shoulderMotor.getClosedLoopController();
@@ -75,8 +71,8 @@ public class Arm extends SubsystemBase {
   public void setArmPosition(double position) {
     // Logger.Log("shoulder position before:" + shoulderEncoder.getPosition());
     // shoulderMotor.setReference(position.shoulderAngle);
-    Logger.Log("Shoulder motor thinks it is at " + shoulderMotor.getPosition().getValueAsDouble());
-    shoulderMotor.setControl(shoulderPosition.withPosition(position));
+    Logger.Log("Shoulder motor thinks it is at " + armMotor.getPosition().getValueAsDouble());
+    armMotor.setControl(shoulderPosition.withPosition(position));
     Logger.Log("shoulder position called with:" + position);
 
     // elbowPID.setReference(
@@ -88,27 +84,27 @@ public class Arm extends SubsystemBase {
 
   public void relax() {
     Logger.Log("Relaxing arm");
-    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    shoulderMotor.getConfigurator().apply(shoulderConfig);
-    shoulderMotor.set(0);
+    armConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    armMotor.getConfigurator().apply(armConfig);
+    armMotor.set(0);
     // elbowMotor.setIdleMode(IdleMode.kCoast);
     // elbowMotor.set(0);
   }
 
   public void gethard() {
     Logger.Log("Hardening arm");
-    shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    shoulderMotor.getConfigurator().apply(shoulderConfig);
+    armConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    armMotor.getConfigurator().apply(armConfig);
   }
 
   public double getArmPosition() {
-    return shoulderMotor.getPosition().getValueAsDouble(); // returns number in rotations
+    return armMotor.getPosition().getValueAsDouble(); // returns number in rotations
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber(
-        "Arm/Shoulder Encoder", shoulderMotor.getPosition().getValueAsDouble());
+        "Arm/Shoulder Encoder", armMotor.getPosition().getValueAsDouble());
     // SmartDashboard.putNumber("Arm/Elbow Encoder", elbowEncoder.getPosition());
   }
 

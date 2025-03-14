@@ -123,7 +123,7 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)), List.of(), pose, trajectoryConfig);
     return new SequentialCommandGroup(
         new InstantCommand(() -> swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)))),
-        getAutonomousCommand(rollForward2Meters),
+        getTrajectoryAutonomousCommand(rollForward2Meters),
         new InstantCommand(() -> swerve.stopModules()));
   }
 

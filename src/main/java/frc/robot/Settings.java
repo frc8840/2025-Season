@@ -13,25 +13,15 @@ public class Settings {
   public static final int OPERATOR_CONTROLLER_PORT = 1;
 
   // ARM SETTINGS
-  public static final int SHOULDER_MOTOR_ID = 33;
-  // public static final int ELBOW_MOTOR_ID = 41;
-
+  public static final int ARM_MOTOR_ID = 33;
   public static final double SHOULDER_GEAR_RATIO = 266 / 1;
-  // public static final double ELBOW_GEAR_RATIO = 266 / 1;
-  public static final double WRIST_GEAR_RATIO = 128 / 1;
+  public static final PIDStruct ARM_PID = new PIDStruct(1.0, 0.0, 40.0);
 
-  public static final PIDStruct SHOULDER_PID = new PIDStruct(0.10, 0.0, 40.0);
-  // public static final PIDStruct ELBOW_PID = new PIDStruct(0.10, 0.0, 40.0);
-  public static final PIDStruct WRIST_PID = new PIDStruct(0.10, 0.0, 50.0);
-
+  // SWERVE SETTINGS
   public static final PIDStruct FRONTLEFT_PID = new PIDStruct(0.10, 0.0, 40.0);
   public static final PIDStruct FRONTRIGHT_PID = new PIDStruct(0.10, 0.0, 40.0);
   public static final PIDStruct BACKLEFT_PID = new PIDStruct(0.10, 0.0, 40.0);
   public static final PIDStruct BACKRIGHT_PID = new PIDStruct(0.10, 0.0, 40.0);
-
-  public static final double MAX_SHOULDER_SPEED = 0.8;
-  // public static final double MAX_ELBOW_SPEED = 0.8;
-  public static final double MAX_WRIST_SPEED = 0.8;
 
   public static final double CLOSED_LOOP_RAMP_RATE = 1.0;
 
