@@ -36,7 +36,7 @@ public class Arm extends SubsystemBase {
 
     shoulderConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
 
-    shoulderConfig.Feedback.SensorToMechanismRatio = 31.5;
+    shoulderConfig.Feedback.SensorToMechanismRatio = 36.0 * 3.5; // gearbox is 3*3*4 and chain is 3.5
     // shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE); //was this, not sure if
     // it's right
 

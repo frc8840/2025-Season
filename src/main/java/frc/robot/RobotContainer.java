@@ -70,7 +70,7 @@ public class RobotContainer {
     swerve.setDefaultCommand(driverControl);
 
     operatorControl = new OperatorControl(arm);
-    // arm.setDefaultCommand(operatorControl);
+    arm.setDefaultCommand(operatorControl);
 
     // now we set up things for auto selection and pathplanner
     // // these are commands that the path from pathplanner will use

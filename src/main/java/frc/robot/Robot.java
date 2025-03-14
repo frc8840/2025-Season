@@ -7,7 +7,10 @@ package frc.robot;
 // import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
@@ -26,6 +29,7 @@ public class Robot extends TimedRobot {
   RobotContainer container;
   KrakenSwerve swerve;
   private LaserCan lc;
+  private PowerDistribution m_pdp;
 
   public static Robot getInstance() {
     return instance;
@@ -48,6 +52,7 @@ public class Robot extends TimedRobot {
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
     lc = new LaserCan(0);
+    m_pdp = new PowerDistribution(0, ModuleType.kCTRE);
     // Optionally initialise the settings of the LaserCAN, if you haven't already done so in
     // GrappleHook
     try {
@@ -72,6 +77,23 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // CanBridge.runTCP();
     LaserCan.Measurement measurement = lc.getMeasurement();
+        // Get the voltage going into the PDP, in Volts.
+    // The PDP returns the voltage in increments of 0.05 Volts.
+    double voltage = m_pdp.getVoltage();
+    SmartDashboard.putNumber("Voltage", voltage);
+        // Get the total current of all channels.
+        double totalCurrent = m_pdp.getTotalCurrent();
+        SmartDashboard.putNumber("Total Current", totalCurrent);
+    
+        // Get the total power of all channels.
+        // Power is the bus voltage multiplied by the current with the units Watts.
+        double totalPower = m_pdp.getTotalPower();
+        SmartDashboard.putNumber("Total Power", totalPower);
+    
+        // Get the total energy of all channels.
+        // Energy is the power summed over time with units Joules.
+        double totalEnergy = m_pdp.getTotalEnergy();
+        SmartDashboard.putNumber("Total Energy", totalEnergy);
     // if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
     // {
     //   System.out.println("The target is " + measurement.distance_mm + "mm away!");
