@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
@@ -16,8 +17,8 @@ public class OperatorControl extends Command {
 
   private PS4Controller ps4controller;
 
-  private IntakeSubsystem intake;
-  private ArmShooter shooter;
+  // private IntakeSubsystem intake;
+  // private ArmShooter shooter;
   private Arm arm;
 
   // private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
@@ -48,18 +49,22 @@ public class OperatorControl extends Command {
     // }
 
     if (ps4controller.getTriangleButton()) {
+      Logger.Log("Triangle button pressed");
       arm.setArmPosition(0.025); // was AMPSHOOTING
     }
 
     if (ps4controller.getL1ButtonPressed()) {
+      Logger.Log("L1 button pressed");
       arm.setArmPosition(0.0325); // was INTAKE
     }
 
     if (ps4controller.getR1ButtonPressed()) {
+      Logger.Log("R1 button pressed");
       arm.setArmPosition(0); // was REST
     }
 
     if (ps4controller.getSquareButtonPressed()) {
+      Logger.Log("Square button pressed");
       arm.setArmPosition(0.0306); // was SPEAKERSHOOTING
     }
 
@@ -71,72 +76,74 @@ public class OperatorControl extends Command {
     //   // Logger.Log("dropping now");
     // }
 
-    if (ps4controller.getR2Button()) {
-      intake.intake();
-    } else if (ps4controller.getL2Button()) {
-      intake.outtake();
-    } else if (!intake.inComplexAction) {
-      // not in the middle of complex action
-      intake.stop();
-    }
+    // if (ps4controller.getR2Button()) {
+    //   intake.intake();
+    // } else if (ps4controller.getL2Button()) {
+    //   intake.outtake();
+    // } else if (!intake.inComplexAction) {
+    //   // not in the middle of complex action
+    //   intake.stop();
+    // }
 
     // if (ps4controller.getPSButtonPressed()) {
     // arm.wristEncoder.setPosition(0);
     // }
 
     if (ps4controller.getShareButtonPressed()) {
+      Logger.Log("Share button pressed");
       arm.relax();
     }
 
     if (ps4controller.getOptionsButtonPressed()) {
+      Logger.Log("Options button pressed");
       arm.gethard();
-      shooter.gethard();
+      // shooter.gethard();
     }
 
     // the idea here is to run the shooter fo 500ms
     // to get it up to speed, then run the intake for 1000ms
     // then top both of them
-    if (ps4controller.getTouchpadPressed()) {
-      intake.inComplexAction = true;
-      Command c =
-          new SequentialCommandGroup(
-              new InstantCommand(() -> shooter.shoot()), // run the shooter
-              new WaitCommand(2),
-              new InstantCommand(() -> intake.intake()), // run the intake
-              new WaitCommand(1),
-              new InstantCommand(
-                  () -> {
-                    shooter.stop();
-                    intake.stop();
-                  })); // stop them both
-      c.schedule(); // make it happen!
-    }
+    // if (ps4controller.getTouchpadPressed()) {
+    //   intake.inComplexAction = true;
+    //   Command c =
+    //       new SequentialCommandGroup(
+    //           new InstantCommand(() -> shooter.shoot()), // run the shooter
+    //           new WaitCommand(2),
+    //           new InstantCommand(() -> intake.intake()), // run the intake
+    //           new WaitCommand(1),
+    //           new InstantCommand(
+    //               () -> {
+    //                 shooter.stop();
+    //                 intake.stop();
+    //               })); // stop them both
+    //   c.schedule(); // make it happen!
+    // }
 
-    if (ps4controller.getPSButtonPressed()) {
-      intake.inComplexAction = true;
-      Command c =
-          new SequentialCommandGroup(
-              new InstantCommand(() -> intake.intake()),
-              new InstantCommand(() -> shooter.shoot()),
-              new WaitCommand(0.5),
-              new InstantCommand(
-                  () -> {
-                    intake.stop();
-                    shooter.stop();
-                  }));
-      c.schedule();
-    }
+    // if (ps4controller.getPSButtonPressed()) {
+    //   intake.inComplexAction = true;
+    //   Command c =
+    //       new SequentialCommandGroup(
+    //           new InstantCommand(() -> intake.intake()),
+    //           new InstantCommand(() -> shooter.shoot()),
+    //           new WaitCommand(0.5),
+    //           new InstantCommand(
+    //               () -> {
+    //                 intake.stop();
+    //                 shooter.stop();
+    //               }));
+    //   c.schedule();
+    // }
 
-    if (ps4controller.getShareButtonPressed()) {
-      Command c =
-          new SequentialCommandGroup(
-              new InstantCommand(() -> shooter.shoot()),
-              new WaitCommand(1),
-              new InstantCommand(
-                  () -> {
-                    shooter.stop();
-                  }));
-    }
+    // if (ps4controller.getShareButtonPressed()) {
+    //   Command c =
+    //       new SequentialCommandGroup(
+    //           new InstantCommand(() -> shooter.shoot()),
+    //           new WaitCommand(1),
+    //           new InstantCommand(
+    //               () -> {
+    //                 shooter.stop();
+    //               }));
+    // }
 
     // Starting to set up mode to control the arm with the left stick
     // double translationVal =

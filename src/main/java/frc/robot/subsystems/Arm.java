@@ -75,6 +75,7 @@ public class Arm extends SubsystemBase {
   public void setArmPosition(double position) {
     // Logger.Log("shoulder position before:" + shoulderEncoder.getPosition());
     // shoulderMotor.setReference(position.shoulderAngle);
+    Logger.Log("Shoulder motor thinks it is at " + shoulderMotor.getPosition().getValueAsDouble());
     shoulderMotor.setControl(shoulderPosition.withPosition(position));
     Logger.Log("shoulder position called with:" + position);
 
@@ -86,6 +87,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void relax() {
+    Logger.Log("Relaxing arm");
     shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     shoulderMotor.getConfigurator().apply(shoulderConfig);
     shoulderMotor.set(0);
@@ -94,6 +96,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void gethard() {
+    Logger.Log("Hardening arm");
     shoulderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     shoulderMotor.getConfigurator().apply(shoulderConfig);
   }
