@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,9 +14,6 @@ public class Climber extends SubsystemBase {
   private TalonFX cMotor;
 
   private TalonFXConfiguration cMotorConfig = new TalonFXConfiguration();
-
-  public RelativeEncoder lEncoder;
-  public RelativeEncoder rEncoder;
 
   // private final SparkClosedLoopController lController;
   // private final SparkClosedLoopController rController;
@@ -38,6 +35,8 @@ public class Climber extends SubsystemBase {
   double allowedErr = 0; // TODO is this correct?
 
   ClosedLoopSlot smartMotionSlot = ClosedLoopSlot.kSlot0;
+
+  private final PositionVoltage climberPosition = new PositionVoltage(0).withSlot(0);
 
   public Climber() {
 
@@ -78,8 +77,7 @@ public class Climber extends SubsystemBase {
     // smartMotionSlot);
     // lController.setOutputRange(kMinOutput, kMaxOutput);
 
-    lEncoder.setPosition(0.0);
-    rEncoder.setPosition(0.0);
+    cMotor.setPosition(0.0);
 
     // Update the settings
     cMotor.getConfigurator().apply(cMotorConfig);
@@ -102,13 +100,14 @@ public class Climber extends SubsystemBase {
   }
 
   public void climb() {
-    cMotor.setPosition(270);
+    cMotor.setControl(climberPosition.withPosition(0.75)); //was setting to 270 degrees
+    // cMotor.setPosition(270);
     // lController.setReference(270, SparkMax.ControlType.kPosition);
     // rController.setReference(270, SparkMax.ControlType.kPosition);
   }
 
   public void drop() {
-    cMotor.setPosition(0);
+    cMotor.setControl(climberPosition.withPosition(0)); //was setting to 0 degrees
     // lController.setReference(0, SparkMax.ControlType.kPosition);
     // rController.setReference(0, SparkMax.ControlType.kPosition);
   }
@@ -119,7 +118,7 @@ public class Climber extends SubsystemBase {
     cMotorConfig.MotionMagic.MotionMagicCruiseVelocity = fastVel; // Not sure if right
     // lMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
     // drop
-    cMotor.setPosition(0);
+    cMotor.setControl(climberPosition.withPosition(0)); //was setting to 0 degrees
     // lController.setReference(0, SparkMax.ControlType.kPosition);
     // decrease the max velocity
     cMotorConfig.MotionMagic.MotionMagicCruiseVelocity = slowVel; // Not sure if right
