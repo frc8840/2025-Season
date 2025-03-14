@@ -117,8 +117,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Command autonomousCommand = container.getAutonomousCommand();
+
     // Logger.Log("Autonomous Init Called");
-    Command autonomousCommand = swerve.followPathCommand("Test Path");
+    // Command autonomousCommand = swerve.followPathCommand("Test Path"); // Evan's alternative test
     // schedule the autonomous command - adds it to the scheduler
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

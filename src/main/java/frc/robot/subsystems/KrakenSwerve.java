@@ -41,13 +41,6 @@ public class KrakenSwerve extends SubsystemBase {
       startPositions[i] = new SwerveModulePosition();
     }
 
-    // kinematics = new SwerveDriveKinematics(
-    //   Constants.Swerve.flModuleOffset,
-    //   Constants.Swerve.frModuleOffset,
-    //   Constants.Swerve.blModuleOffset,
-    //   Constants.Swerve.brModuleOffset
-    // );
-    // is it true that every module is at angle 0.0 when we start?
     odometer =
         new SwerveDriveOdometry(
             Constants.Swerve.swerveKinematics, new Rotation2d(0), startPositions);
@@ -81,14 +74,14 @@ public class KrakenSwerve extends SubsystemBase {
         this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) ->
             driveFromSpeeds(
-                speeds), // Method that will drive the robot given ROBOT RELATIVE(speeds), //
+                speeds), // Method that will drive the robot given ROBOT RELATIVE(speeds),
         // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds. Also optionally outputs individual module
         // feedforwards
         new PPHolonomicDriveController( // PPHolonomicController is the built in path following
             // controller for holonomic drive trains
-            new PIDConstants(0.2, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(1.0, 0.0, 0.0) // Rotation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
             ),
         config, // The robot configuration
         () -> {
@@ -224,7 +217,6 @@ public class KrakenSwerve extends SubsystemBase {
     return odometer.getPoseMeters();
   }
 
-  //
   public void resetOdometry(Pose2d pose) {
     odometer.resetPosition(getYaw(), getPositions(), pose);
   }

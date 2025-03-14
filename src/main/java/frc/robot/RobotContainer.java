@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -188,7 +189,14 @@ public class RobotContainer {
   //       });
   // }
 
-  public SwerveControllerCommand getAutonomousCommand(Trajectory trajectory) {
+  public Command getAutonomousCommand() {
+    // This method loads the auto when it is called, however, it is recommended
+    // to first load your paths/autos when code starts, then return the
+    // pre-loaded auto/path
+    return new PathPlannerAuto("Test Path", true);
+  }
+
+  public SwerveControllerCommand getTrajectoryAutonomousCommand(Trajectory trajectory) {
     // create the PID controllers for feedback
     PIDController xController = new PIDController(0.2, 0, 0);
     PIDController yController = new PIDController(0.2, 0, 0);
@@ -207,7 +215,7 @@ public class RobotContainer {
         swerve);
   }
 
-  public Command getPathPlannerAutonomousCommand() {
+  public Command getEvantsAutonomousCommand() {
     try {
       // Load the path you want to follow using its name in the GUI
       PathPlannerPath path = PathPlannerPath.fromPathFile("New Path");
