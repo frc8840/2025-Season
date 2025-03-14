@@ -30,7 +30,7 @@ public class Settings {
   public static final double PICKUP_OUTTAKE_SPEED = -0.2;
   public static final double PICKUP_INTAKE_SPEED = 0.25;
   // SHOOTER SETTINGS
-  public static final int SHOOTER_MOTOR_ID = 21;
+  public static final int SHOOTER_MOTOR_ID = 23;
   public static final int SHOOTER_MOTOR_ID2 = 4;
   public static final double SHOOTER_OUT_SPEED = 1.0;
   public static final double SHOOTER_IN_SPEED = -1.0;
