@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-// import edu.wpi.first.math.MathUtil;
-// import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Logger;
@@ -12,25 +10,9 @@ public class OperatorControl extends Command {
 
   private PS4Controller ps4controller;
 
-  // private IntakeSubsystem intake;
-  // private ArmShooter shooter;
   private Arm arm;
 
-  // private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
-
-  // private ArmPosition L1ArmPosition = ArmPosition.L1;
-  // private ArmPosition L2ArmPosition = ArmPosition.L2;
-  // private ArmPosition L3ArmPosition = ArmPosition.L3;
-  // private ArmPosition L4ArmPosition = ArmPosition.L4;
-
-  long shooterStarted = -1;
-
-  // Make sure the roller imported is the one from subsystems! Not from settings.
   public OperatorControl(Arm arm) {
-    // addRequirements(climber);
-    // this.climber = climber;
-    // this.intake = pIntake;
-    // this.shooter = shooter;
     this.arm = arm;
 
     ps4controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
@@ -39,50 +21,16 @@ public class OperatorControl extends Command {
   @Override
   public void execute() {
 
-    // if (intake.getTimeRunning() > 500 && intake.getAmperage() > 20) {
-    // intake.stop();
-    // }
-
     if (ps4controller.getTriangleButton()) {
       Logger.Log("Triangle button pressed");
-      arm.setArmPosition(0.025); // was AMPSHOOTING
-    }
-
-    if (ps4controller.getL1ButtonPressed()) {
-      Logger.Log("L1 button pressed");
-      arm.setArmPosition(0.0325); // was INTAKE
-    }
-
-    if (ps4controller.getR1ButtonPressed()) {
-      Logger.Log("R1 button pressed");
-      arm.setArmPosition(0); // was REST
+      arm.setArmPositionRotations(-0.025); // was AMPSHOOTING
     }
 
     if (ps4controller.getSquareButtonPressed()) {
       Logger.Log("Square button pressed");
-      arm.setArmPosition(0.0306); // was SPEAKERSHOOTING
+      double position = arm.getArmPosition();
+      Logger.Log("Arm position: " + position);
     }
-
-    // if (ps4controller.getCrossButtonPressed()) {
-    //   climber.climb();
-    //   // Logger.Log("climbing now");
-    // } else if (ps4controller.getCircleButtonPressed()) {
-    //   climber.drop();
-    //   // Logger.Log("dropping now");
-    // }
-
-    // if (ps4controller.getR2Button()) {
-    //   intake.intake();
-    // } else if (ps4controller.getL2Button()) {
-    //   intake.outtake();
-    // } else if (!intake.inComplexAction) {
-    //   // not in the middle of complex action
-    //   intake.stop();
-    // }
-
-    // if (ps4controller.getPSButtonPressed()) {
-    // arm.wristEncoder.setPosition(0);
-    // }
 
     if (ps4controller.getShareButtonPressed()) {
       Logger.Log("Share button pressed");

@@ -100,14 +100,14 @@ public class Climber extends SubsystemBase {
   }
 
   public void climb() {
-    cMotor.setControl(climberPosition.withPosition(0.75)); //was setting to 270 degrees
+    cMotor.setControl(climberPosition.withPosition(0.75)); // was setting to 270 degrees
     // cMotor.setPosition(270);
     // lController.setReference(270, SparkMax.ControlType.kPosition);
     // rController.setReference(270, SparkMax.ControlType.kPosition);
   }
 
   public void drop() {
-    cMotor.setControl(climberPosition.withPosition(0)); //was setting to 0 degrees
+    cMotor.setControl(climberPosition.withPosition(0)); // was setting to 0 degrees
     // lController.setReference(0, SparkMax.ControlType.kPosition);
     // rController.setReference(0, SparkMax.ControlType.kPosition);
   }
@@ -118,7 +118,7 @@ public class Climber extends SubsystemBase {
     cMotorConfig.MotionMagic.MotionMagicCruiseVelocity = fastVel; // Not sure if right
     // lMotorConfig.closedLoop.maxMotion.maxVelocity(fastVel, smartMotionSlot);
     // drop
-    cMotor.setControl(climberPosition.withPosition(0)); //was setting to 0 degrees
+    cMotor.setControl(climberPosition.withPosition(0)); // was setting to 0 degrees
     // lController.setReference(0, SparkMax.ControlType.kPosition);
     // decrease the max velocity
     cMotorConfig.MotionMagic.MotionMagicCruiseVelocity = slowVel; // Not sure if right

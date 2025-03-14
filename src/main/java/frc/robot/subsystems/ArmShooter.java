@@ -10,8 +10,7 @@ import frc.robot.Settings;
 
 public class ArmShooter extends SubsystemBase {
 
-  public TalonFX leftMotor;
-  // public TalonFX rightMotor;
+  public TalonFX shooterMotor;
 
   private TalonFXConfiguration lMotorConfig = new TalonFXConfiguration();
   // private TalonFXConfiguration rMotorConfig = new TalonFXConfiguration();
@@ -20,7 +19,7 @@ public class ArmShooter extends SubsystemBase {
 
   public ArmShooter() {
 
-    leftMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID);
+    shooterMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID);
     // rightMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID2);
 
     lMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -43,7 +42,7 @@ public class ArmShooter extends SubsystemBase {
     // lMoterConfig.setCANTimeout(20);
     // rMoterConfig.setCANTimeout(20);
 
-    leftMotor.getConfigurator().apply(lMotorConfig);
+    shooterMotor.getConfigurator().apply(lMotorConfig);
     // rightMotor.getConfigurator().apply(lMotorConfig);
     // leftMotor.configure(
     //     lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -53,21 +52,16 @@ public class ArmShooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Shooter left ", leftMotor.getVelocity().getValueAsDouble());
-    // SmartDashboard.putNumber("Shooter right ", rightMotor.getVelocity().getValueAsDouble());
-    // boolean isReady =
-    //     (Math.abs(leftMotor.getVelocity().getValueAsDouble()) > 4300
-    //         && Math.abs(rightMotor.getVelocity().getValueAsDouble()) > 4300);
-    // SmartDashboard.putBoolean("Shooter Ready", isReady);
+    SmartDashboard.putNumber("Shooter speed ", shooterMotor.getVelocity().getValueAsDouble());
   }
 
   public void shoot() {
-    leftMotor.set(Settings.SHOOTER_OUT_SPEED);
+    shooterMotor.set(Settings.SHOOTER_OUT_SPEED);
     // rightMotor.set(-Settings.SHOOTER_OUT_SPEED);
   }
 
   public void stop() {
-    leftMotor.set(0);
+    shooterMotor.set(0);
     // rightMotor.set(0);
     inShooterComplexAction = false;
   }
@@ -75,7 +69,7 @@ public class ArmShooter extends SubsystemBase {
   public void gethard() {
     lMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     // rMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    leftMotor.getConfigurator().apply(lMotorConfig);
+    shooterMotor.getConfigurator().apply(lMotorConfig);
     // rightMotor.getConfigurator().apply(lMotorConfig);
   }
 

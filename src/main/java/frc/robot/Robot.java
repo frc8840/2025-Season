@@ -77,23 +77,23 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // CanBridge.runTCP();
     LaserCan.Measurement measurement = lc.getMeasurement();
-        // Get the voltage going into the PDP, in Volts.
+    // Get the voltage going into the PDP, in Volts.
     // The PDP returns the voltage in increments of 0.05 Volts.
     double voltage = m_pdp.getVoltage();
     SmartDashboard.putNumber("Voltage", voltage);
-        // Get the total current of all channels.
-        double totalCurrent = m_pdp.getTotalCurrent();
-        SmartDashboard.putNumber("Total Current", totalCurrent);
-    
-        // Get the total power of all channels.
-        // Power is the bus voltage multiplied by the current with the units Watts.
-        double totalPower = m_pdp.getTotalPower();
-        SmartDashboard.putNumber("Total Power", totalPower);
-    
-        // Get the total energy of all channels.
-        // Energy is the power summed over time with units Joules.
-        double totalEnergy = m_pdp.getTotalEnergy();
-        SmartDashboard.putNumber("Total Energy", totalEnergy);
+    // Get the total current of all channels.
+    double totalCurrent = m_pdp.getTotalCurrent();
+    SmartDashboard.putNumber("Total Current", totalCurrent);
+
+    // Get the total power of all channels.
+    // Power is the bus voltage multiplied by the current with the units Watts.
+    double totalPower = m_pdp.getTotalPower();
+    SmartDashboard.putNumber("Total Power", totalPower);
+
+    // Get the total energy of all channels.
+    // Energy is the power summed over time with units Joules.
+    double totalEnergy = m_pdp.getTotalEnergy();
+    SmartDashboard.putNumber("Total Energy", totalEnergy);
     // if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
     // {
     //   System.out.println("The target is " + measurement.distance_mm + "mm away!");

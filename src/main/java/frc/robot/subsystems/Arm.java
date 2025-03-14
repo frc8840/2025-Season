@@ -21,65 +21,31 @@ public class Arm extends SubsystemBase {
   public Arm() {
 
     // set up the motor configs
-
     armConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
     armConfig.CurrentLimits.SupplyCurrentLimit = 80;
-    armConfig.CurrentLimits.SupplyCurrentLimitEnable =
-        Constants.Swerve.supplyCurrentLimitEnable;
-
-    // shoulderConfig.secondaryCurrentLimit(85);
+    armConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
     armConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
 
     armConfig.Feedback.SensorToMechanismRatio = 36.0 * 3.5; // gearbox is 3*3*4 and chain is 3.5
-    // shoulderConfig.closedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE); //was this, not sure if
-    // it's right
-
-    // shoulderConfig.voltageCompensation(12);
-
-    // Don't want, this takes something in rotations and turns it into degrees, which we don't want
-    // to do.
-    // shoulderConfig.encoder.positionConversionFactor((1 / Settings.SHOULDER_GEAR_RATIO) * 360);
 
     // PID configurations
-
     armConfig.Slot0.kP = Settings.ARM_PID.kP;
     armConfig.Slot0.kI = Settings.ARM_PID.kI;
     armConfig.Slot0.kD = Settings.ARM_PID.kD;
-    // shoulderConfig.Slot0.kV = Settings.SHOULDER_PID.kF; //Feedforward I think, not sure if needed
 
+    // now set up the motor
     armMotor = new TalonFX(Settings.ARM_MOTOR_ID);
-
-    // now set up the motors
     armMotor.getConfigurator().apply(armConfig);
-
-    // setup the encoders
-    // shoulderEncoder = shoulderMotor.getEncoder();
-    // shoulderMotor.
-
-    armMotor.setPosition(0);
-
-    // // the PID controllers
-    // shoulderPID = shoulderMotor.getClosedLoopController();
-
-    // shoulderPID.setOutputRange(-Settings.MAX_SHOULDER_SPEED, Settings.MAX_SHOULDER_SPEED);
-    // wristPID.setOutputRange(-Settings.MAX_WRIST_SPEED, Settings.MAX_WRIST_SPEED);
-
+    armMotor.setPosition(0); // assume the arm is in rest position at the start
   }
 
-  public void setArmPosition(double position) {
+  public void setArmPositionRotations(double position) {
     // Logger.Log("shoulder position before:" + shoulderEncoder.getPosition());
     // shoulderMotor.setReference(position.shoulderAngle);
     Logger.Log("Shoulder motor thinks it is at " + armMotor.getPosition().getValueAsDouble());
     armMotor.setControl(shoulderPosition.withPosition(position));
     Logger.Log("shoulder position called with:" + position);
-
-    // elbowPID.setReference(
-    // position.elbowAngle,
-    // ControlType.kPosition,
-    // 0);
-
   }
 
   public void relax() {
@@ -103,15 +69,6 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(
-        "Arm/Shoulder Encoder", armMotor.getPosition().getValueAsDouble());
-    // SmartDashboard.putNumber("Arm/Elbow Encoder", elbowEncoder.getPosition());
+    SmartDashboard.putNumber("Arm Position", armMotor.getPosition().getValueAsDouble());
   }
-
-  // REST(0), // was 0,0, changing to rotations
-  //   INTAKE(0.325), // was 0, 117, changing to rotations
-  //   AMPSHOOTING(0.25), // was 90, 90, changing to rotations
-  //   SPEAKERSHOOTING(0.306), // was 0, 110, changing to rotations
-  //   INTAKEDEMO(0.325); // was 0, 117, changing to rotations
-
 }
