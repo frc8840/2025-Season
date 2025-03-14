@@ -19,7 +19,6 @@ import frc.robot.commands.DriverControl;
 import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.KrakenSwerve;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.List;
 public class RobotContainer {
   private static RobotContainer instance;
   private Arm arm;
-  public Climber climber;
   private KrakenSwerve swerve;
   public IntakeSubsystem intake;
   public ArmShooter shooter;
@@ -56,7 +54,6 @@ public class RobotContainer {
     // construct the subsystems
     swerve = new KrakenSwerve();
     arm = new Arm();
-    climber = new Climber();
     intake = new IntakeSubsystem();
     shooter = new ArmShooter();
 
@@ -72,8 +69,8 @@ public class RobotContainer {
     driverControl = new DriverControl(swerve);
     swerve.setDefaultCommand(driverControl);
 
-    operatorControl = new OperatorControl(arm, climber, intake, shooter);
-    arm.setDefaultCommand(operatorControl);
+    operatorControl = new OperatorControl(arm);
+    // arm.setDefaultCommand(operatorControl);
 
     // now we set up things for auto selection and pathplanner
     // // these are commands that the path from pathplanner will use

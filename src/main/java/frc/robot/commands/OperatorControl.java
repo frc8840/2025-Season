@@ -10,14 +10,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class OperatorControl extends Command {
 
   private PS4Controller ps4controller;
 
-  private Climber climber;
   private IntakeSubsystem intake;
   private ArmShooter shooter;
   private Arm arm;
@@ -32,11 +30,11 @@ public class OperatorControl extends Command {
   long shooterStarted = -1;
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
-  public OperatorControl(Arm arm, Climber climber, IntakeSubsystem pIntake, ArmShooter shooter) {
-    addRequirements(climber);
-    this.climber = climber;
-    this.intake = pIntake;
-    this.shooter = shooter;
+  public OperatorControl(Arm arm) {
+    // addRequirements(climber);
+    // this.climber = climber;
+    // this.intake = pIntake;
+    // this.shooter = shooter;
     this.arm = arm;
 
     ps4controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
@@ -50,11 +48,11 @@ public class OperatorControl extends Command {
     // }
 
     if (ps4controller.getTriangleButton()) {
-      arm.setArmPosition(0.25); // was AMPSHOOTING
+      arm.setArmPosition(0.025); // was AMPSHOOTING
     }
 
     if (ps4controller.getL1ButtonPressed()) {
-      arm.setArmPosition(0.325); // was INTAKE
+      arm.setArmPosition(0.0325); // was INTAKE
     }
 
     if (ps4controller.getR1ButtonPressed()) {
@@ -62,16 +60,16 @@ public class OperatorControl extends Command {
     }
 
     if (ps4controller.getSquareButtonPressed()) {
-      arm.setArmPosition(0.306); // was SPEAKERSHOOTING
+      arm.setArmPosition(0.0306); // was SPEAKERSHOOTING
     }
 
-    if (ps4controller.getCrossButtonPressed()) {
-      climber.climb();
-      // Logger.Log("climbing now");
-    } else if (ps4controller.getCircleButtonPressed()) {
-      climber.drop();
-      // Logger.Log("dropping now");
-    }
+    // if (ps4controller.getCrossButtonPressed()) {
+    //   climber.climb();
+    //   // Logger.Log("climbing now");
+    // } else if (ps4controller.getCircleButtonPressed()) {
+    //   climber.drop();
+    //   // Logger.Log("dropping now");
+    // }
 
     if (ps4controller.getR2Button()) {
       intake.intake();
@@ -86,9 +84,9 @@ public class OperatorControl extends Command {
     // arm.wristEncoder.setPosition(0);
     // }
 
-    // if (ps4controller.getShareButtonPressed()) {
-    //   arm.relax();
-    // }
+    if (ps4controller.getShareButtonPressed()) {
+      arm.relax();
+    }
 
     if (ps4controller.getOptionsButtonPressed()) {
       arm.gethard();
