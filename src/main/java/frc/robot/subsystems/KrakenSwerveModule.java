@@ -124,20 +124,16 @@ public class KrakenSwerveModule {
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    Logger.LogPeriodic(moduleNumber + " setSpeed mps: " + desiredState.speedMetersPerSecond);
     if (isOpenLoop) {
       // convert speed in m/s to percent output
       double percentOutput = desiredState.speedMetersPerSecond / 5.0;
-      Logger.LogPeriodic(moduleNumber + " setSpeed %: " + percentOutput);
       driveMotor.setControl(new DutyCycleOut(percentOutput));
     } else {
       // convert speed in m/s to motor rotations per second
+      // VelocityVoltage doesn't seem to use the mechanism ratio
       double wheelRotationsPerSecond =
           desiredState.speedMetersPerSecond / Constants.Swerve.wheelCircumference;
       double motorRotationsPerSecond = wheelRotationsPerSecond * Constants.Swerve.driveGearRatio;
-      Logger.LogPeriodic(moduleNumber + " setSpeed rps: " + motorRotationsPerSecond);
-      // I think we send wheel rotations/sec to the motor because it is already using mechanism
-      // ratio
       VelocityVoltage velocityControl = new VelocityVoltage(motorRotationsPerSecond);
       velocityControl.Slot = 0;
       driveMotor.setControl(velocityControl);
