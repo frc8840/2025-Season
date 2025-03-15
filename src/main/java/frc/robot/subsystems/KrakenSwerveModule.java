@@ -53,26 +53,13 @@ public class KrakenSwerveModule {
 
   private void resetToAbsolute() {
     double canCoderRotations = getCanCoderAngle().getRotations();
-    Logger.Log(
-        "\n\nangleEncoder"
-            + moduleNumber
-            + " initMotorPosition: "
-            + angleMotor.getPosition().getValueAsDouble());
-    Logger.Log("angleEncoder" + moduleNumber + " canCoderPosition: " + canCoderRotations);
-    Logger.Log("angleEncoder" + moduleNumber + " angleOffset: " + angleOffset.getRotations());
     double absolutePosition = canCoderRotations - angleOffset.getRotations();
     angleMotor.setPosition(absolutePosition);
     try {
       Thread.sleep(1000);
     } catch (Exception e) {
     }
-    Logger.Log("angleEncoder" + moduleNumber + " absolutePosition: " + absolutePosition);
-    Logger.Log(
-        "angleEncoder"
-            + moduleNumber
-            + " finalMotorPosition: "
-            + angleMotor.getPosition().getValueAsDouble());
-    Logger.Log("");
+    Logger.Log("angleEncoder" + moduleNumber + ": " + canCoderRotations + " - " + angleOffset.getRotations() + " = " + angleMotor.getPosition().getValueAsDouble());
   }
 
   private void configAngleMotor() {
