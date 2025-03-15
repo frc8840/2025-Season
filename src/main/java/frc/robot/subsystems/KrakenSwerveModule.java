@@ -77,7 +77,7 @@ public class KrakenSwerveModule {
 
   private void configAngleMotor() {
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
-    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; // TEG was Brake
+    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; 
 
     // after we do this, angleMotor.getPosition will always return wheel angle in rotations
     angleConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
@@ -90,7 +90,7 @@ public class KrakenSwerveModule {
     angleConfig.Slot0.kI = Constants.Swerve.aKrakenKI;
     angleConfig.Slot0.kD = Constants.Swerve.aKrakenKD;
     // angleConfig.Slot0.kS = 0.25;
-    angleConfig.Slot0.kV = 0.12;
+    // angleConfig.Slot0.kV = 0.12;
     // angleConfig.Slot0.kA = 0.01;
 
     // need to figure out neutral mode, could be the problem

@@ -1,53 +1,43 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.Settings;
 
 public class ArmShooter extends SubsystemBase {
 
   public TalonFX shooterMotor;
 
-  private TalonFXConfiguration lMotorConfig = new TalonFXConfiguration();
-  // private TalonFXConfiguration rMotorConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration motorConfig = new TalonFXConfiguration();
 
-  public boolean inShooterComplexAction = false;
+  private final PositionVoltage position = new PositionVoltage(0).withSlot(0);
 
   public ArmShooter() {
 
     shooterMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID);
-    // rightMotor = new TalonFX(Settings.SHOOTER_MOTOR_ID2);
 
-    lMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // rMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    lMotorConfig.CurrentLimits.SupplyCurrentLimit = 100; // was 100, 80, just used 100
-    lMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 40; // was 100, 80, just used 100
+    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    // lMoterConfig.CurrentLimits.secondaryCurrentLimit(105); //Doesn't exist for TalonFX
+    motorConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2; // for getting up to speed
 
-    // rMotorConfig.CurrentLimits.SupplyCurrentLimit = 100; // was 100, 80, just used 100
-    // rMoterConfig.secondaryCurrentLimit(105); //Doesn't exist for TalonFX
+    // PID for position control
+    motorConfig.Slot0 = new Slot0Configs();
+    motorConfig.Slot0.kP = 1.0;
+    motorConfig.Slot0.kI = 0.0;
+    motorConfig.Slot0.kD = 0.0;
 
-    // sMotor.setOpenLoopRampRate(0.2);
-
-    lMotorConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.2;
-
-    // sMotor2.setOpenLoopRampRate(0.2);
-
-    // lMoterConfig.setCANTimeout(20);
-    // rMoterConfig.setCANTimeout(20);
-
-    shooterMotor.getConfigurator().apply(lMotorConfig);
-    // rightMotor.getConfigurator().apply(lMotorConfig);
-    // leftMotor.configure(
-    //     lMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // rightMotor.configure(
-    //     rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    shooterMotor.getConfigurator().apply(motorConfig);
   }
 
   @Override
@@ -55,25 +45,20 @@ public class ArmShooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter speed ", shooterMotor.getVelocity().getValueAsDouble());
   }
 
+  // spin the motor 2 rotations forward
+  public void intake() {
+    double oldRotations = shooterMotor.getPosition().getValueAsDouble(); // current position in rotation
+    Logger.Log("intake() got " + oldRotations);
+    shooterMotor.setControl(position.withPosition(oldRotations + 5.0));
+  }
+
+  // start the motor running to a relative velocity
   public void shoot() {
-    shooterMotor.set(Settings.SHOOTER_OUT_SPEED);
-    // rightMotor.set(-Settings.SHOOTER_OUT_SPEED);
+    shooterMotor.set(-0.5); // 1.0 is full speed
   }
 
   public void stop() {
     shooterMotor.set(0);
-    // rightMotor.set(0);
-    inShooterComplexAction = false;
   }
 
-  public void gethard() {
-    lMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    // rMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    shooterMotor.getConfigurator().apply(lMotorConfig);
-    // rightMotor.getConfigurator().apply(lMotorConfig);
-  }
-
-  public boolean isAbletoShoot() {
-    return true;
-  }
 }

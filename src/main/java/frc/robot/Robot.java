@@ -27,7 +27,6 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
 
   RobotContainer container;
-  KrakenSwerve swerve;
   private LaserCan lc;
   private PowerDistribution m_pdp;
 
@@ -48,7 +47,6 @@ public class Robot extends TimedRobot {
     Logger.Log("RobotInitRan");
     ctreConfigs = new CTREConfigs();
     container = new RobotContainer();
-    swerve = new KrakenSwerve();
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
     lc = new LaserCan(0);
@@ -75,25 +73,26 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     Logger.loopCounter++;
     CommandScheduler.getInstance().run();
+
     // CanBridge.runTCP();
-    LaserCan.Measurement measurement = lc.getMeasurement();
-    // Get the voltage going into the PDP, in Volts.
-    // The PDP returns the voltage in increments of 0.05 Volts.
-    double voltage = m_pdp.getVoltage();
-    SmartDashboard.putNumber("Voltage", voltage);
-    // Get the total current of all channels.
-    double totalCurrent = m_pdp.getTotalCurrent();
-    SmartDashboard.putNumber("Total Current", totalCurrent);
 
-    // Get the total power of all channels.
-    // Power is the bus voltage multiplied by the current with the units Watts.
-    double totalPower = m_pdp.getTotalPower();
-    SmartDashboard.putNumber("Total Power", totalPower);
+    // // Get the voltage going into the PDP, in Volts.
+    // // The PDP returns the voltage in increments of 0.05 Volts.
+    // double voltage = m_pdp.getVoltage();
+    // SmartDashboard.putNumber("Voltage", voltage);
+    // // Get the total current of all channels.
+    // double totalCurrent = m_pdp.getTotalCurrent();
+    // SmartDashboard.putNumber("Total Current", totalCurrent);
+    // // Get the total power of all channels.
+    // // Power is the bus voltage multiplied by the current with the units Watts.
+    // double totalPower = m_pdp.getTotalPower();
+    // SmartDashboard.putNumber("Total Power", totalPower);
+    // // Get the total energy of all channels.
+    // // Energy is the power summed over time with units Joules.
+    // double totalEnergy = m_pdp.getTotalEnergy();
+    // SmartDashboard.putNumber("Total Energy", totalEnergy);
 
-    // Get the total energy of all channels.
-    // Energy is the power summed over time with units Joules.
-    double totalEnergy = m_pdp.getTotalEnergy();
-    SmartDashboard.putNumber("Total Energy", totalEnergy);
+    // LaserCan.Measurement measurement = lc.getMeasurement();
     // if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
     // {
     //   System.out.println("The target is " + measurement.distance_mm + "mm away!");

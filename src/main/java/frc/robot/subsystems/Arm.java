@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -30,6 +31,7 @@ public class Arm extends SubsystemBase {
     armConfig.Feedback.SensorToMechanismRatio = 36.0 * 3.5; // gearbox is 3*3*4 and chain is 3.5
 
     // PID configurations
+    armConfig.Slot0 = new Slot0Configs();
     armConfig.Slot0.kP = Settings.ARM_PID.kP;
     armConfig.Slot0.kI = Settings.ARM_PID.kI;
     armConfig.Slot0.kD = Settings.ARM_PID.kD;

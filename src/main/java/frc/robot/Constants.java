@@ -54,7 +54,7 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 25;
+    public static final int angleContinuousCurrentLimit = 35;
     public static final int driveContinuousCurrentLimit = 35;
     public static final boolean supplyCurrentLimitEnable = true;
 

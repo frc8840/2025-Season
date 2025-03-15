@@ -5,15 +5,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ArmShooter;
 
 public class OperatorControl extends Command {
 
   private PS4Controller ps4controller;
 
   private Arm arm;
+  private ArmShooter shooter;
 
-  public OperatorControl(Arm arm) {
+  public OperatorControl(Arm arm, ArmShooter shooter) {
     this.arm = arm;
+    this.shooter = shooter;
+    addRequirements(arm);
+    addRequirements(shooter);
 
     ps4controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
   }
@@ -21,7 +26,19 @@ public class OperatorControl extends Command {
   @Override
   public void execute() {
 
-    if (ps4controller.getTriangleButton()) {
+    // shooter/intake related
+    if (ps4controller.getL2ButtonPressed()) {
+      Logger.Log("L2 button pressed");
+      shooter.intake();
+    }
+    if (ps4controller.getR2Button()) {
+      shooter.shoot();
+    } else {
+      shooter.stop();
+    }
+
+    // arm position related
+    if (ps4controller.getTriangleButtonPressed()) {
       Logger.Log("Triangle button pressed");
       arm.setArmPositionRotations(-0.025); // was AMPSHOOTING
     }
