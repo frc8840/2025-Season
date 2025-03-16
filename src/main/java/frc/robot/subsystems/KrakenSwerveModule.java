@@ -59,12 +59,20 @@ public class KrakenSwerveModule {
       Thread.sleep(1000);
     } catch (Exception e) {
     }
-    Logger.Log("angleEncoder" + moduleNumber + ": " + canCoderRotations + " - " + angleOffset.getRotations() + " = " + angleMotor.getPosition().getValueAsDouble());
+    Logger.Log(
+        "angleEncoder"
+            + moduleNumber
+            + ": "
+            + canCoderRotations
+            + " - "
+            + angleOffset.getRotations()
+            + " = "
+            + angleMotor.getPosition().getValueAsDouble());
   }
 
   private void configAngleMotor() {
     angleConfig.MotorOutput.Inverted = Constants.Swerve.angleInverted;
-    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; 
+    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // after we do this, angleMotor.getPosition will always return wheel angle in rotations
     angleConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
@@ -127,10 +135,6 @@ public class KrakenSwerveModule {
     }
   }
 
-  public void testDrive(double speed) {
-    driveMotor.setControl(new VelocityVoltage(speed));
-  }
-
   private void setAngle(SwerveModuleState desiredState) {
     double oldRotations = angleMotor.getPosition().getValueAsDouble();
     double newRotations = desiredState.angle.getRotations();
@@ -138,10 +142,6 @@ public class KrakenSwerveModule {
       return;
     }
     angleMotor.setControl(anglePosition.withPosition(newRotations));
-  }
-
-  public void testAngle(double speed) {
-    angleMotor.setControl(new DutyCycleOut(speed));
   }
 
   private Rotation2d getAngle() {

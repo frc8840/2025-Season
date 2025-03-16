@@ -57,7 +57,6 @@ public class OperatorControl extends Command {
     if (ps4controller.getOptionsButtonPressed()) {
       Logger.Log("Options button pressed");
       arm.gethard();
-      // shooter.gethard();
     }
 
     // the idea here is to run the shooter fo 500ms

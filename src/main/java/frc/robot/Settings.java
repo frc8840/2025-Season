@@ -15,15 +15,7 @@ public class Settings {
   // ARM SETTINGS
   public static final int ARM_MOTOR_ID = 33;
   public static final double SHOULDER_GEAR_RATIO = 266 / 1;
-  public static final PIDStruct ARM_PID = new PIDStruct(1.0, 0.0, 40.0);
-
-  // SWERVE SETTINGS
-  public static final PIDStruct FRONTLEFT_PID = new PIDStruct(0.10, 0.0, 40.0);
-  public static final PIDStruct FRONTRIGHT_PID = new PIDStruct(0.10, 0.0, 40.0);
-  public static final PIDStruct BACKLEFT_PID = new PIDStruct(0.10, 0.0, 40.0);
-  public static final PIDStruct BACKRIGHT_PID = new PIDStruct(0.10, 0.0, 40.0);
-
-  public static final double CLOSED_LOOP_RAMP_RATE = 1.0;
+  public static final PIDStruct ARM_PID = new PIDStruct(10.0, 0.0, 0.1);
 
   // INTAKE SETTINGS
   public static final int INTAKE_MOTOR_ID = 3;

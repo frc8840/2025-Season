@@ -26,8 +26,6 @@ public class Arm extends SubsystemBase {
     armConfig.CurrentLimits.SupplyCurrentLimit = 80;
     armConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.supplyCurrentLimitEnable;
 
-    armConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Settings.CLOSED_LOOP_RAMP_RATE;
-
     armConfig.Feedback.SensorToMechanismRatio = 36.0 * 3.5; // gearbox is 3*3*4 and chain is 3.5
 
     // PID configurations
