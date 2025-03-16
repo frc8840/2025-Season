@@ -45,6 +45,10 @@ public class KrakenSwerveModule {
     configDriveMotor();
   }
 
+  public TalonFX getAngleMotor() {
+    return angleMotor;
+  }
+
   public void setDesiredState(SwerveModuleState desiredState) {
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
@@ -56,7 +60,7 @@ public class KrakenSwerveModule {
     double absolutePosition = canCoderRotations - angleOffset.getRotations();
     angleMotor.setPosition(absolutePosition);
     try {
-      Thread.sleep(1000);
+      Thread.sleep(100);
     } catch (Exception e) {
     }
     Logger.Log(

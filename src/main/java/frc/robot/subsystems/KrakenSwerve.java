@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.Orchestra;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -29,8 +30,9 @@ public class KrakenSwerve extends SubsystemBase {
   private final AHRS gyro;
   private SwerveDriveOdometry odometer;
   private KrakenSwerveModule[] mSwerveMods;
-  // private final SwerveDriveKinematics kinematics;
   private Field2d field;
+
+  private Orchestra orchestra;
 
   public KrakenSwerve() {
     gyro = new AHRS(NavXComType.kMXP_SPI);
@@ -55,6 +57,11 @@ public class KrakenSwerve extends SubsystemBase {
         };
 
     field = new Field2d();
+    orchestra = new Orchestra();
+    for (KrakenSwerveModule module : mSwerveMods) {
+      orchestra.addInstrument(module.angleMotor);
+    }
+    // var status = orchestra.loadMusic("track.chrp");
 
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
