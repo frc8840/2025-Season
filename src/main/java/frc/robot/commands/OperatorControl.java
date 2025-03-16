@@ -36,7 +36,9 @@ public class OperatorControl extends Command {
       shooter.outtake();
     }
     if (ps4controller.getR2Button()) {
-      shooter.shoot();
+      shooter.runForward();
+    } else  if (ps4controller.getR1Button()) {
+      shooter.runBackward();
     } else {
       shooter.stop();
     }
@@ -44,13 +46,26 @@ public class OperatorControl extends Command {
     // arm position related
     if (ps4controller.getTriangleButtonPressed()) {
       Logger.Log("Triangle button pressed");
-      arm.setArmPositionRotations(-0.025); // was AMPSHOOTING
+      arm.setArmPositionRotations(-20.0); // high
+      Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getSquareButtonPressed()) {
       Logger.Log("Square button pressed");
-      double position = arm.getArmPosition();
-      Logger.Log("Arm position: " + position);
+      arm.setArmPositionRotations(-18.0); // medium
+      Logger.Log("Arm position: " + arm.getArmPosition());
+    }
+
+    if (ps4controller.getCircleButtonPressed()) {
+      Logger.Log("Square button pressed");
+      arm.setArmPositionRotations(-12.0); // medium
+      Logger.Log("Arm position: " + arm.getArmPosition());
+    }
+
+    if (ps4controller.getCrossButtonPressed()) {
+      Logger.Log("Cross button pressed");
+      arm.setArmPositionRotations(0); // low
+      Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getShareButtonPressed()) {

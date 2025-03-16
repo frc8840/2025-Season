@@ -16,7 +16,7 @@ public class ArmShooter extends SubsystemBase {
   public TalonFX shooterMotor;
   private Date lastIntake = null;
 
-  private final MotionMagicVoltage position = new MotionMagicVoltage(0);
+  private final MotionMagicVoltage positionSignal = new MotionMagicVoltage(0);
 
   public ArmShooter() {
 
@@ -29,9 +29,7 @@ public class ArmShooter extends SubsystemBase {
     talonFXConfigs.CurrentLimits.SupplyCurrentLimitEnable =
         Constants.Swerve.supplyCurrentLimitEnable;
 
-    // below are from
-    // https://v6.docs.ctr-electronics.com/en/2024/docs/api-reference/device-specific/talonfx/motion-magic.html
-    // set slot 0 gains
+    // set PID slot 0 gains
     var slot0Configs = talonFXConfigs.Slot0;
     slot0Configs.kP = 5.0; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
@@ -43,7 +41,7 @@ public class ArmShooter extends SubsystemBase {
 
     // set Motion Magic settings
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 20; // Target cruise velocity of 80 rps
+    motionMagicConfigs.MotionMagicCruiseVelocity = 20; // Target cruise velocity of 20 rps
     motionMagicConfigs.MotionMagicAcceleration = 160; // Target acceleration of 160 rps/s
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
@@ -59,7 +57,7 @@ public class ArmShooter extends SubsystemBase {
   public void intake() {
     double oldRotations =
         shooterMotor.getPosition().getValueAsDouble(); // current position in rotation
-    shooterMotor.setControl(position.withPosition(oldRotations - 5.0));
+    shooterMotor.setControl(positionSignal.withPosition(oldRotations - 5.0));
     lastIntake = new Date();
   }
 
@@ -67,13 +65,18 @@ public class ArmShooter extends SubsystemBase {
   public void outtake() {
     double oldRotations =
         shooterMotor.getPosition().getValueAsDouble(); // current position in rotation
-    shooterMotor.setControl(position.withPosition(oldRotations + 5.0));
+    shooterMotor.setControl(positionSignal.withPosition(oldRotations + 5.0));
     lastIntake = new Date();
   }
 
   // start the motor running to a relative velocity
-  public void shoot() {
-    shooterMotor.set(-0.5); // 1.0 is full speed
+  public void runForward() {
+    shooterMotor.set(-0.3); // 1.0 is full speed
+  }
+
+  // start the motor running to a relative velocity
+  public void runBackward() {
+    shooterMotor.set(0.3); // 1.0 is full speed
   }
 
   // stop the motor, but only if we haven't called intake() in the last second
