@@ -20,6 +20,7 @@ import frc.robot.commands.DriverControl;
 import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
+import frc.robot.subsystems.Drawbridge;
 import frc.robot.subsystems.KrakenSwerve;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class RobotContainer {
   private KrakenSwerve swerve;
   private Arm arm;
   public ArmShooter shooter;
+  public Drawbridge drawbridge;
 
   // the old chooser
   // private final SendableChooser<String> oldAutoChooser;
@@ -71,9 +73,10 @@ public class RobotContainer {
     driverControl = new DriverControl(swerve);
     swerve.setDefaultCommand(driverControl);
 
-    operatorControl = new OperatorControl(arm, shooter);
+    operatorControl = new OperatorControl(arm, shooter, drawbridge);
     arm.setDefaultCommand(operatorControl);
     shooter.setDefaultCommand(operatorControl);
+    drawbridge.setDefaultCommand(operatorControl);
 
     // now we set up things for auto selection and pathplanner
     // // these are commands that the path from pathplanner will use

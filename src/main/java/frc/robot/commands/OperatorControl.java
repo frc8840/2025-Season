@@ -6,6 +6,7 @@ import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
+import frc.robot.subsystems.Drawbridge;
 
 public class OperatorControl extends Command {
 
@@ -13,18 +14,30 @@ public class OperatorControl extends Command {
 
   private Arm arm;
   private ArmShooter shooter;
+  private Drawbridge drawbridge;
 
-  public OperatorControl(Arm arm, ArmShooter shooter) {
+  public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
     this.shooter = shooter;
+    this.drawbridge = drawbridge;
     addRequirements(arm);
     addRequirements(shooter);
+    addRequirements(drawbridge);
 
     ps4controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
   }
 
   @Override
   public void execute() {
+
+    // drawbridge related
+    if (ps4controller.getPOV() == 0) {
+      Logger.Log("POV top button pressed");
+      drawbridge.open();
+    } else if (ps4controller.getPOV() == 180) {
+      Logger.Log("POV bottom button pressed");
+      drawbridge.close();
+    }
 
     // shooter/intake related
     if (ps4controller.getL2ButtonPressed()) {
@@ -37,7 +50,7 @@ public class OperatorControl extends Command {
     }
     if (ps4controller.getR2Button()) {
       shooter.runForward();
-    } else  if (ps4controller.getR1Button()) {
+    } else if (ps4controller.getR1Button()) {
       shooter.runBackward();
     } else {
       shooter.stop();
