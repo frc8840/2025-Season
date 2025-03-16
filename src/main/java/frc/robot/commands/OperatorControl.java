@@ -31,6 +31,10 @@ public class OperatorControl extends Command {
       Logger.Log("L2 button pressed");
       shooter.intake();
     }
+    if (ps4controller.getL1ButtonPressed()) {
+      Logger.Log("L1 button pressed");
+      shooter.outtake();
+    }
     if (ps4controller.getR2Button()) {
       shooter.shoot();
     } else {
