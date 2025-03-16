@@ -60,6 +60,7 @@ public class RobotContainer {
     swerve = new KrakenSwerve();
     arm = new Arm();
     shooter = new ArmShooter();
+    drawbridge = new Drawbridge();
 
     Logger.Log("finished constructing subsystems, going to sleep");
     try {

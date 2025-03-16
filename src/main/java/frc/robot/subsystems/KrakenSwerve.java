@@ -17,7 +17,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -142,22 +141,6 @@ public class KrakenSwerve extends SubsystemBase {
     // do we need the below?
     // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
     setModuleStates(swerveModuleStates);
-  }
-
-  // for testing
-  public void runEachMotorForOneSecond() {
-    for (KrakenSwerveModule module : mSwerveMods) {
-      // Run the current module's motor at full speed (or desired speed).
-      module.setDesiredState(
-          new SwerveModuleState(Constants.Swerve.maxSpeedMetersPerSecond, new Rotation2d()));
-      Logger.Log("Running module " + module.moduleNumber + " for 1 second.");
-
-      // Wait for 1 second.
-      Timer.delay(1.0);
-
-      // Stop the current module's motor.
-      module.stop();
-    }
   }
 
   public void rotateAroundReef(boolean hugReef, double speed) {
