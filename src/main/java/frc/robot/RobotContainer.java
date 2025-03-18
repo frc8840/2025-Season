@@ -224,13 +224,12 @@ public class RobotContainer {
   public Command getEvantsAutonomousCommand() {
     try {
       // Load the path you want to follow using its name in the GUI
-      PathPlannerPath path = PathPlannerPath.fromPathFile("New Path");
+      PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
       return new SequentialCommandGroup(
           new InstantCommand(
               () -> {
-                swerve.zeroGyro();
-                swerve.zeroOdometry();
-                swerve.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+                // swerve.zeroOdometry();
+                swerve.resetOdometry(new Pose2d(2, 7, new Rotation2d(0))); //Have to tell the reset odometry where you are in the pathplannre start position before you start
                 Logger.Log(
                     "PathPlannerAutoCommand() called. Current Pose (should be zero): "
                         + swerve.getPose());

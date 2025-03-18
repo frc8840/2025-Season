@@ -47,8 +47,8 @@ public class Robot extends TimedRobot {
     container = new RobotContainer();
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
-    lc = new LaserCan(0);
-    m_pdp = new PowerDistribution(0, ModuleType.kCTRE);
+    lc = new LaserCan(42);
+    m_pdp = new PowerDistribution(1, ModuleType.kCTRE);
     // Optionally initialise the settings of the LaserCAN, if you haven't already done so in
     // GrappleHook
     try {
@@ -114,7 +114,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    Command autonomousCommand = container.getAutonomousCommand();
+    Command autonomousCommand = container.getDriveForwardCommand();
 
     // Logger.Log("Autonomous Init Called");
     // Command autonomousCommand = swerve.followPathCommand("Test Path"); // Evan's alternative test
