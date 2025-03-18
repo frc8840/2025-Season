@@ -59,25 +59,25 @@ public class OperatorControl extends Command {
     // arm position related
     if (ps4controller.getTriangleButtonPressed()) {
       Logger.Log("Triangle button pressed");
-      arm.setArmPositionRotations(-20.0); // high
+      arm.setArmPositionRotations(-20.0); // level 4
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getSquareButtonPressed()) {
       Logger.Log("Square button pressed");
-      arm.setArmPositionRotations(-18.0); // medium
+      arm.setArmPositionRotations(-22.0); // level 3
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getCircleButtonPressed()) {
       Logger.Log("Square button pressed");
-      arm.setArmPositionRotations(-12.0); // medium
+      arm.setArmPositionRotations(-13.0); // level 2
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getCrossButtonPressed()) {
       Logger.Log("Cross button pressed");
-      arm.setArmPositionRotations(0); // low
+      arm.setArmPositionRotations(0); // down
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
