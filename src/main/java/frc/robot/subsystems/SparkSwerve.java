@@ -189,10 +189,10 @@ public class SparkSwerve extends SubsystemBase {
     odometer.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
 
-    for (SparkSwerveModule mod : mSwerveMods) {
-      // SmartDashboard.putNumber(
-      //     "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
-    }
+    // for (SparkSwerveModule mod : mSwerveMods) {
+    //   // SmartDashboard.putNumber(
+    //   //     "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+    // }
     // tell dashboard where the robot thinks it is
     // SmartDashboard.putNumber("Robot heading:", getYawValue());
     // SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());

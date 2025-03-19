@@ -23,7 +23,7 @@ public class OperatorControl extends Command {
   private double L4ArmPosition = -36.0;
   private double L3ArmPosition = -22.0;
   private double L2ArmPosition = -13.0;
-  private double RestArmPosition = 0;
+  private double RestArmPosition = -5;
 
   public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
