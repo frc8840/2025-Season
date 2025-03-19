@@ -15,7 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
@@ -191,12 +190,12 @@ public class SparkSwerve extends SubsystemBase {
     field.setRobotPose(getPose());
 
     for (SparkSwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
     }
     // tell dashboard where the robot thinks it is
-    SmartDashboard.putNumber("Robot heading:", getYawValue());
-    SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+    // SmartDashboard.putNumber("Robot heading:", getYawValue());
+    // SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
   }
 
   public void stopModules() {

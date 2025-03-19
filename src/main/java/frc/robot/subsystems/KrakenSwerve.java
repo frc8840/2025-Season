@@ -242,19 +242,19 @@ public class KrakenSwerve extends SubsystemBase {
     odometer.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
     for (KrakenSwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees());
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond);
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Distance", mod.getPosition().distanceMeters);
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " Distance", mod.getPosition().distanceMeters);
     }
     // tell dashboard where the robot thinks it is
     SmartDashboard.putNumber("Robot heading:", getYawValue());
     SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
-    SmartDashboard.putString("Module Positions: ", getPositions().toString());
+    // SmartDashboard.putString("Module Positions: ", getPositions().toString());
     // for (KrakenSwerveModule mod : mSwerveMods) {
     //   // No voltage being sent to angleMotor, but is being sent to driveMotor
     //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" +
