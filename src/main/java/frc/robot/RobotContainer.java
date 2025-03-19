@@ -229,7 +229,12 @@ public class RobotContainer {
           new InstantCommand(
               () -> {
                 // swerve.zeroOdometry();
-                swerve.resetOdometry(new Pose2d(2, 7, new Rotation2d(0))); //Have to tell the reset odometry where you are in the pathplannre start position before you start
+                swerve.resetOdometry(
+                    new Pose2d(
+                        2,
+                        7,
+                        new Rotation2d(0))); // Have to tell the reset odometry where you are in the
+                // pathplannre start position before you start
                 Logger.Log(
                     "PathPlannerAutoCommand() called. Current Pose (should be zero): "
                         + swerve.getPose());

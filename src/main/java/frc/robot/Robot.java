@@ -9,9 +9,9 @@ import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
     lc = new LaserCan(42);
-    sbContainer = Shuffleboard.getTab("Main"); //change name to whatever you want
+    sbContainer = Shuffleboard.getTab("Main"); // change name to whatever you want
     m_pdp = new PowerDistribution(1, ModuleType.kCTRE);
     // Optionally initialise the settings of the LaserCAN, if you haven't already done so in
     // GrappleHook
@@ -78,8 +78,11 @@ public class Robot extends TimedRobot {
 
     // CanBridge.runTCP();
 
-    sbContainer.addCamera("Camera", "Camera", "http://10.88..40.11:5800").withWidget("Camera Stream").withSize(4, 2)
-        .withPosition(0, 0); //Not sure if URL can be accessed locally
+    sbContainer
+        .addCamera("Camera", "Camera", "http://10.88..40.11:5800")
+        .withWidget("Camera Stream")
+        .withSize(4, 2)
+        .withPosition(0, 0); // Not sure if URL can be accessed locally
     // // Get the voltage going into the PDP, in Volts.
     // // The PDP returns the voltage in increments of 0.05 Volts.
     // double voltage = m_pdp.getVoltage();
@@ -150,8 +153,7 @@ public class Robot extends TimedRobot {
     //  );
 
     LaserCan.Measurement measurement = lc.getMeasurement();
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
-    {
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       System.out.println("The target is " + measurement.distance_mm + "mm away!");
     } else {
       System.out.println(

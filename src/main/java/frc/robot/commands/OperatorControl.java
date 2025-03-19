@@ -25,7 +25,6 @@ public class OperatorControl extends Command {
   private double L2ArmPosition = -13.0;
   private double RestArmPosition = 0;
 
-
   public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
     this.shooter = shooter;
