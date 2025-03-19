@@ -20,7 +20,7 @@ public class OperatorControl extends Command {
 
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
 
-  private double L4ArmPosition = -20.0;
+  private double L4ArmPosition = -36.0;
   private double L3ArmPosition = -22.0;
   private double L2ArmPosition = -13.0;
   private double RestArmPosition = 0;
@@ -149,8 +149,8 @@ public class OperatorControl extends Command {
     double translationVal =
         translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
     double armPosition = arm.getArmPosition();
-    double newArmPosition = armPosition - (int) Math.round(translationVal * 10);
     if (Math.abs(translationVal) > 0.1) {
+      double newArmPosition = armPosition + (int) Math.round(translationVal * 0.8);
       arm.setArmPositionRotations(newArmPosition);
     }
 

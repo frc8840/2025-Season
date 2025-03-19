@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+
 // import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,7 +32,9 @@ public class Robot extends TimedRobot {
   RobotContainer container;
   private LaserCan lc;
   private PowerDistribution m_pdp;
-  private ShuffleboardContainer sbContainer;
+  // private ShuffleboardContainer sbContainer;
+  private boolean inRange = false;
+
 
   public static Robot getInstance() {
     return instance;
@@ -51,7 +56,7 @@ public class Robot extends TimedRobot {
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
     lc = new LaserCan(42);
-    sbContainer = Shuffleboard.getTab("Main"); // change name to whatever you want
+    // sbContainer = Shuffleboard.getTab("Live Window"); //change name to whatever you want
     m_pdp = new PowerDistribution(1, ModuleType.kCTRE);
     // Optionally initialise the settings of the LaserCAN, if you haven't already done so in
     // GrappleHook
@@ -62,6 +67,12 @@ public class Robot extends TimedRobot {
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
     }
+    // PhotonCamera camera = new PhotonCamera("Arducam_OV2311_USB_CAMERA");
+    // Shuffleboard.getTab("Live Window")
+    //   .add("Camera", camera)
+    //   .withWidget("Camera Stream")
+    //   .withSize(4,2);
+    // sbContainer.add("LaserCAN", inRange);
   }
 
   /**
@@ -78,11 +89,11 @@ public class Robot extends TimedRobot {
 
     // CanBridge.runTCP();
 
-    sbContainer
-        .addCamera("Camera", "Camera", "http://10.88..40.11:5800")
-        .withWidget("Camera Stream")
-        .withSize(4, 2)
-        .withPosition(0, 0); // Not sure if URL can be accessed locally
+    // sbContainer
+    //     .addCamera("Camera", "Camera", "http://10.88..40.11:5800")
+    //     .withWidget("Camera Stream")
+    //     .withSize(4, 2)
+    //     .withPosition(0, 0); // Not sure if URL can be accessed locally
     // // Get the voltage going into the PDP, in Volts.
     // // The PDP returns the voltage in increments of 0.05 Volts.
     // double voltage = m_pdp.getVoltage();
@@ -98,6 +109,22 @@ public class Robot extends TimedRobot {
     // // Energy is the power summed over time with units Joules.
     // double totalEnergy = m_pdp.getTotalEnergy();
     // SmartDashboard.putNumber("Total Energy", totalEnergy);
+
+    LaserCan.Measurement measurement = lc.getMeasurement();
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
+    {
+      Logger.LogPeriodic("The target is " + measurement.distance_mm + "mm away!");
+    } else {
+      Logger.LogPeriodic(
+          "Oh no! The target is out of range, or we can't get a reliable measurement!");
+      // You can still use distance_mm in here, if you're ok tolerating a clamped value or an
+      // unreliable measurement.
+    }
+    if (measurement != null && measurement.distance_mm <= 400) {
+      inRange = true;
+    } else{
+      inRange = false;
+    }
   }
 
   /**
@@ -162,14 +189,13 @@ public class Robot extends TimedRobot {
       // unreliable measurement.
     }
 
-    boolean inRange = false;
     if (measurement != null && measurement.distance_mm <= 400) {
       inRange = true;
     } else {
       inRange = false;
     }
 
-    sbContainer.add("LaserCAN", inRange);
+    // sbContainer.add("LaserCAN", inRange);
   }
 
   /** This function is called once when the robot is disabled. */

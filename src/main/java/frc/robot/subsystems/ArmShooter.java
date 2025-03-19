@@ -56,7 +56,7 @@ public class ArmShooter extends SubsystemBase {
   public void intake() {
     double oldRotations =
         shooterMotor.getPosition().getValueAsDouble(); // current position in rotation
-    shooterMotor.setControl(positionSignal.withPosition(oldRotations - 5.0));
+    shooterMotor.setControl(positionSignal.withPosition(oldRotations - 3.5));
     lastIntake = new Date();
   }
 
