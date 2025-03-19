@@ -141,15 +141,6 @@ public class KrakenSwerve extends SubsystemBase {
 
   public void rotateAroundReef(boolean hugReef, double speed) {
     if (hugReef) {
-      mSwerveMods[0].setDesiredState(
-          new SwerveModuleState(speed, Rotation2d.fromRotations(0.164))); // FL
-      mSwerveMods[1].setDesiredState(
-          new SwerveModuleState(speed, Rotation2d.fromRotations(0.275))); // FR
-      mSwerveMods[2].setDesiredState(
-          new SwerveModuleState(speed, Rotation2d.fromRotations(0.336))); // BL
-      mSwerveMods[3].setDesiredState(
-          new SwerveModuleState(speed, Rotation2d.fromRotations(0.442))); // BR
-    } else {
       // Changing to be orthogonal to the current rotation pattern. should make it closer/farther
       // from the reef
       mSwerveMods[0].setDesiredState(
@@ -160,6 +151,15 @@ public class KrakenSwerve extends SubsystemBase {
           new SwerveModuleState(speed, Rotation2d.fromRotations(0.836))); // BL
       mSwerveMods[3].setDesiredState(
           new SwerveModuleState(speed, Rotation2d.fromRotations(0.942))); // BR
+    } else {
+      mSwerveMods[0].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.3))); // FL
+      mSwerveMods[1].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.2))); // FR
+      mSwerveMods[2].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.3))); // BL
+      mSwerveMods[3].setDesiredState(
+          new SwerveModuleState(speed, Rotation2d.fromRotations(0.2))); // BR
     }
   }
 

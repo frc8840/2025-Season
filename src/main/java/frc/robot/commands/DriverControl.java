@@ -77,7 +77,6 @@ public class DriverControl extends Command {
       // ask for ChassisSpeeds so we can print it to logs for debugging
       ChassisSpeeds chassisSpeeds = swerve.getChassisSpeeds();
       Logger.LogPeriodic("getChassisSpeeds: " + chassisSpeeds);
-
     } else {
       if (isHuggingReef) {
         swerve.rotateAroundReef(true, translationVal);

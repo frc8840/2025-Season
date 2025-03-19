@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Logger;
@@ -15,6 +17,14 @@ public class OperatorControl extends Command {
   private Arm arm;
   private ArmShooter shooter;
   private Drawbridge drawbridge;
+
+  private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
+
+  private double L4ArmPosition = -20.0;
+  private double L3ArmPosition = -22.0;
+  private double L2ArmPosition = -13.0;
+  private double RestArmPosition = 0;
+
 
   public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
@@ -59,25 +69,25 @@ public class OperatorControl extends Command {
     // arm position related
     if (ps4controller.getTriangleButtonPressed()) {
       Logger.Log("Triangle button pressed");
-      arm.setArmPositionRotations(-20.0); // level 4
+      arm.setArmPositionRotations(L4ArmPosition); // level 4
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getSquareButtonPressed()) {
       Logger.Log("Square button pressed");
-      arm.setArmPositionRotations(-22.0); // level 3
+      arm.setArmPositionRotations(L3ArmPosition); // level 3
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getCircleButtonPressed()) {
       Logger.Log("Square button pressed");
-      arm.setArmPositionRotations(-13.0); // level 2
+      arm.setArmPositionRotations(L2ArmPosition); // level 2
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
     if (ps4controller.getCrossButtonPressed()) {
       Logger.Log("Cross button pressed");
-      arm.setArmPositionRotations(0); // down
+      arm.setArmPositionRotations(RestArmPosition); // down
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
@@ -137,26 +147,26 @@ public class OperatorControl extends Command {
     // }
 
     // Starting to set up mode to control the arm with the left stick
-    // double translationVal =
-    //     translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
-    // Arm.ArmPosition armPosition = arm.getArmPosition();
-    // Arm.ArmPosition newArmPosition = armPosition - (int) Math.round(translationVal * 10);
-    // if (Math.abs(translationVal) > 0.1) {
-    //   setArmPosition(newArmPosition);
-    // }
+    double translationVal =
+        translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
+    double armPosition = arm.getArmPosition();
+    double newArmPosition = armPosition - (int) Math.round(translationVal * 10);
+    if (Math.abs(translationVal) > 0.1) {
+      arm.setArmPositionRotations(newArmPosition);
+    }
 
     // Saves current arm position as the values to be used for the future (only this session)
     // if (ps4controller.getPOV() == 0) {
     //   L1ArmPosition = armPosition;
     // }
-    // if (ps4controller.getPOV() == 90) {
-    //   L2ArmPosition = armPosition;
-    // }
-    // if (ps4controller.getPOV() == 180) {
-    //   L3ArmPosition = armPosition;
-    // }
-    // if (ps4controller.getPOV() == 270) {
-    //   L4ArmPosition = armPosition;
-    // }
+    if (ps4controller.getPOV() == 90) {
+      L2ArmPosition = armPosition;
+    }
+    if (ps4controller.getPOV() == 180) {
+      L3ArmPosition = armPosition;
+    }
+    if (ps4controller.getPOV() == 270) {
+      L4ArmPosition = armPosition;
+    }
   }
 }
