@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.controller.PIDController;
@@ -81,9 +82,13 @@ public class RobotContainer {
 
     // now we set up things for auto selection and pathplanner
     // // these are commands that the path from pathplanner will use
-    // NamedCommands.registerCommand("Start Intake", getStartIntakeCommand());
-    // NamedCommands.registerCommand("Stop Intake", getStopIntakeCommand());
-    // NamedCommands.registerCommand("Shoot", getShootCommand());
+    NamedCommands.registerCommand("Start Intake", getStartIntakeCommand());
+    NamedCommands.registerCommand("Stop Intake", getStopIntakeCommand());
+    NamedCommands.registerCommand("Shoot", getShootCommand());
+    NamedCommands.registerCommand("Intake Position", getIntakePositionCommand());
+    NamedCommands.registerCommand("L2", getL2Command());
+    NamedCommands.registerCommand("L3", getL3Command());
+    NamedCommands.registerCommand("L4", getL4Command());
 
     // The old autonomous chooser
     // oldAutoChooser = new SendableChooser<>();
@@ -171,29 +176,54 @@ public class RobotContainer {
   //   diagonalLeft,
   // }
 
-  // public Command getStartIntakeCommand() {
-  //   return new InstantCommand(
-  //       () -> {
-  //         arm.setArmPosition(ArmPosition.INTAKE);
-  //         intake.intake();
-  //       });
-  // }
+  public Command getStartIntakeCommand() {
+    return new InstantCommand(
+        () -> {
+          shooter.intake();
+        });
+   }
 
-  // public Command getStopIntakeCommand() {
-  //   return new InstantCommand(
-  //       () -> {
-  //         intake.stop();
-  //         arm.setArmPosition(ArmPosition.REST);
-  //       });
-  // }
+  public Command getStopIntakeCommand() {
+    return new InstantCommand(
+        () -> {
+          shooter.stop();
+        });
+  }
 
-  // public Command getShootCommand() {
-  //   return new InstantCommand(
-  //       () -> {
-  //         arm.setArmPosition(ArmPosition.SPEAKERSHOOTING);
-  //         shooter.shoot();
-  //       });
-  // }
+  public Command getShootCommand() {
+    return new InstantCommand(
+        () -> {
+          shooter.outtake();
+        });
+  }
+
+  public Command getIntakePositionCommand() {
+    return new InstantCommand(
+        () -> {
+          arm.returnToIntakePosition();
+        });
+  }
+
+  public Command getL2Command() {
+    return new InstantCommand(
+        () -> {
+          arm.setArmPositionRotations(-13);
+        });
+  }
+  
+  public Command getL3Command() {
+    return new InstantCommand(
+        () -> {
+          arm.setArmPositionRotations(-22);
+        });
+  }
+
+  public Command getL4Command() {
+    return new InstantCommand(
+        () -> {
+          arm.setArmPositionRotations(-36);
+        });
+  }
 
   public Command getAutonomousCommand() {
     // This method loads the auto when it is called, however, it is recommended

@@ -57,6 +57,17 @@ public class Arm extends SubsystemBase {
     Logger.Log("shoulder position called with:" + position);
   }
 
+  public void returnToIntakePosition() {
+    Logger.Log("Returning to intake position");
+    setArmPositionRotations(0.5);
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    setArmPositionRotations(0);
+  }
+
   public void relax() {
     Logger.Log("Relaxing arm");
     armConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
