@@ -25,6 +25,8 @@ public class OperatorControl extends Command {
   private double L2ArmPosition = -13.0;
   private double RestArmPosition = -5;
 
+  double armPosition = arm.getArmPosition();
+
   public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
     this.shooter = shooter;
@@ -58,9 +60,11 @@ public class OperatorControl extends Command {
       shooter.outtake();
     }
     if (ps4controller.getR2Button()) {
-      shooter.runForward();
+      double newArmPosition = armPosition + 0.5;
+      arm.setArmPositionRotations(newArmPosition);
     } else if (ps4controller.getR1Button()) {
-      shooter.runBackward();
+      double newArmPosition = armPosition - 0.5;
+      arm.setArmPositionRotations(newArmPosition);
     } else {
       shooter.stop();
     }
@@ -148,7 +152,6 @@ public class OperatorControl extends Command {
     // Starting to set up mode to control the arm with the left stick
     double translationVal =
         translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
-    double armPosition = arm.getArmPosition();
     if (Math.abs(translationVal) > 0.1) {
       double newArmPosition = armPosition + (int) Math.round(translationVal * 0.8);
       arm.setArmPositionRotations(newArmPosition);
