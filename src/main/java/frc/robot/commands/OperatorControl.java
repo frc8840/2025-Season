@@ -25,8 +25,6 @@ public class OperatorControl extends Command {
   private double L2ArmPosition = -13.0;
   private double RestArmPosition = -5;
 
-  double armPosition = arm.getArmPosition();
-
   public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
     this.shooter = shooter;
@@ -59,11 +57,11 @@ public class OperatorControl extends Command {
       Logger.Log("L1 button pressed");
       shooter.outtake();
     }
-    if (ps4controller.getR2Button()) {
-      double newArmPosition = armPosition + 0.5;
+    if (ps4controller.getR2ButtonPressed()) {
+      double newArmPosition = arm.getArmPosition() + 2;
       arm.setArmPositionRotations(newArmPosition);
-    } else if (ps4controller.getR1Button()) {
-      double newArmPosition = armPosition - 0.5;
+    } else if (ps4controller.getR1ButtonPressed()) {
+      double newArmPosition = arm.getArmPosition() - 2;
       arm.setArmPositionRotations(newArmPosition);
     } else {
       shooter.stop();
@@ -153,7 +151,7 @@ public class OperatorControl extends Command {
     double translationVal =
         translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
     if (Math.abs(translationVal) > 0.1) {
-      double newArmPosition = armPosition + (int) Math.round(translationVal * 0.8);
+      double newArmPosition = arm.getArmPosition() + (int) Math.round(translationVal * 0.8);
       arm.setArmPositionRotations(newArmPosition);
     }
 
@@ -162,13 +160,13 @@ public class OperatorControl extends Command {
     //   L1ArmPosition = armPosition;
     // }
     if (ps4controller.getPOV() == 90) {
-      L2ArmPosition = armPosition;
+      L2ArmPosition = arm.getArmPosition();
     }
     if (ps4controller.getPOV() == 180) {
-      L3ArmPosition = armPosition;
+      L3ArmPosition = arm.getArmPosition();
     }
     if (ps4controller.getPOV() == 270) {
-      L4ArmPosition = armPosition;
+      L4ArmPosition = arm.getArmPosition();
     }
   }
 }
