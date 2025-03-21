@@ -88,7 +88,8 @@ public class OperatorControl extends Command {
 
     if (ps4controller.getCrossButtonPressed()) {
       Logger.Log("Cross button pressed");
-      arm.returnToIntakePosition();; // down
+      arm.returnToIntakePosition();
+      ; // down
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
@@ -155,14 +156,14 @@ public class OperatorControl extends Command {
     double joystickInput = MathUtil.applyDeadband(ps4controller.getLeftY(), 0.1);
     double filteredInput = translationLimiter.calculate(joystickInput);
     if (Math.abs(filteredInput) > 0.15) {
-      double currentArmPosition =  arm.getArmPosition();
+      double currentArmPosition = arm.getArmPosition();
       double newArmPosition = currentArmPosition + filteredInput * 1.0;
       arm.setArmPositionRotations(newArmPosition);
     }
 
     // Saves current arm position as the values to be used for the future (only this session)
     if (ps4controller.getPOV() == 0) {
-      L1ArmPosition = arm.getArmPosition()  ;
+      L1ArmPosition = arm.getArmPosition();
     }
     if (ps4controller.getPOV() == 90) {
       L2ArmPosition = arm.getArmPosition();

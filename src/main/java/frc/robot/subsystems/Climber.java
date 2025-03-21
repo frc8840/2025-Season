@@ -63,11 +63,25 @@ public class Climber extends SubsystemBase {
 
     // cMotorConfig.voltageCompensation(12.0);
 
-    cMotorConfig.Slot0.kP = kP;
-    cMotorConfig.Slot0.kI = kI;
-    cMotorConfig.Slot0.kD = kD;
-    // cMotorConfig.closedLoop.iZone(kIz);
-    cMotorConfig.Slot0.kV = kFF;
+    // set PID slot 0 gains
+    var slot0Configs = cMotorConfig.Slot0;
+    slot0Configs.kP = kP; // A position error of 2.5 rotations results in 12 V output
+    slot0Configs.kI = kI; // no output for integrated error
+    slot0Configs.kD = kD; // A velocity error of 1 rps results in 0.1 V output
+    slot0Configs.kS = 0; // Add 0.25 V output to overcome static friction
+    slot0Configs.kV = kFF; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kA = 0; // An acceleration of 1 rps/s requires 0.01 V output
+    slot0Configs.kG = 0; // gravity gain
+
+    // set Motion Magic settings
+    var motionMagicConfigs = cMotorConfig.MotionMagic;
+    motionMagicConfigs.MotionMagicCruiseVelocity =
+        20; // Target cruise velocity of 20 rps, CHANGE THESE NUMBERS
+    motionMagicConfigs.MotionMagicAcceleration =
+        160; // Target acceleration of 160 rps/s, CHANGE THESE NUMBERS
+    motionMagicConfigs.MotionMagicJerk =
+        1600; // Target jerk of 1600 rps/s/s (0.1 seconds), CHANGE THESE NUMBERS
+
     // lController.setOutputRange(kMinOutput, kMaxOutput);
     // cMotorConfig.closedLoop.maxMotion.maxVelocity(slowVel, smartMotionSlot); //Commented out, not
     // sure if needed

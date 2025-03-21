@@ -10,10 +10,13 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
+import java.util.Map;
+import org.photonvision.PhotonCamera;
 
 // import au.grapplerobotics.CanBridge;
 
@@ -66,9 +69,17 @@ public class Robot extends TimedRobot {
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
     }
+    // Creates UsbCamera and MjpegServer [1] and connects them
+    PhotonCamera camera = new PhotonCamera("Arducam_OV2311_USB_CAMERA");
     CameraServer.startAutomaticCapture(
-        "camera", 0); // Change device number to whatever the camera is
-    // camera = new PhotonCamera("Arducam_OV2311_USB_CAMERA");
+        "camera", "/dev/video0"); // Change path to whatever the camera is
+    // MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
+    // mjpegServer1.setSource(usbCamera);
+    Shuffleboard.getTab("Camera Stream")
+        .addCamera("Driver Camera", "test", "mjpg:http://10.88.40.11:5800/?action=stream")
+        .withProperties(Map.of("Show Controls", false))
+        .withPosition(2, 0)
+        .withSize(3, 3);
   }
 
   /**

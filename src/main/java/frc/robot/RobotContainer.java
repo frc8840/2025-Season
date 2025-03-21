@@ -181,7 +181,7 @@ public class RobotContainer {
         () -> {
           shooter.intake();
         });
-   }
+  }
 
   public Command getStopIntakeCommand() {
     return new InstantCommand(
@@ -210,7 +210,7 @@ public class RobotContainer {
           arm.setArmPositionRotations(-13);
         });
   }
-  
+
   public Command getL3Command() {
     return new InstantCommand(
         () -> {

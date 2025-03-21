@@ -22,6 +22,7 @@ public class DriverControl extends Command {
 
   private boolean isReefRotating = false;
   private boolean isHuggingReef = false;
+  private boolean slowMode = false;
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
   public DriverControl(KrakenSwerve swerve) {
@@ -47,6 +48,7 @@ public class DriverControl extends Command {
     }
 
     if (xboxcontroller.getAButtonPressed()) {
+
       isReefRotating = !isReefRotating;
       if (!isReefRotating) {
         swerve.rotateAroundReef(false, 0.0);
@@ -54,6 +56,9 @@ public class DriverControl extends Command {
     }
     if (xboxcontroller.getBackButtonPressed()) {
       isHuggingReef = !isHuggingReef;
+    }
+    if (xboxcontroller.getStartButtonPressed()) {
+      slowMode = !slowMode;
     }
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
@@ -69,20 +74,35 @@ public class DriverControl extends Command {
     if (!isReefRotating) {
       Logger.LogPeriodic(
           "swerve.drive() called with translation=" + translationVal + " and strafe=" + strafeVal);
-      swerve.drive(
-          new Translation2d(translationVal, strafeVal)
-              .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s
-          rotationVal * Constants.Swerve.maxAngularVelocityRadiansPerSecond,
-          false);
+      if (slowMode) {
+        swerve.drive(
+            new Translation2d(translationVal * 0.5, strafeVal * 0.5)
+                .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s
+            rotationVal * Constants.Swerve.maxAngularVelocityRadiansPerSecond,
+            false);
+      } else {
+        swerve.drive(
+            new Translation2d(translationVal, strafeVal)
+                .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s
+            rotationVal * Constants.Swerve.maxAngularVelocityRadiansPerSecond,
+            false);
+      }
       // ask for ChassisSpeeds so we can print it to logs for debugging
       ChassisSpeeds chassisSpeeds = swerve.getChassisSpeeds();
       Logger.LogPeriodic("getChassisSpeeds: " + chassisSpeeds);
     } else {
       if (isHuggingReef) {
-        swerve.rotateAroundReef(true, translationVal);
+        if (slowMode) {
+          swerve.rotateAroundReef(true, translationVal * 0.5);
+        } else {
+          swerve.rotateAroundReef(true, translationVal);
+        }
       } else {
-        swerve.rotateAroundReef(false, strafeVal);
-        ;
+        if (slowMode) {
+          swerve.rotateAroundReef(false, strafeVal * 0.5);
+        } else {
+          swerve.rotateAroundReef(false, strafeVal);
+        }
       }
     }
   }
