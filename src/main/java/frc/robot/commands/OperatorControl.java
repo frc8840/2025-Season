@@ -21,8 +21,9 @@ public class OperatorControl extends Command {
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
 
   private double L4ArmPosition = -36.0;
-  private double L3ArmPosition = -22.0;
+  private double L3ArmPosition = -21.0;
   private double L2ArmPosition = -13.0;
+  private double L1ArmPosition = -9.0;
 
   public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
     this.arm = arm;
@@ -91,13 +92,17 @@ public class OperatorControl extends Command {
       Logger.Log("Arm position: " + arm.getArmPosition());
     }
 
+    if (ps4controller.getOptionsButtonPressed()) {
+      Logger.Log("Options button pressed");
+      arm.setArmPositionRotations(L1ArmPosition);
+    }
+
     if (ps4controller.getShareButtonPressed()) {
       Logger.Log("Share button pressed");
       arm.relax();
     }
 
-    if (ps4controller.getOptionsButtonPressed()) {
-      Logger.Log("Options button pressed");
+    if (ps4controller.getPSButtonPressed()) {
       arm.gethard();
     }
 
@@ -147,17 +152,18 @@ public class OperatorControl extends Command {
     // }
 
     // Starting to set up mode to control the arm with the left stick
-    double translationVal =
-        translationLimiter.calculate(MathUtil.applyDeadband(ps4controller.getLeftY(), 0.05));
-    if (Math.abs(translationVal) > 0.1) {
-      double newArmPosition = arm.getArmPosition() + (int) Math.round(translationVal * 0.8);
+    double joystickInput = MathUtil.applyDeadband(ps4controller.getLeftY(), 0.1);
+    double filteredInput = translationLimiter.calculate(joystickInput);
+    if (Math.abs(filteredInput) > 0.15) {
+      double currentArmPosition =  arm.getArmPosition();
+      double newArmPosition = currentArmPosition + filteredInput * 1.0;
       arm.setArmPositionRotations(newArmPosition);
     }
 
     // Saves current arm position as the values to be used for the future (only this session)
-    // if (ps4controller.getPOV() == 0) {
-    //   L1ArmPosition = armPosition;
-    // }
+    if (ps4controller.getPOV() == 0) {
+      L1ArmPosition = arm.getArmPosition()  ;
+    }
     if (ps4controller.getPOV() == 90) {
       L2ArmPosition = arm.getArmPosition();
     }
