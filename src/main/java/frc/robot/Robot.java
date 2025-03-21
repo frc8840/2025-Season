@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
@@ -73,7 +72,9 @@ public class Robot extends TimedRobot {
       System.out.println("Configuration failed! " + e);
     }
     // Creates UsbCamera and MjpegServer [1] and connects them
-    HttpCamera photonCamera = new HttpCamera("PhotonVision", "http://10.88.40.11:1181/stream.mjpg", HttpCameraKind.kMJPGStreamer);
+    HttpCamera photonCamera =
+        new HttpCamera(
+            "PhotonVision", "http://10.88.40.11:1181/stream.mjpg", HttpCameraKind.kMJPGStreamer);
     // PhotonCamera camera = new PhotonCamera("Arducam_OV2311_USB_CAMERA");
     // CameraServer.startAutomaticCapture(); // Change path to whatever the camera is
     // MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
@@ -86,12 +87,13 @@ public class Robot extends TimedRobot {
 
     CameraServer.addCamera(photonCamera);
 
-    NetworkTableEntry streams = NetworkTableInstance.getDefault()
-      .getTable("CameraPublisher")
-      .getSubTable("PhotonVision")
-      .getEntry("streams");
+    NetworkTableEntry streams =
+        NetworkTableInstance.getDefault()
+            .getTable("CameraPublisher")
+            .getSubTable("PhotonVision")
+            .getEntry("streams");
 
-    streams.setStringArray(new String[]{"mjpeg:http://10.88.40.11:1181/stream.mjpg"});
+    streams.setStringArray(new String[] {"mjpeg:http://10.88.40.11:1181/stream.mjpg"});
   }
 
   /**
@@ -109,7 +111,10 @@ public class Robot extends TimedRobot {
     // CanBridge.runTCP();
     double voltage = m_pdp.getVoltage();
     Shuffleboard.getTab("Live Window")
-    .add("Voltage", voltage);
+        .add("Voltage", voltage)
+        .withWidget("Number Bar")
+        .withPosition(0, 0)
+        .withSize(1, 1);
     // sbContainer
     //     .addCamera("Camera", "Camera", "http://10.88..40.11:5800")
     //     .withWidget("Camera Stream")
@@ -146,12 +151,12 @@ public class Robot extends TimedRobot {
       inRange = false;
     }
     Shuffleboard.getTab("Live Window")
-    .add("In Range", inRange)
-    .withWidget("Boolean Box")
-    .withPosition(1, 2)
-    .withSize(1,1);
+        .add("In Range", inRange)
+        .withWidget("Boolean Box")
+        .withPosition(1, 2)
+        .withSize(1, 1);
     // SmartDashboard.putBoolean("Close to Reef", inRange);
-    
+
     // SmartDashboard.putData(m_pdp);
     // .add("Camera", camera)
     // .withWidget("Camera Stream")

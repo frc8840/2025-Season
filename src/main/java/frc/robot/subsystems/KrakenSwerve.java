@@ -15,8 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
@@ -246,16 +246,32 @@ public class KrakenSwerve extends SubsystemBase {
     for (KrakenSwerveModule mod : mSwerveMods) {
       // SmartDashboard.putNumber(
       //     "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond);
+      Shuffleboard.getTab("Live Window")
+          .add("Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees())
+          .withPosition(4, 4)
+          .withSize(1, 1);
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees());
+      Shuffleboard.getTab("Live Window")
+          .add("Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond)
+          .withPosition(6, 4)
+          .withSize(1, 1);
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond);
       // SmartDashboard.putNumber(
       //     "Mod " + mod.moduleNumber + " Distance", mod.getPosition().distanceMeters);
     }
     // tell dashboard where the robot thinks it is
-    SmartDashboard.putNumber("Robot heading:", getYawValue());
-    SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
+    Shuffleboard.getTab("Live Window")
+        .add("Robot Heading", getYawValue())
+        .withPosition(6, 2)
+        .withSize(1, 1);
+    // SmartDashboard.putNumber("Robot heading:", getYawValue());
+    Shuffleboard.getTab("Live Window")
+        .add("Robot Location", getPose().getTranslation().toString())
+        .withPosition(4, 2)
+        .withSize(1, 1);
+    // SmartDashboard.putString("Robot location:", getPose().getTranslation().toString());
     // SmartDashboard.putString("Module Positions: ", getPositions().toString());
     // for (KrakenSwerveModule mod : mSwerveMods) {
     //   // No voltage being sent to angleMotor, but is being sent to driveMotor
