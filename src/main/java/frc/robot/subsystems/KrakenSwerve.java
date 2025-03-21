@@ -56,7 +56,9 @@ public class KrakenSwerve extends SubsystemBase {
     for (KrakenSwerveModule module : mSwerveMods) {
       orchestra.addInstrument(module.angleMotor);
     }
-    // var status = orchestra.loadMusic("track.chrp");
+    // var status = orchestra.loadMusic("music/Happy_Birthday.chrp");
+    // Logger.Log(status.toString());
+    // orchestra.play();
 
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file

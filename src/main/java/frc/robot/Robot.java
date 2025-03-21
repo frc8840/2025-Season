@@ -7,6 +7,11 @@ package frc.robot;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -15,8 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
-import java.util.Map;
-import org.photonvision.PhotonCamera;
 
 // import au.grapplerobotics.CanBridge;
 
@@ -70,16 +73,25 @@ public class Robot extends TimedRobot {
       System.out.println("Configuration failed! " + e);
     }
     // Creates UsbCamera and MjpegServer [1] and connects them
-    PhotonCamera camera = new PhotonCamera("Arducam_OV2311_USB_CAMERA");
-    CameraServer.startAutomaticCapture(
-        "camera", "/dev/video0"); // Change path to whatever the camera is
+    HttpCamera photonCamera = new HttpCamera("PhotonVision", "http://10.88.40.11:1181/stream.mjpg", HttpCameraKind.kMJPGStreamer);
+    // PhotonCamera camera = new PhotonCamera("Arducam_OV2311_USB_CAMERA");
+    // CameraServer.startAutomaticCapture(); // Change path to whatever the camera is
     // MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
     // mjpegServer1.setSource(usbCamera);
-    Shuffleboard.getTab("Camera Stream")
-        .addCamera("Driver Camera", "test", "mjpg:http://10.88.40.11:5800/?action=stream")
-        .withProperties(Map.of("Show Controls", false))
-        .withPosition(2, 0)
-        .withSize(3, 3);
+    // Shuffleboard.getTab("Camera Stream")
+    //     .addCamera("Driver Camera", "test", "mjpg:http://10.88.40.11:5800/?action=stream")
+    //     .withPosition(2, 0)
+    //     .withSize(3, 3);
+    photonCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+
+    CameraServer.addCamera(photonCamera);
+
+    NetworkTableEntry streams = NetworkTableInstance.getDefault()
+      .getTable("CameraPublisher")
+      .getSubTable("PhotonVision")
+      .getEntry("streams");
+
+    streams.setStringArray(new String[]{"mjpeg:http://10.88.40.11:1181/stream.mjpg"});
   }
 
   /**
@@ -96,7 +108,8 @@ public class Robot extends TimedRobot {
 
     // CanBridge.runTCP();
     double voltage = m_pdp.getVoltage();
-    SmartDashboard.putNumber("Voltage", kDefaultPeriod);
+    Shuffleboard.getTab("Live Window")
+    .add("Voltage", voltage);
     // sbContainer
     //     .addCamera("Camera", "Camera", "http://10.88..40.11:5800")
     //     .withWidget("Camera Stream")
@@ -127,12 +140,18 @@ public class Robot extends TimedRobot {
     //   // You can still use distance_mm in here, if you're ok tolerating a clamped value or an
     //   // unreliable measurement.
     // }
-    if (measurement != null && measurement.distance_mm <= 400) {
+    if (measurement != null && measurement.distance_mm <= 400 && measurement.distance_mm >= 100) {
       inRange = true;
     } else {
       inRange = false;
     }
-    SmartDashboard.putBoolean("Close to Reef", inRange);
+    Shuffleboard.getTab("Live Window")
+    .add("In Range", inRange)
+    .withWidget("Boolean Box")
+    .withPosition(1, 2)
+    .withSize(1,1);
+    // SmartDashboard.putBoolean("Close to Reef", inRange);
+    
     // SmartDashboard.putData(m_pdp);
     // .add("Camera", camera)
     // .withWidget("Camera Stream")

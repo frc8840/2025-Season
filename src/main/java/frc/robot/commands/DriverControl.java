@@ -22,7 +22,7 @@ public class DriverControl extends Command {
 
   private boolean isReefRotating = false;
   private boolean isHuggingReef = false;
-  private boolean slowMode = false;
+  private boolean fieldRelative = true;
 
   // Make sure the roller imported is the one from subsystems! Not from settings.
   public DriverControl(KrakenSwerve swerve) {
@@ -58,7 +58,7 @@ public class DriverControl extends Command {
       isHuggingReef = !isHuggingReef;
     }
     if (xboxcontroller.getStartButtonPressed()) {
-      slowMode = !slowMode;
+      fieldRelative = !fieldRelative;
     }
     // get values from the Xbox Controller joysticks
     // apply the deadband so we don't do anything right around the center of the
@@ -69,6 +69,9 @@ public class DriverControl extends Command {
         strafeLimiter.calculate(MathUtil.applyDeadband(xboxcontroller.getLeftX(), 0.05));
     double rotationVal =
         rotationLimiter.calculate(MathUtil.applyDeadband(xboxcontroller.getRightX(), 0.05));
+    double triggerVal = xboxcontroller.getLeftTriggerAxis();
+
+    boolean slowMode = triggerVal > 0.7;
 
     /* Drive */
     if (!isReefRotating) {
@@ -79,13 +82,13 @@ public class DriverControl extends Command {
             new Translation2d(translationVal * 0.5, strafeVal * 0.5)
                 .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s
             rotationVal * Constants.Swerve.maxAngularVelocityRadiansPerSecond,
-            false);
+            fieldRelative);
       } else {
         swerve.drive(
             new Translation2d(translationVal, strafeVal)
                 .times(Constants.Swerve.maxSpeedMetersPerSecond), // convert to m/s
             rotationVal * Constants.Swerve.maxAngularVelocityRadiansPerSecond,
-            false);
+            fieldRelative);
       }
       // ask for ChassisSpeeds so we can print it to logs for debugging
       ChassisSpeeds chassisSpeeds = swerve.getChassisSpeeds();
