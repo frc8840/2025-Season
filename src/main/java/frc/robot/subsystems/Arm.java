@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Logger;
@@ -59,12 +59,12 @@ public class Arm extends SubsystemBase {
 
   public void returnToIntakePosition() {
     Logger.Log("Returning to intake position");
-    setArmPositionRotations(0.5);
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    // setArmPositionRotations(0.5);
+    // try {
+    //   Thread.sleep(2000);
+    // } catch (InterruptedException e) {
+    //   e.printStackTrace();
+    // }
     setArmPositionRotations(0);
   }
 
@@ -89,11 +89,11 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Shuffleboard.getTab("Live Window")
-        .add("Arm Position", armMotor.getPosition().getValueAsDouble())
-        .withWidget("Simple Dial")
-        .withPosition(5, 0)
-        .withSize(1, 1);
-    // SmartDashboard.putNumber("Arm Position", armMotor.getPosition().getValueAsDouble());
+    // Shuffleboard.getTab("LiveWindow")
+    //     .add("Arm Position", armMotor.getPosition().getValueAsDouble())
+    //     .withWidget("Simple Dial")
+    //     .withPosition(5, 0)
+    //     .withSize(1, 1);
+    SmartDashboard.putNumber("Arm Position", armMotor.getPosition().getValueAsDouble());
   }
 }

@@ -73,7 +73,7 @@ public final class Constants {
     /* Kraken Drive Motor PID Values */
     public static final double dKrakenKP = 0.2;
     public static final double dKrakenKI = 0.0;
-    public static final double dKrakenKD = 0.1;
+    public static final double dKrakenKD = 0.0;
 
     /* Kraken Angle Motor PID Values */
     public static final double aKrakenKP = 15.0;

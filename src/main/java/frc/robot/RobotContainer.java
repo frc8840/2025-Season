@@ -21,7 +21,6 @@ import frc.robot.commands.DriverControl;
 import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
-import frc.robot.subsystems.Drawbridge;
 import frc.robot.subsystems.KrakenSwerve;
 import java.util.List;
 
@@ -33,7 +32,6 @@ public class RobotContainer {
   private KrakenSwerve swerve;
   private Arm arm;
   public ArmShooter shooter;
-  public Drawbridge drawbridge;
 
   // the old chooser
   // private final SendableChooser<String> oldAutoChooser;
@@ -61,7 +59,6 @@ public class RobotContainer {
     swerve = new KrakenSwerve();
     arm = new Arm();
     shooter = new ArmShooter();
-    drawbridge = new Drawbridge();
 
     Logger.Log("finished constructing subsystems, going to sleep");
     try {
@@ -75,16 +72,15 @@ public class RobotContainer {
     driverControl = new DriverControl(swerve);
     swerve.setDefaultCommand(driverControl);
 
-    operatorControl = new OperatorControl(arm, shooter, drawbridge);
+    operatorControl = new OperatorControl(arm, shooter);
     arm.setDefaultCommand(operatorControl);
     shooter.setDefaultCommand(operatorControl);
-    drawbridge.setDefaultCommand(operatorControl);
 
     // now we set up things for auto selection and pathplanner
     // // these are commands that the path from pathplanner will use
     NamedCommands.registerCommand("Start Intake", getStartIntakeCommand());
     NamedCommands.registerCommand("Stop Intake", getStopIntakeCommand());
-    NamedCommands.registerCommand("Shoot", getShootCommand());
+    NamedCommands.registerCommand("Outtake", getOuttakeCommand());
     NamedCommands.registerCommand("Intake Position", getIntakePositionCommand());
     NamedCommands.registerCommand("L2", getL2Command());
     NamedCommands.registerCommand("L3", getL3Command());
@@ -190,7 +186,7 @@ public class RobotContainer {
         });
   }
 
-  public Command getShootCommand() {
+  public Command getOuttakeCommand() {
     return new InstantCommand(
         () -> {
           shooter.outtake();
@@ -229,7 +225,7 @@ public class RobotContainer {
     // This method loads the auto when it is called, however, it is recommended
     // to first load your paths/autos when code starts, then return the
     // pre-loaded auto/path
-    return new PathPlannerAuto("Test Path", true);
+    return new PathPlannerAuto("Middle Auto", false);
   }
 
   public SwerveControllerCommand getTrajectoryAutonomousCommand(Trajectory trajectory) {
@@ -251,23 +247,22 @@ public class RobotContainer {
         swerve);
   }
 
-  public Command getEvantsAutonomousCommand() {
+  public Command getPathCommand() {
     try {
       // Load the path you want to follow using its name in the GUI
-      PathPlannerPath path = PathPlannerPath.fromPathFile("Test Path");
+      PathPlannerPath path = PathPlannerPath.fromPathFile("New New Path");
       return new SequentialCommandGroup(
           new InstantCommand(
               () -> {
                 // swerve.zeroOdometry();
                 swerve.resetOdometry(
                     new Pose2d(
-                        2,
-                        7,
-                        new Rotation2d(0))); // Have to tell the reset odometry where you are in the
+                        7.157,
+                        3.745,
+                        new Rotation2d(
+                            -3.123))); // Have to tell the reset odometry where you are in the
                 // pathplannre start position before you start
-                Logger.Log(
-                    "PathPlannerAutoCommand() called. Current Pose (should be zero): "
-                        + swerve.getPose());
+                Logger.Log("PathPlannerAutoCommand() called. Current Pose" + swerve.getPose());
               }),
 
           // Create a path following command using AutoBuilder. This will also trigger event

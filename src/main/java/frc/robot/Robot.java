@@ -15,7 +15,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
@@ -110,11 +110,14 @@ public class Robot extends TimedRobot {
 
     // CanBridge.runTCP();
     double voltage = m_pdp.getVoltage();
-    Shuffleboard.getTab("Live Window")
-        .add("Voltage", voltage)
-        .withWidget("Number Bar")
-        .withPosition(0, 0)
-        .withSize(1, 1);
+    // boolean added = false;
+    // if (!added) {
+    //   Shuffleboard.getTab("LiveWindow")
+    //   .add("Voltage", voltage)
+    //   .withWidget("Number Bar")
+    //   .withPosition(0, 0)
+    //   .withSize(1, 1);
+    // }
     // sbContainer
     //     .addCamera("Camera", "Camera", "http://10.88..40.11:5800")
     //     .withWidget("Camera Stream")
@@ -122,7 +125,7 @@ public class Robot extends TimedRobot {
     //     .withPosition(0, 0); // Not sure if URL can be accessed locally
     // // Get the voltage going into the PDP, in Volts.
     // // The PDP returns the voltage in increments of 0.05 Volts.
-    // SmartDashboard.putNumber("Voltage", voltage);
+    SmartDashboard.putNumber("Voltage", voltage);
     // // Get the total current of all channels.
     // double totalCurrent = m_pdp.getTotalCurrent();
     // SmartDashboard.putNumber("Total Current", totalCurrent);
@@ -150,12 +153,12 @@ public class Robot extends TimedRobot {
     } else {
       inRange = false;
     }
-    Shuffleboard.getTab("Live Window")
-        .add("In Range", inRange)
-        .withWidget("Boolean Box")
-        .withPosition(1, 2)
-        .withSize(1, 1);
-    // SmartDashboard.putBoolean("Close to Reef", inRange);
+    // Shuffleboard.getTab("LiveWindow")
+    //     .add("In Range", inRange)
+    //     .withWidget("Boolean Box")
+    //     .withPosition(1, 2)
+    //     .withSize(1, 1);
+    SmartDashboard.putBoolean("Close to Reef", inRange);
 
     // SmartDashboard.putData(m_pdp);
     // .add("Camera", camera)
@@ -175,7 +178,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    Command autonomousCommand = container.getDriveForwardCommand();
+    Command autonomousCommand = container.getAutonomousCommand();
 
     // Logger.Log("Autonomous Init Called");
     // Command autonomousCommand = swerve.followPathCommand("Test Path"); // Evan's alternative test

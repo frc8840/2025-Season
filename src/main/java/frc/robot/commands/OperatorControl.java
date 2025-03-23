@@ -8,7 +8,6 @@ import frc.robot.Logger;
 import frc.robot.Settings;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
-import frc.robot.subsystems.Drawbridge;
 
 public class OperatorControl extends Command {
 
@@ -16,22 +15,19 @@ public class OperatorControl extends Command {
 
   private Arm arm;
   private ArmShooter shooter;
-  private Drawbridge drawbridge;
 
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(10);
 
-  private double L4ArmPosition = -36.0;
+  private double L4ArmPosition = -37.5;
   private double L3ArmPosition = -21.0;
   private double L2ArmPosition = -13.0;
   private double L1ArmPosition = -9.0;
 
-  public OperatorControl(Arm arm, ArmShooter shooter, Drawbridge drawbridge) {
+  public OperatorControl(Arm arm, ArmShooter shooter) {
     this.arm = arm;
     this.shooter = shooter;
-    this.drawbridge = drawbridge;
     addRequirements(arm);
     addRequirements(shooter);
-    addRequirements(drawbridge);
 
     ps4controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
   }
@@ -40,13 +36,13 @@ public class OperatorControl extends Command {
   public void execute() {
 
     // drawbridge related
-    if (ps4controller.getPOV() == 0) {
-      Logger.Log("POV top button pressed");
-      drawbridge.open();
-    } else if (ps4controller.getPOV() == 180) {
-      Logger.Log("POV bottom button pressed");
-      drawbridge.close();
-    }
+    // if (ps4controller.getPOV() == 0) {
+    //   Logger.Log("POV top button pressed");
+    //   drawbridge.open();
+    // } else if (ps4controller.getPOV() == 180) {
+    //   Logger.Log("POV bottom button pressed");
+    //   drawbridge.close();
+    // }
 
     // shooter/intake related
     if (ps4controller.getL2ButtonPressed()) {
@@ -57,13 +53,13 @@ public class OperatorControl extends Command {
       Logger.Log("L1 button pressed");
       shooter.outtake();
     }
-    if (ps4controller.getR2ButtonPressed()) {
-      double newArmPosition = arm.getArmPosition() + 2;
-      arm.setArmPositionRotations(newArmPosition);
-    } else if (ps4controller.getR1ButtonPressed()) {
-      double newArmPosition = arm.getArmPosition() - 2;
-      arm.setArmPositionRotations(newArmPosition);
-    } else {
+    // if (ps4controller.getR2ButtonPressed()) {
+    //   double newArmPosition = arm.getArmPosition() + 2;
+    //   arm.setArmPositionRotations(newArmPosition);
+    // } else if (ps4controller.getR1ButtonPressed()) {
+    //   double newArmPosition = arm.getArmPosition() - 2;
+    //   arm.setArmPositionRotations(newArmPosition);
+    else {
       shooter.stop();
     }
 
@@ -105,6 +101,13 @@ public class OperatorControl extends Command {
 
     if (ps4controller.getPSButtonPressed()) {
       arm.gethard();
+    }
+
+    if (ps4controller.getR2Button()) {
+      shooter.intake();
+    }
+    if (ps4controller.getR1Button()) {
+      shooter.outtake();
     }
 
     // the idea here is to run the shooter fo 500ms

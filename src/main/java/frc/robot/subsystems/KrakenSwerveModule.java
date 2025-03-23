@@ -104,7 +104,7 @@ public class KrakenSwerveModule {
   }
 
   private void configDriveMotor() {
-    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; // TEG was Brake
+    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; // TEG was Brake
     driveConfig.MotorOutput.Inverted = Constants.Swerve.driveInverted;
 
     // after we do this, driveMotor.getPosition will always return rotations of the wheel
