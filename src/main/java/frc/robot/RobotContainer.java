@@ -29,7 +29,7 @@ public class RobotContainer {
   private static RobotContainer instance;
 
   // the subsystems
-  private KrakenSwerve swerve;
+  public KrakenSwerve swerve;
   private Arm arm;
   public ArmShooter shooter;
 

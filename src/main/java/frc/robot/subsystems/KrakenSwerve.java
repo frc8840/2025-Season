@@ -7,13 +7,17 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +30,11 @@ public class KrakenSwerve extends SubsystemBase {
   private SwerveDriveOdometry odometer;
   private KrakenSwerveModule[] mSwerveMods;
   private Field2d field;
+
+  private SwerveDrivePoseEstimator swervePoseEstimator;
+  private SwerveDriveKinematics kinematics; // your swerve kinematics object
+  private SwerveModulePosition[] modulePositions; // update these every loop
+  private Rotation2d gyroAngle; // from your gyro (e.g., Pigeon2)
 
   private Orchestra orchestra;
 
@@ -101,6 +110,16 @@ public class KrakenSwerve extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
         );
+
+    swervePoseEstimator =
+        new SwerveDrivePoseEstimator(
+            kinematics,
+            gyroAngle, // your gyro's heading
+            modulePositions, // module encoder positions
+            new Pose2d(), // initial robot pose
+            VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(0.5)), // state standard deviations
+            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10)) // vision standard deviations
+            );
   }
 
   // translation and rotation are the desired behavior of the robot at this moment
@@ -278,6 +297,10 @@ public class KrakenSwerve extends SubsystemBase {
     //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" +
     // mod.angleMotor.getMotorVoltage().getValueAsDouble());
     // }
+    swervePoseEstimator.update(
+        gyroAngle, // latest gyro rotation
+        modulePositions // latest module positions from encoders
+        );
   }
 
   public void stopModules() {
@@ -299,5 +322,9 @@ public class KrakenSwerve extends SubsystemBase {
             frontLeftState, frontRightState, backLeftState, backRightState);
 
     return chassisSpeeds;
+  }
+
+  public Pose2d getEstimatedPose() {
+    return swervePoseEstimator.getEstimatedPosition();
   }
 }
