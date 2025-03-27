@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,9 +31,6 @@ public class KrakenSwerve extends SubsystemBase {
   private Field2d field;
 
   private SwerveDrivePoseEstimator swervePoseEstimator;
-  private SwerveDriveKinematics kinematics; // your swerve kinematics object
-  private SwerveModulePosition[] modulePositions; // update these every loop
-  private Rotation2d gyroAngle; // from your gyro (e.g., Pigeon2)
 
   private Orchestra orchestra;
 
@@ -113,9 +109,9 @@ public class KrakenSwerve extends SubsystemBase {
 
     swervePoseEstimator =
         new SwerveDrivePoseEstimator(
-            kinematics,
-            gyroAngle, // your gyro's heading
-            modulePositions, // module encoder positions
+            Constants.Swerve.swerveKinematics,
+            gyro.getRotation2d(), // your gyro's heading
+            getPositions(), // module encoder positions
             new Pose2d(), // initial robot pose
             VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(0.5)), // state standard deviations
             VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10)) // vision standard deviations
@@ -298,8 +294,8 @@ public class KrakenSwerve extends SubsystemBase {
     // mod.angleMotor.getMotorVoltage().getValueAsDouble());
     // }
     swervePoseEstimator.update(
-        gyroAngle, // latest gyro rotation
-        modulePositions // latest module positions from encoders
+        gyro.getRotation2d(), // latest gyro rotation
+        getPositions() // latest module positions from encoders
         );
   }
 
