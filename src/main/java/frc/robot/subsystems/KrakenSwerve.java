@@ -30,8 +30,6 @@ public class KrakenSwerve extends SubsystemBase {
   private KrakenSwerveModule[] mSwerveMods;
   private Field2d field;
 
-  private SwerveDrivePoseEstimator swervePoseEstimator;
-
   private Orchestra orchestra;
 
   public KrakenSwerve() {
@@ -107,15 +105,6 @@ public class KrakenSwerve extends SubsystemBase {
         this // Reference to this subsystem to set requirements
         );
 
-    swervePoseEstimator =
-        new SwerveDrivePoseEstimator(
-            Constants.Swerve.swerveKinematics,
-            gyro.getRotation2d(), // your gyro's heading
-            getPositions(), // module encoder positions
-            new Pose2d(), // initial robot pose
-            VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(0.5)), // state standard deviations
-            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10)) // vision standard deviations
-            );
   }
 
   // translation and rotation are the desired behavior of the robot at this moment
@@ -293,10 +282,12 @@ public class KrakenSwerve extends SubsystemBase {
     //   Logger.Log("Module " +  mod.moduleNumber + " Angle Motor Voltage" +
     // mod.angleMotor.getMotorVoltage().getValueAsDouble());
     // }
-    swervePoseEstimator.update(
-        gyro.getRotation2d(), // latest gyro rotation
-        getPositions() // latest module positions from encoders
-        );
+    // try {
+    //   updateSwerveEstimator();
+    // } catch (NoSuchMethodError e) {
+    //   System.err.println(e);
+    // }
+    
   }
 
   public void stopModules() {
@@ -321,6 +312,6 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public Pose2d getEstimatedPose() {
-    return swervePoseEstimator.getEstimatedPosition();
+    return odometer.getPoseMeters();
   }
 }

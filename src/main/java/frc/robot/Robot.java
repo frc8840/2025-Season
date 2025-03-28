@@ -12,6 +12,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -114,7 +115,7 @@ public class Robot extends TimedRobot {
 
     streams.setStringArray(new String[] {"mjpeg:http://10.88.40.11:1181/stream.mjpg"});
 
-    photonCamera2 = new PhotonCamera("PhotonVision");
+    photonCamera2 = new PhotonCamera("Arducam_OV2311_USB_Camera");
     aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     photonPoseEstimator =
         new PhotonPoseEstimator(
@@ -191,22 +192,21 @@ public class Robot extends TimedRobot {
     // .withSize(4,2);
 
     List<PhotonPipelineResult> result = photonCamera2.getAllUnreadResults();
-    PhotonPipelineResult lastResult = result.get(0);
-
-    if (lastResult.hasTargets()) {
-      photonPoseEstimator.setReferencePose(container.swerve.getEstimatedPose());
-      var optionalEstimatedPose = photonPoseEstimator.update(lastResult);
-
-      optionalEstimatedPose.ifPresent(
-          estimatedRobotPose -> {
-            Pose2d pose2d = estimatedRobotPose.estimatedPose.toPose2d();
-            SmartDashboard.putNumber("Estimated X", pose2d.getX());
-            SmartDashboard.putNumber("Estimated Y", pose2d.getY());
-            SmartDashboard.putNumber("Estimated Heading", pose2d.getRotation().getDegrees());
-
-            // If you're using a SwervePoseEstimator:
-            // swervePoseEstimator.addVisionMeasurement(pose2d, result.getTimestampSeconds());
-          });
+    if (result.size() > 0) {
+      PhotonPipelineResult lastResult = result.get(0);
+      System.out.println(lastResult.getBestTarget());
+      if (lastResult.hasTargets()) {
+        photonPoseEstimator.setReferencePose(container.swerve.getEstimatedPose());
+        var optionalEstimatedPose = photonPoseEstimator.update(lastResult);
+  
+        optionalEstimatedPose.ifPresent(
+            estimatedRobotPose -> {
+              Pose2d pose2d = estimatedRobotPose.estimatedPose.toPose2d();
+              SmartDashboard.putNumber("Estimated X", pose2d.getX());
+              SmartDashboard.putNumber("Estimated Y", pose2d.getY());
+              SmartDashboard.putNumber("Estimated Heading", pose2d.getRotation().getDegrees());
+            });
+    }
     }
   }
 
