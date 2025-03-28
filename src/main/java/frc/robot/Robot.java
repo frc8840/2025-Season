@@ -6,16 +6,10 @@ package frc.robot;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -25,11 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
-import java.util.List;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 // import au.grapplerobotics.CanBridge;
 
@@ -48,14 +37,6 @@ public class Robot extends TimedRobot {
   private PowerDistribution m_pdp;
   // private ShuffleboardContainer sbContainer;
   private boolean inRange = false;
-
-  PhotonCamera photonCamera2;
-  PhotonPoseEstimator photonPoseEstimator;
-  AprilTagFieldLayout aprilTagFieldLayout;
-  Transform3d robotToCam =
-      new Transform3d(
-          new Translation3d(0.2, 0.0, 0.3), // adjust for your camera's position on the robot
-          new Rotation3d(0, 0, 0));
 
   // private PhotonCamera camera;
 
@@ -113,12 +94,6 @@ public class Robot extends TimedRobot {
             .getEntry("streams");
 
     streams.setStringArray(new String[] {"mjpeg:http://10.88.40.11:1181/stream.mjpg"});
-
-    photonCamera2 = new PhotonCamera("PhotonVision");
-    aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-    photonPoseEstimator =
-        new PhotonPoseEstimator(
-            aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam);
   }
 
   /**
@@ -189,25 +164,6 @@ public class Robot extends TimedRobot {
     // .add("Camera", camera)
     // .withWidget("Camera Stream")
     // .withSize(4,2);
-
-    List<PhotonPipelineResult> result = photonCamera2.getAllUnreadResults();
-    PhotonPipelineResult lastResult = result.get(0);
-
-    if (lastResult.hasTargets()) {
-      photonPoseEstimator.setReferencePose(container.swerve.getEstimatedPose());
-      var optionalEstimatedPose = photonPoseEstimator.update(lastResult);
-
-      optionalEstimatedPose.ifPresent(
-          estimatedRobotPose -> {
-            Pose2d pose2d = estimatedRobotPose.estimatedPose.toPose2d();
-            SmartDashboard.putNumber("Estimated X", pose2d.getX());
-            SmartDashboard.putNumber("Estimated Y", pose2d.getY());
-            SmartDashboard.putNumber("Estimated Heading", pose2d.getRotation().getDegrees());
-
-            // If you're using a SwervePoseEstimator:
-            // swervePoseEstimator.addVisionMeasurement(pose2d, result.getTimestampSeconds());
-          });
-    }
   }
 
   /**
