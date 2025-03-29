@@ -101,7 +101,6 @@ public class KrakenSwerve extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
         );
-
   }
 
   // translation and rotation are the desired behavior of the robot at this moment
@@ -284,7 +283,7 @@ public class KrakenSwerve extends SubsystemBase {
     // } catch (NoSuchMethodError e) {
     //   System.err.println(e);
     // }
-    
+
   }
 
   public void stopModules() {

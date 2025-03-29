@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.apriltag.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -9,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -22,8 +22,21 @@ public class Vision extends SubsystemBase {
   PhotonCamera photonCamera;
   PhotonPoseEstimator photonPoseEstimator;
 
-  AprilTagFields fields = AprilTagFields.k2025ReefscapeAndyMark;
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(fields);
+  // Returns IO exception, should handle this
+  String aprilTagLayoutPath = "2025-reefscape-andymark.json";
+  AprilTagFieldLayout fieldLayout;
+
+  {
+    try {
+      fieldLayout = new AprilTagFieldLayout(aprilTagLayoutPath);
+    } catch (IOException e) {
+      e.printStackTrace();
+      fieldLayout = null; // Handle the error gracefully
+    }
+  }
+
+  // AprilTagFields fields = AprilTagFields.k2025ReefscapeAndyMark;
+  // AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(fields);
 
   Transform3d robotToCam =
       new Transform3d(
@@ -35,8 +48,7 @@ public class Vision extends SubsystemBase {
     photonCamera = new PhotonCamera("PhotonVision");
 
     photonPoseEstimator =
-        new PhotonPoseEstimator(
-            aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam);
+        new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam);
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -48,6 +60,7 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    fieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
     List<PhotonPipelineResult> result = photonCamera.getAllUnreadResults();
     PhotonPipelineResult lastResult = result.get(result.size() - 1);
     if (lastResult.hasTargets()) {
