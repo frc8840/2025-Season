@@ -72,9 +72,13 @@ public class Vision extends SubsystemBase {
     
   
     fieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
-    List<PhotonPipelineResult> result = photonCamera.getAllUnreadResults();
-    PhotonPipelineResult lastResult = result.get(result.size() - 1);
-    if (lastResult.hasTargets()) {
+    List<PhotonPipelineResult> results = photonCamera.getAllUnreadResults();
+    if (!results.isEmpty()) {
+      PhotonPipelineResult lastResult = results.get(results.size() - 1);
+      if (!lastResult.hasTargets()) {
+        Logger.LogPeriodic("NO vision targets found");      
+        return;     
+      }
       Logger.LogPeriodic("YES vision targets found");
       photonPoseEstimator.setReferencePose(swerve.getEstimatedPose());
       Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update(lastResult);
@@ -91,8 +95,8 @@ public class Vision extends SubsystemBase {
             // container.swerve.resetOdometry(pose2d);
           });
           SmartDashboard.putNumber("End of vision loop", 1);
-        }  else {
-      Logger.LogPeriodic("NO vision targets found");           
-    }
+    } else {
+      Logger.LogPeriodic("No results");
+    } 
   }
 }
