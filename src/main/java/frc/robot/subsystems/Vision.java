@@ -5,11 +5,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Logger;
-import frc.robot.RobotContainer;
-import java.io.IOException;
+
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -31,16 +32,17 @@ public class Vision extends SubsystemBase {
 
   {
     try {
-      fieldLayout = new AprilTagFieldLayout(aprilTagLayoutPath);
+  //  AprilTagFields field = AprilTagFields.k2025ReefscapeAndyMark;
+  Path path = Filesystem.getDeployDirectory().toPath().resolve(aprilTagLayoutPath);
+  Logger.Log("Got path: " + path.toAbsolutePath());
+  fieldLayout = new AprilTagFieldLayout(path.toAbsolutePath());
       Logger.Log("Field layout loaded");
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       fieldLayout = null; // Handle the error gracefully
     }
   }
 
-  // AprilTagFields fields = AprilTagFields.k2025ReefscapeAndyMark;
-  // AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(fields);
 
   Transform3d robotToCam =
       new Transform3d(
