@@ -180,7 +180,7 @@ public class KrakenSwerve extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    Logger.LogPeriodic("Pose is " + odometer.getPoseMeters());
+    //Logger.LogPeriodic("Pose is " + odometer.getPoseMeters());
     return odometer.getPoseMeters();
   }
 

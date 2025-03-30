@@ -23,6 +23,7 @@ import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ArmShooter;
 import frc.robot.subsystems.KrakenSwerve;
+import frc.robot.subsystems.Vision;
 import java.util.List;
 
 public class RobotContainer {
@@ -33,6 +34,7 @@ public class RobotContainer {
   public KrakenSwerve swerve;
   private Arm arm;
   public ArmShooter shooter;
+  public Vision vision;
 
   // the old chooser
   // private final SendableChooser<String> oldAutoChooser;

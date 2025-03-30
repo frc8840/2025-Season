@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Logger;
 import frc.robot.RobotContainer;
 import java.io.IOException;
 import java.util.List;
@@ -60,6 +61,10 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+  
+    Logger.LogPeriodic("Top loop " );
+    
+  
     fieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
     List<PhotonPipelineResult> result = photonCamera.getAllUnreadResults();
     PhotonPipelineResult lastResult = result.get(result.size() - 1);
@@ -77,6 +82,12 @@ public class Vision extends SubsystemBase {
             // To update to the pose we calculate with this
             // container.swerve.resetOdometry(pose2d);
           });
+    }
+    else {
+      SmartDashboard.putNumber("End of vision loop", 1);
+      Logger.LogPeriodic("Visionloop! ");
+    
+           
     }
   }
 }
