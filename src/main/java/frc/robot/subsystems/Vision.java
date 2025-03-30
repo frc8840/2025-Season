@@ -19,7 +19,9 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Vision extends SubsystemBase {
-  RobotContainer container;
+
+  KrakenSwerve swerve;
+
   PhotonCamera photonCamera;
   PhotonPoseEstimator photonPoseEstimator;
 
@@ -45,8 +47,8 @@ public class Vision extends SubsystemBase {
           new Translation3d(0.2, 0.0, 0.3), // adjust for your camera's position on the robot
           new Rotation3d(0, 0, 0));
 
-  public Vision() {
-    container = new RobotContainer();
+  public Vision(KrakenSwerve swerve) {
+    this.swerve = swerve;
     photonCamera = new PhotonCamera("Arducam_OV2311_USB_Camera (1)"); // ("PhotonVision");
     Logger.Log("PhotonCamera loaded: " + photonCamera);
 
@@ -72,7 +74,7 @@ public class Vision extends SubsystemBase {
     PhotonPipelineResult lastResult = result.get(result.size() - 1);
     if (lastResult.hasTargets()) {
       Logger.LogPeriodic("YES vision targets found");
-      photonPoseEstimator.setReferencePose(container.swerve.getEstimatedPose());
+      photonPoseEstimator.setReferencePose(swerve.getEstimatedPose());
       Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update(lastResult);
 
       optionalEstimatedPose.ifPresent(
