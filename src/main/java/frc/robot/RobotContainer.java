@@ -58,6 +58,9 @@ public class RobotContainer {
   public RobotContainer() {
     instance = this;
 
+    // set up the vision system
+    vision = new Vision();
+
     // construct the subsystems
     swerve = new KrakenSwerve();
     arm = new Arm();

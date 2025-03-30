@@ -30,6 +30,7 @@ public class Vision extends SubsystemBase {
   {
     try {
       fieldLayout = new AprilTagFieldLayout(aprilTagLayoutPath);
+      Logger.Log("Field layout loaded");
     } catch (IOException e) {
       e.printStackTrace();
       fieldLayout = null; // Handle the error gracefully
@@ -46,10 +47,12 @@ public class Vision extends SubsystemBase {
 
   public Vision() {
     container = new RobotContainer();
-    photonCamera = new PhotonCamera("PhotonVision");
+    photonCamera = new PhotonCamera("Arducam_OV2311_USB_Camera (1)"); // ("PhotonVision");
+    Logger.Log("PhotonCamera loaded: " + photonCamera);
 
     photonPoseEstimator =
         new PhotonPoseEstimator(fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam);
+    Logger.Log("PhotonPoseEstimator loaded: " + photonPoseEstimator);
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -62,19 +65,20 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
   
-    Logger.LogPeriodic("Top loop " );
     
   
     fieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
     List<PhotonPipelineResult> result = photonCamera.getAllUnreadResults();
     PhotonPipelineResult lastResult = result.get(result.size() - 1);
     if (lastResult.hasTargets()) {
+      Logger.LogPeriodic("YES vision targets found");
       photonPoseEstimator.setReferencePose(container.swerve.getEstimatedPose());
-      var optionalEstimatedPose = photonPoseEstimator.update(lastResult);
+      Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update(lastResult);
 
       optionalEstimatedPose.ifPresent(
           estimatedRobotPose -> {
             Pose2d pose2d = estimatedRobotPose.estimatedPose.toPose2d();
+            Logger.LogPeriodic("Got vision pose: " + pose2d);
             SmartDashboard.putNumber("Estimated X", pose2d.getX());
             SmartDashboard.putNumber("Estimated Y", pose2d.getY());
             SmartDashboard.putNumber("Estimated Heading", pose2d.getRotation().getDegrees());
@@ -82,12 +86,9 @@ public class Vision extends SubsystemBase {
             // To update to the pose we calculate with this
             // container.swerve.resetOdometry(pose2d);
           });
-    }
-    else {
-      SmartDashboard.putNumber("End of vision loop", 1);
-      Logger.LogPeriodic("Visionloop! ");
-    
-           
+          SmartDashboard.putNumber("End of vision loop", 1);
+        }  else {
+      Logger.LogPeriodic("NO vision targets found");           
     }
   }
 }
