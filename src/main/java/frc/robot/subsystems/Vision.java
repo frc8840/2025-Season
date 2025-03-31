@@ -59,6 +59,7 @@ public class Vision extends SubsystemBase {
     List<PhotonPipelineResult> results = photonCamera.getAllUnreadResults();
     if (results.isEmpty()) {
       Logger.LogPeriodic("No results");
+      return;
     }
     PhotonPipelineResult lastResult = results.get(results.size() - 1);
     if (!lastResult.hasTargets()) {
@@ -66,10 +67,13 @@ public class Vision extends SubsystemBase {
       return;
     }
     PhotonTrackedTarget target = lastResult.getBestTarget();
-    Logger.LogPeriodic("Best vision target: " + target.objDetectId);
-
-    Transform3d relativeTransform = target.bestCameraToTarget;
-    Logger.LogPeriodic("Transform to target: " + target.objDetectId);
+    Logger.LogPeriodic("Best vision target: " + target);
+    Logger.LogPeriodic("yaw: " + target.getYaw());
+    Logger.LogPeriodic("pitch: " + target.getPitch());
+    Logger.LogPeriodic("area: " + target.getArea());
+    Logger.LogPeriodic("skew: " + target.getSkew());
+    Logger.LogPeriodic("pose: " + target.getBestCameraToTarget());
+    Logger.LogPeriodic("corners: " + target.getDetectedCorners());
 
     // photonPoseEstimator.setReferencePose(swerve.getEstimatedPose()); // only needed if we're using PoseStrategy.CLOSEST_TO_REFERENCE_POSE
     Optional<EstimatedRobotPose> optionalEstimatedPose = photonPoseEstimator.update(lastResult);
