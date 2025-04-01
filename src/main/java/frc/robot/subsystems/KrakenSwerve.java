@@ -244,20 +244,20 @@ public class KrakenSwerve extends SubsystemBase {
     odometer.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
     for (KrakenSwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoderAngle().getDegrees());
       // Shuffleboard.getTab("LiveWindow")
       //     .add("Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees())
       //     .withPosition(4, 4)
       //     .withSize(1, 1);
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees());
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " StateAngle", mod.getState().angle.getDegrees());
       // Shuffleboard.getTab("LiveWindow")
       //     .add("Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond)
       //     .withPosition(6, 4)
       //     .withSize(1, 1);
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond);
+      // SmartDashboard.putNumber(
+      //     "Mod " + mod.moduleNumber + " Speed", mod.getState().speedMetersPerSecond);
       // SmartDashboard.putNumber(
       //     "Mod " + mod.moduleNumber + " Distance", mod.getPosition().distanceMeters);
     }
