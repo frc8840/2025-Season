@@ -50,7 +50,7 @@ public class Vision extends SubsystemBase {
       photonPoseEstimator =
           new PhotonPoseEstimator(
               fieldLayout,
-              PoseStrategy.LOWEST_AMBIGUITY,
+              PoseStrategy.CONSTRAINED_SOLVEPNP,
               robotToCam); // PoseStrategy.CLOSEST_TO_REFERENCE_POSE
       Logger.Log("PhotonPoseEstimator loaded: " + photonPoseEstimator);
     } catch (Exception e) {
@@ -76,10 +76,13 @@ public class Vision extends SubsystemBase {
     }
     PhotonTrackedTarget target = lastResult.getBestTarget();
     // Logger.LogPeriodic("Best vision target: " + target.toString());
-    Logger.LogPeriodic("yaw" + target.getYaw());
     Logger.LogPeriodic("Target ID: " + target.getFiducialId());
-    Logger.LogPeriodic("Tag Pose from layout: " + fieldLayout.getTagPose(target.getFiducialId()));
-    // Logger.LogPeriodic("Position: " + target.getBestCameraToTarget());
+    Logger.LogPeriodic("yaw: " + target.getYaw());
+    Logger.LogPeriodic("pitch: " + target.getPitch());
+    Logger.LogPeriodic("area: " + target.getArea());
+    // Logger.LogPeriodic("Tag Pose from layout: " + fieldLayout.getTagPose(target.getFiducialId()));
+    Logger.LogPeriodic("Best Transform: " + target.getBestCameraToTarget());
+    Logger.LogPeriodic("Alt  Transform: " + target.getAlternateCameraToTarget());
 
     // photonPoseEstimator.setReferencePose(swerve.getEstimatedPose()); // only needed if we're
     // using PoseStrategy.CLOSEST_TO_REFERENCE_POSE
@@ -91,18 +94,17 @@ public class Vision extends SubsystemBase {
     optionalEstimatedPose.ifPresent(
         estimatedRobotPose -> {
           Pose2d pose2d = estimatedRobotPose.estimatedPose.toPose2d();
-          Logger.Log("Got vision pose: " + pose2d);
-          Logger.Log(
-              "Estimated X: "
-                  + pose2d.getX()
-                  + " Estimated Y: "
-                  + pose2d.getY()
-                  + " Estimated Heading: "
-                  + pose2d.getRotation().getDegrees());
+          Logger.LogPeriodic("Got vision pose: " + pose2d);
+          // Logger.LogPeriodic(
+          //     "Estimated X: "
+          //         + pose2d.getX()
+          //         + " Estimated Y: "
+          //         + pose2d.getY()
+          //         + " Estimated Heading: "
+          //         + pose2d.getRotation().getDegrees());
           SmartDashboard.putNumber("Estimated X", pose2d.getX());
           SmartDashboard.putNumber("Estimated Y", pose2d.getY());
           SmartDashboard.putNumber("Estimated Heading", pose2d.getRotation().getDegrees());
-
           // To update to the pose we calculate with this
           // swerve.resetOdometry(pose2d);
         });
