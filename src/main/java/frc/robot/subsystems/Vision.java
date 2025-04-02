@@ -32,7 +32,7 @@ public class Vision extends SubsystemBase {
 
   public Vision(KrakenSwerve swerve) {
     this.swerve = swerve;
-    photonCamera = new PhotonCamera("Arducam_OV2311_USB_Camera (1)"); // ("PhotonVision");
+    photonCamera = new PhotonCamera("Arducam_OV2311_USB_Camera"); // ("PhotonVision");
     Logger.Log("PhotonCamera loaded: " + photonCamera);
 
     try {
@@ -50,7 +50,7 @@ public class Vision extends SubsystemBase {
       photonPoseEstimator =
           new PhotonPoseEstimator(
               fieldLayout,
-              PoseStrategy.PNP_DISTANCE_TRIG_SOLVE,
+              PoseStrategy.LOWEST_AMBIGUITY,
               robotToCam); // PoseStrategy.CLOSEST_TO_REFERENCE_POSE
       Logger.Log("PhotonPoseEstimator loaded: " + photonPoseEstimator);
     } catch (Exception e) {
@@ -60,6 +60,9 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    double timeSeconds = System.currentTimeMillis() / 1000.0;
+    photonPoseEstimator.addHeadingData(timeSeconds, swerve.getYaw());
 
     List<PhotonPipelineResult> results = photonCamera.getAllUnreadResults();
     if (results.isEmpty()) {
@@ -88,8 +91,8 @@ public class Vision extends SubsystemBase {
     optionalEstimatedPose.ifPresent(
         estimatedRobotPose -> {
           Pose2d pose2d = estimatedRobotPose.estimatedPose.toPose2d();
-          Logger.LogPeriodic("Got vision pose: " + pose2d);
-          Logger.LogPeriodic(
+          Logger.Log("Got vision pose: " + pose2d);
+          Logger.Log(
               "Estimated X: "
                   + pose2d.getX()
                   + " Estimated Y: "
