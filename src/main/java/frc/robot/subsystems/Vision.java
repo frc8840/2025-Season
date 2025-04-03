@@ -86,10 +86,6 @@ public class Vision extends SubsystemBase {
             && yOffset > yThresholdRight
             && angleOffset < angleThreshold;
 
-    // Optional telemetry
-    SmartDashboard.putNumber("Score Distance", xOffset);
-    SmartDashboard.putNumber("Score Angle", angleOffset);
-
     if (isLeft) {
       return canScoreLeft;
     } else {
@@ -102,6 +98,9 @@ public class Vision extends SubsystemBase {
 
     try {
       List<PhotonPipelineResult> result = photonCamera.getAllUnreadResults();
+      if (result.size()==0) {
+        return;
+      }
       PhotonPipelineResult lastResult = result.get(result.size() - 1);
       if (!lastResult.hasTargets()) {
         return;
@@ -133,10 +132,16 @@ public class Vision extends SubsystemBase {
       // Transform2d robotToTag = new Transform2d(robotPose, tagPose);
 
       Transform3d robotToTag = target.getBestCameraToTarget();
+      Logger.LogPeriodic("robotToTag: " + robotToTag);
   
       xOffset = robotToTag.getX();
       yOffset = robotToTag.getY();
       angleOffset = robotToTag.getRotation().getZ();
+    // Optional telemetry
+    SmartDashboard.putNumber("Score X", xOffset);
+    SmartDashboard.putNumber("Score Y", yOffset);
+    SmartDashboard.putNumber("Score Angle", angleOffset);
+
     } catch (Exception e) {
       Logger.Log("Error: " + e);
     }  
