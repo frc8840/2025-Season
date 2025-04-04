@@ -91,6 +91,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2", getL2Command());
     NamedCommands.registerCommand("L3", getL3Command());
     NamedCommands.registerCommand("L4", getL4Command());
+    NamedCommands.registerCommand("DeAlgae L2", getDeAlgaeL2Command());
 
     // The old autonomous chooser
     // oldAutoChooser = new SendableChooser<>();
@@ -213,6 +214,12 @@ public class RobotContainer {
         });
   }
 
+  public Command getDeAlgaeL2Command() {
+    return new InstantCommand(
+        () -> {
+          arm.setArmPositionRotations(-15);
+        });
+  }
   public Command getL3Command() {
     return new InstantCommand(
         () -> {

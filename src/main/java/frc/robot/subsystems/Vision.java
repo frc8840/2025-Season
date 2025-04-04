@@ -33,9 +33,9 @@ public class Vision extends SubsystemBase {
   AprilTagFieldLayout fieldLayout;
 
   // cache of transform to closest April tag    
-  double xOffset ;
-    double yOffset;
-    double angleOffset;
+  double xOffset;
+  double yOffset;
+  double angleOffset;
 
 
 
@@ -70,21 +70,28 @@ public class Vision extends SubsystemBase {
   public boolean canScore(Boolean isLeft) {
  
     // Parameters - you can tune these
-    double distanceThreshold = 1.5; // meters
-    double yThresholdLeft = 0.5; // meters
-    double yThresholdRight = -0.5; // meters
-    double angleThreshold = 5.0; // degrees
+    double distanceThreshold = 2.55; // meters
+    double distanceMinimum = 2.2; // meters
+    double yThresholdLeft = -0.85; // meters
+    double yThresholdLeftMax = -1.0; // meters
+    double yThresholdRight = -0.7; // meters
+    double yThresholdRightMax = -0.6; // meters
+    double angleThreshold = 2.0; // degrees
 
     boolean canScoreLeft =
         xOffset < distanceThreshold
-            && xOffset > 0
+            && xOffset > distanceMinimum
             && yOffset < yThresholdLeft
-            && angleOffset < angleThreshold;
+            && yOffset > yThresholdLeftMax
+            && angleOffset < angleThreshold
+            && angleOffset > -4.0;
     boolean canScoreRight =
         xOffset < distanceThreshold
-            && xOffset > 0
+            && xOffset > distanceMinimum
             && yOffset > yThresholdRight
-            && angleOffset < angleThreshold;
+            && yOffset < yThresholdRightMax
+            && angleOffset < angleThreshold
+            && angleOffset > -4.0;
 
     if (isLeft) {
       return canScoreLeft;
@@ -141,6 +148,8 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("Score X", xOffset);
     SmartDashboard.putNumber("Score Y", yOffset);
     SmartDashboard.putNumber("Score Angle", angleOffset);
+    SmartDashboard.putBoolean("Can Score Left L2", canScore(true));
+    SmartDashboard.putBoolean("Can Score Right L2", canScore(false));
 
     } catch (Exception e) {
       Logger.Log("Error: " + e);

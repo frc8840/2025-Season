@@ -11,13 +11,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Top Left Path"
+                  "pathName": "Top RU Path"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "L3"
+                  "name": "L2"
                 }
               }
             ]
@@ -42,7 +42,63 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Top Left to Coral Path"
+                  "pathName": "Top RU to Coral Path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Position"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Coral to RMB left Reef"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Start Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RMB Left to Coral Path"
                 }
               },
               {
@@ -61,19 +117,13 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Start Intake"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Coral to MB left Reef"
+                  "pathName": "Coral to RMB right Path"
                 }
               },
               {

@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle Path"
+            "pathName": "Top Left Path"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L3"
+            "name": "L2"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle Auto to start Position"
+            "pathName": "Top Left to Start Path"
           }
         }
       ]
