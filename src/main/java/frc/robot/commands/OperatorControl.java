@@ -53,7 +53,9 @@ public class OperatorControl extends Command {
       Logger.Log("L1 button pressed");
       shooter.outtake();
     }
-    // if (ps4controller.getR2ButtonPressed()) {
+    if (ps4controller.getR2ButtonPressed()) {
+      shooter.runForward();
+    }
     //   double newArmPosition = arm.getArmPosition() + 2;
     //   arm.setArmPositionRotations(newArmPosition);
     // } else if (ps4controller.getR1ButtonPressed()) {

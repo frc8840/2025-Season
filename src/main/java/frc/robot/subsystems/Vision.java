@@ -1,10 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.*;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -14,7 +12,6 @@ import frc.robot.Logger;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -32,12 +29,10 @@ public class Vision extends SubsystemBase {
 
   AprilTagFieldLayout fieldLayout;
 
-  // cache of transform to closest April tag    
+  // cache of transform to closest April tag
   double xOffset;
   double yOffset;
   double angleOffset;
-
-
 
   public Vision(KrakenSwerve swerve) {
     this.swerve = swerve;
@@ -67,11 +62,13 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  public boolean canScore(Boolean isLeft) {
- 
+  public boolean canScore(Boolean isLeft, Boolean L2) {
+
     // Parameters - you can tune these
-    double distanceThreshold = 2.55; // meters
-    double distanceMinimum = 2.2; // meters
+    double L2DistanceThreshold = 2.55; // meters
+    double L2DistanceMinimum = 2.2; // meters
+    double L3DistanceThreshold = 2.65; // meters
+    double L3DistanceMinimum = 2.35; // meters
     double yThresholdLeft = -0.85; // meters
     double yThresholdLeftMax = -1.0; // meters
     double yThresholdRight = -0.7; // meters
@@ -79,24 +76,46 @@ public class Vision extends SubsystemBase {
     double angleThreshold = 2.0; // degrees
 
     boolean canScoreLeft =
-        xOffset < distanceThreshold
-            && xOffset > distanceMinimum
+        xOffset < L2DistanceThreshold
+            && xOffset > L2DistanceMinimum
             && yOffset < yThresholdLeft
             && yOffset > yThresholdLeftMax
             && angleOffset < angleThreshold
             && angleOffset > -4.0;
     boolean canScoreRight =
-        xOffset < distanceThreshold
-            && xOffset > distanceMinimum
+        xOffset < L2DistanceThreshold
+            && xOffset > L2DistanceMinimum
+            && yOffset > yThresholdRight
+            && yOffset < yThresholdRightMax
+            && angleOffset < angleThreshold
+            && angleOffset > -4.0;
+    boolean canScoreL3Left =
+        xOffset < L3DistanceThreshold
+            && xOffset > L3DistanceMinimum
+            && yOffset < yThresholdLeft
+            && yOffset > yThresholdLeftMax
+            && angleOffset < angleThreshold
+            && angleOffset > -4.0;
+    boolean canScoreL3Right =
+        xOffset < L3DistanceThreshold
+            && xOffset > L3DistanceMinimum
             && yOffset > yThresholdRight
             && yOffset < yThresholdRightMax
             && angleOffset < angleThreshold
             && angleOffset > -4.0;
 
-    if (isLeft) {
-      return canScoreLeft;
+    if (L2) {
+      if (isLeft) {
+        return canScoreLeft;
+      } else {
+        return canScoreRight;
+      }
     } else {
-      return canScoreRight;
+      if (isLeft) {
+        return canScoreL3Left;
+      } else {
+        return canScoreL3Right;
+      }
     }
   }
 
@@ -105,54 +124,54 @@ public class Vision extends SubsystemBase {
 
     try {
       List<PhotonPipelineResult> result = photonCamera.getAllUnreadResults();
-      if (result.size()==0) {
+      if (result.size() == 0) {
         return;
       }
       PhotonPipelineResult lastResult = result.get(result.size() - 1);
       if (!lastResult.hasTargets()) {
         return;
       }
-  
+
       PhotonTrackedTarget target = lastResult.getBestTarget();
       int tagId = target.getFiducialId();
-  
+
       List<Integer> noScoreTags = List.of(1, 2, 3, 4, 5, 12, 13, 14, 15, 16);
-  
+
       if (noScoreTags.contains(tagId)) {
         return;
       }
-  
+
       Optional<Pose3d> tagPoseOptional = fieldLayout.getTagPose(tagId);
       if (tagPoseOptional.isEmpty()) {
         return;
       }
-  
 
       // Optional<EstimatedRobotPose> poseEstimate = photonPoseEstimator.update(lastResult);
       // if (poseEstimate.isEmpty()) {
       //   return;
       // }
-  
+
       // Pose2d robotPose = poseEstimate.get().estimatedPose.toPose2d();
       // Pose2d tagPose = tagPoseOptional.get().toPose2d();
-  
+
       // Transform2d robotToTag = new Transform2d(robotPose, tagPose);
 
       Transform3d robotToTag = target.getBestCameraToTarget();
       Logger.LogPeriodic("robotToTag: " + robotToTag);
-  
+
       xOffset = robotToTag.getX();
       yOffset = robotToTag.getY();
       angleOffset = robotToTag.getRotation().getZ();
-    // Optional telemetry
-    SmartDashboard.putNumber("Score X", xOffset);
-    SmartDashboard.putNumber("Score Y", yOffset);
-    SmartDashboard.putNumber("Score Angle", angleOffset);
-    SmartDashboard.putBoolean("Can Score Left L2", canScore(true));
-    SmartDashboard.putBoolean("Can Score Right L2", canScore(false));
-
+      // Optional telemetry
+      SmartDashboard.putNumber("Score X", xOffset);
+      SmartDashboard.putNumber("Score Y", yOffset);
+      SmartDashboard.putNumber("Score Angle", angleOffset);
+      SmartDashboard.putBoolean("Can Score Left L2", canScore(true, true));
+      SmartDashboard.putBoolean("Can Score Right L2", canScore(false, true));
+      SmartDashboard.putBoolean("Can Score Left L3", canScore(true, false));
+      SmartDashboard.putBoolean("Can Score Right L3", canScore(false, false));
     } catch (Exception e) {
       Logger.Log("Error: " + e);
-    }  
+    }
   }
 }

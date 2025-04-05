@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -92,6 +93,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L3", getL3Command());
     NamedCommands.registerCommand("L4", getL4Command());
     NamedCommands.registerCommand("DeAlgae L2", getDeAlgaeL2Command());
+    NamedCommands.registerCommand("Run Forward", getRunForwardCommand());
 
     // The old autonomous chooser
     // oldAutoChooser = new SendableChooser<>();
@@ -186,6 +188,13 @@ public class RobotContainer {
         });
   }
 
+  public Command getRunForwardCommand() {
+    return new InstantCommand(
+        () -> {
+          shooter.runForward();
+        });
+  }
+
   public Command getStopIntakeCommand() {
     return new InstantCommand(
         () -> {
@@ -220,6 +229,7 @@ public class RobotContainer {
           arm.setArmPositionRotations(-15);
         });
   }
+
   public Command getL3Command() {
     return new InstantCommand(
         () -> {
@@ -238,7 +248,8 @@ public class RobotContainer {
     // This method loads the auto when it is called, however, it is recommended
     // to first load your paths/autos when code starts, then return the
     // pre-loaded auto/path
-    return autoChooser.getSelected();
+    return new PathPlannerAuto("1 Middle + DeAlgae Auto");
+    // return autoChooser.getSelected();
   }
 
   public SwerveControllerCommand getTrajectoryAutonomousCommand(Trajectory trajectory) {

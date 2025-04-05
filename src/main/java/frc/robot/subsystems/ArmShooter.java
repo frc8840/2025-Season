@@ -74,12 +74,12 @@ public class ArmShooter extends SubsystemBase {
 
   // start the motor running to a relative velocity
   public void runForward() {
-    shooterMotor.set(-0.3); // 1.0 is full speed
+    shooterMotor.set(-1.0); // 1.0 is full speed
   }
 
   // start the motor running to a relative velocity
   public void runBackward() {
-    shooterMotor.set(0.3); // 1.0 is full speed
+    shooterMotor.set(0.6); // 1.0 is full speed
   }
 
   // stop the motor, but only if we haven't called intake() in the last second
